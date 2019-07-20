@@ -1,6 +1,6 @@
 ---
 layout: post
-title: AllenNLP The Hard Way, Part 0 (Setup) 
+title: AllenNLP The Hard Way, Part 0 - Setup
 ---
 
 In this step we'll learn what AllenNLP is, what the takeaway from this tutorial is, and how to set it up on your machine.
