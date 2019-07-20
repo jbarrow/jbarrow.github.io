@@ -27,6 +27,10 @@ During my PhD, I've had the good fortune to work at [Amazon's AWS Comprehend](ht
 - **UMDeep at SemEval-2017 Task 1: End-to-End Shared Weight LSTM Model for Semantic Textual Similarity** (SemEval 2017)<br />
   **Joe Barrow**, Denis Peskov
 
+### Software
+
+- **LambdaNet**
+
 ### Talks
 
 - **AllenNLP: The Hard Way** (UMD, July 2019; Adobe DIL, July 2019)
