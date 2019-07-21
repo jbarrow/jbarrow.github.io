@@ -1,3 +1,9 @@
+---
+layout: page
+title: Publications
+permalink: /publications/
+---
+
 ### Publications
 
 - **Mitigating Noisy Inputs for Question Answering** (INTERSPEECH 2019)<br />
@@ -12,7 +18,7 @@
 - **UMDeep at SemEval-2017 Task 1: End-to-End Shared Weight LSTM Model for Semantic Textual Similarity** (SemEval 2017)<br />
   **Joe Barrow**, Denis Peskov
 
-  ### Software
+### Software
 
   - **[LambdaNet](https://github.com/jbarrow/LambdaNet)**<br />
     Deep learning framework in Haskell (built in 2014, without autograd).
