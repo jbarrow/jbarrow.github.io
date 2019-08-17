@@ -210,7 +210,7 @@ Every class that inherits from `DatasetReader` *should override these 3 function
 Any argument in `__init__()` will be visible to the JSON configuration later on, so if you have parameters in the dataset reader you want to change in between experiments, you'll put them there.
 For our CoNLL'03 reader, our `__init__()` function will take in 2 parameters: `token_indexers`, and `lazy`.
 
-```
+```python
 from allennlp.data.dataset_readers.dataset_reader import DatasetReader
 from allennlp.data.token_indexers import SingleIdTokenIndexer, TokenIndexer
 
