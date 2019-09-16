@@ -22,3 +22,5 @@ During my PhD, I've had the good fortune to work at [Amazon's AWS Comprehend](ht
 [jdbarrow@cs.umd.edu](mailto:jdbarrow@cs.umd.edu)
 
 ### CV
+
+[My CV is hosted on my website!](https://jbarrow.ai/Joseph_Barrow_CV.pdf)
