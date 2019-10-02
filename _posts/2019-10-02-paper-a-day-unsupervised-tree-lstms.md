@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Paper a "Day": Jointly Learning Sentence Embeddings and Syntax with Unsupervised Tree-LSTMs
+title: Paper a Day: Jointly Learning Sentence Embeddings and Syntax with Unsupervised Tree-LSTMs
 ---
 
 [Jointly Learning Sentence Embeddings and Syntax with Unsupervised Tree-LSTMs](https://arxiv.org/abs/1705.09189v1), by Jean Maillard, Stephen Clark, and Dani Yogatama.
