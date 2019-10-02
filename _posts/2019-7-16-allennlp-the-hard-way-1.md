@@ -177,7 +177,7 @@ allennlp_tutorial/
 To do this, we're going to extend AllenNLP's built-in `DatasetReader` class.
 We'll put the following code in a file in the readers_folder called `conll_reader.py`:
 
-```
+```python
 from allennlp.data.dataset_readers.dataset_reader import DatasetReader
 
 @DatasetReader.register("conll_03_reader")
@@ -210,7 +210,7 @@ Every class that inherits from `DatasetReader` *should override these 3 function
 Any argument in `__init__()` will be visible to the JSON configuration later on, so if you have parameters in the dataset reader you want to change in between experiments, you'll put them there.
 For our CoNLL'03 reader, our `__init__()` function will take in 2 parameters: `token_indexers`, and `lazy`.
 
-```
+```python
 from allennlp.data.dataset_readers.dataset_reader import DatasetReader
 from allennlp.data.token_indexers import SingleIdTokenIndexer, TokenIndexer
 
@@ -236,7 +236,7 @@ For now, don't worry about what an `Instance` is, because we'll assume we have a
 
 Put the code below into your `conll_reader` file:
 
-```
+```python
 from allennlp.data.instance import Instance
 from overrides import overrides
 
@@ -276,7 +276,7 @@ You can consume a CSV file, JSON-lines file, XML file, CoNLL file, etc., but the
 
 However, we've put a lot on the `text_to_instance` function without describing its purpose, so let's write our own now:
 
-```
+```python
 from allennlp.data.tokenizers import Token
 from allennlp.data.fields import Field, TextField, SequenceLabelField
 
@@ -344,7 +344,7 @@ After running the above commands, your `allennlp_tutorial` folder should look li
 
 Inside this file, put the following Jsonnet code (it looks a lot like JSON, and all valid JSON is valid Jsonnet, so don't worry about the differences for now):
 
-```
+```jsonnet
 {
   dataset_reader: {
     type: 'conll_03_reader',

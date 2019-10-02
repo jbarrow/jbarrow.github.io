@@ -42,7 +42,7 @@ There are two main types of iterators that you will likely be using: a **basic i
 The basic iterator batches it into a fixed batch size, and then (by default) shuffles those batches every epoch.
 You can use it in the configuration file by adding this bit of code:
 
-```
+```jsonnet
   iterator: {
     type: 'basic',
     batch_size: 10
@@ -64,7 +64,7 @@ Using a bucket iterator sorts all the examples by length and **then** batches th
 This minimizes the amount of padding in each batch, as the sequences are only batched with other similar-length sequences.
 To use the bucket iterator, you need to additionally specify which keys to sort on, in this case the `num_tokens` in the `tokens` field.
 
-```
+```jsonnet
   iterator: {
     type: 'bucket',
     sorting_keys: [['tokens', 'num_tokens']],
@@ -80,7 +80,7 @@ That one extra line of configuration can yield decent speedups, and though the c
 Once we have the iterator configured, we have to configure the model.
 We begin by specifying the type of the model as the one we built in the last section:
 
-```
+```jsonnet
   model: {
     type: 'ner_lstm'
   }
@@ -89,7 +89,7 @@ We begin by specifying the type of the model as the one we built in the last sec
 Remember that our model took in 2 parameters (besides vocab), an `embedder`, and an `encoder`.
 So we'll have to fill those in:
 
-```
+```jsonnet
   model: {
     type: 'ner_lstm',
     embedder: {},
@@ -100,7 +100,7 @@ So we'll have to fill those in:
 A `TextFieldEmbedder` can take in one set of embeddings per token namespace we defined earlier.
 In our case, we're still using the default `tokens` namespace for our `token_indexers`:
 
-```
+```jsonnet
   model: {
     type: 'ner_lstm',
     embedder: {
@@ -112,7 +112,7 @@ In our case, we're still using the default `tokens` namespace for our `token_ind
 
 To see where we get the `tokens` namespace from, imagine that we instead told our `DatasetReader` to use `words` as the name for the `token_indexer`:
 
-```
+```jsonnet
   dataset_reader: {
     type: 'conll_03_reader',
     lazy: false,
@@ -136,7 +136,7 @@ You can see in the above configuration that we've created a different namespace 
 For the `tokens` namespace, we want to use pretrained GloVe embeddings.
 This is where we could do something fancier with BERT or eLMO, but I'll leave that for a future section.
 
-```
+```jsonnet
   model: {
     type: 'ner_lstm',
     embedder: {
@@ -157,7 +157,7 @@ We've defined the embedder type as `embedding` and passed it a `pretrained_file`
 Now we need to define our `Seq2SeqEncoder`.
 For this run, we'll use a Bidirectional LSTM:
 
-```
+```jsonnet
   model: {
     type: 'ner_lstm',
     embedder: {
@@ -184,7 +184,7 @@ The ability to use JSON to configure your experiments and search for hyperparame
 
 The last bit we need to define is the trainer:
 
-```
+```jsonnet
   trainer: {
     num_epochs: 10,
     patience: 3,

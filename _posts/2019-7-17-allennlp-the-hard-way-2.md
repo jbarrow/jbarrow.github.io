@@ -49,7 +49,7 @@ The first step to creating a model in AllenNLP is a lot like the first step to c
 
 In code, this looks like the following:
 
-```
+```python
 from allennlp.models import Model
 
 @Model.register('ner_lstm')
@@ -97,7 +97,7 @@ In this case, we can use AllenNLP's `SpanBasedF1Measure`, which will report the 
 
 With those requirements laid out, lets take a look at the `__init__` function:
 
-```
+```python
 import torch
 import torch.nn as nn
 
@@ -145,7 +145,7 @@ Well, remember the data reader `Field`s we had defined --- `tokens` and `label`.
 
 The code to do all that is the following:
 
-```
+```python
 from allennlp.nn.util import get_text_field_mask, sequence_cross_entropy_with_logits
 from typing import Dict, Optional
 
@@ -193,7 +193,7 @@ We feed the output of each previous step into the call on the next module.
 The final function we need to implement is `get_metrics`.
 This function just returns a dict where each key is a name of your choosing for the metric (it'll be displayed at training time), and the value is the float value of that metric.
 
-```
+```python
     def get_metrics(self, reset: bool = True) -> Dict[str, float]:
         return self._f1.get_metric(reset)
 ```
