@@ -5,3 +5,7 @@ allennlp:
 papers:
   title: 'Literature Review'
   status: ongoing
+
+slam:
+  title: 'Second Language Acquisition Modeling'
+  status: ongoing
