@@ -2,7 +2,7 @@
 layout: post
 title: Part 1 - Building a Dataset Reader
 tags: allennlp
-blurb: An introduction to Named Entity Recognition (NER), and building a sequence tagging LSTM.
+blurb: An introduction to Named Entity Recognition (NER) and the CoNLL'03 Dataset.
 letter: 1
 ---
 
