@@ -1,6 +1,9 @@
 ---
 layout: post
-title: AllenNLP The Hard Way, Part 2 - Building a Baseline Model
+title: Part 2 - Building a Baseline Model
+tags: allennlp
+blurb: Building a sequence-tagging LSTM for Named Entity Recognition (NER).
+letter: 2
 ---
 
 Once we have ensured that the data can be properly read in, we'll want to do some sanity checks that the task is learnable.

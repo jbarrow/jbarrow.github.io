@@ -1,6 +1,9 @@
 ---
 layout: post
-title: AllenNLP The Hard Way, Part 1 - Building a Dataset Reader
+title: Part 1 - Building a Dataset Reader
+tags: allennlp
+blurb: An introduction to Named Entity Recognition (NER), and building a sequence tagging LSTM.
+letter: 1
 ---
 
 The first step of any NLP project should be reading the data.

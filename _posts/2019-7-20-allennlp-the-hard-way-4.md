@@ -1,6 +1,9 @@
 ---
 layout: post
-title: AllenNLP The Hard Way, Part 4 - Tackling Your Own Experiments
+title: Part 4 - Tackling Your Own Experiments
+tags: allennlp
+blurb: Recommendations on how to tackle your own experiments.
+letter: 4
 ---
 
 In this section, I'm revisiting what we've done thus far and how I recommend approaching new problems with AllenNLP.

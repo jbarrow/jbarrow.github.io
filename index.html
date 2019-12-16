@@ -2,20 +2,41 @@
 layout: default
 ---
 
-    My name is Joe Barrow, and I'm an NLP PhD student at the University of Maryland working for <a href="http://users.umiacs.umd.edu/~resnik/">Professor Philip Resnik</a>.
-  <hr style="border-top:1px solid #eee;" />
+My name is Joe Barrow, and I'm an NLP PhD student at the University of Maryland working for <a href="http://users.umiacs.umd.edu/~resnik/">Professor Philip Resnik</a>.
+<hr style="border-top:1px solid #eee;" />
 
-<div class="posts">
-  {% for post in site.posts %}
-    <article class="post">
+<h2>Series Tracker</h2>
+<ul class="tags">
+{% for tag in site.tags %}
+  {% assign t = tag | first %}
+  {% assign posts = tag | last %}
+  <li><b><a href="#{{t | downcase}}">{{ site.data.series[t].title }}</a></b> has <b>{{ posts | size }} posts</b> and is <b>{{ site.data.series[t].status }}</b></li>
+{% endfor %}
+</ul>
 
-      <h1><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></h1>
+<hr style="border-top:1px solid #eee;" />
 
-      <div class="entry">
-        {{ post.excerpt }}
-      </div>
+{% for tag in site.tags %}
+  {% assign t = tag | first %}
+  {% assign posts = (tag | last) | reverse %}
 
-      <a href="{{ site.baseurl }}{{ post.url }}" class="read-more">Read More</a>
-    </article>
-  {% endfor %}
-</div>
+  <h2 id="{{t | downcase}}">{{ site.data.series[t].title }}</h2>
+  <div class="posts">
+    {% for post in posts %}
+      {% if post.tags contains t %}
+      <article class="post">
+        <div class="image">
+          {{ post.letter }}
+        </div>
+        <div class="description">
+          <h3><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></h3>
+          <div class="entry">
+            {{ post.blurb }}
+          </div>
+        </div>
+        <div class="clearfix"></div>
+      </article>
+      {% endif %}
+    {% endfor %}
+  </div>
+{% endfor %}
