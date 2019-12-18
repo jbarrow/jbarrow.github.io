@@ -6,8 +6,6 @@ blurb: Exploring AllenNLP Predictors for using your trained models.
 letter: 5
 ---
 
-# 5. Predictors
-
 In this section we'll learn about how to build a `Predictor`, a bit of AllenNLP code which allows us to explore model outputs and apply our pretrained models to a new dataset.
 
 ## 5.1 The Point of Predictors
@@ -33,7 +31,7 @@ Thankfully, AllenNLP has a flag called `--use-dataset-reader` which will allow u
 As with `Model`s and `DatasetReader`s, we're going to start by inheriting from a base AllenNLP class and registering it so we can use it in the config file.
 In this case, the base class is `Predictor`, and we're going to give ours a descriptive name: the `conll_03_predictor`.
 
-```
+```python
 from allennlp.predictors.predictor import Predictor
 
 
@@ -45,7 +43,7 @@ From: [tagging/predictors/conll_predictor.py](https://github.com/jbarrow/allennl
 
 And, quite honestly, that's enough to be able to run the `allennlp predict` command:
 
-```
+```bash
 export OUTPUT_FILE=predictions.json
 
 allennlp predict \
@@ -86,14 +84,15 @@ However, as it currently stands, it's not particularly useful, just giving us th
 
 If we instead want to see more useful information, like the text and tag predictions, we'll have to do a bit more work.
 
-## 5.3 Getting Useful Output (the Actual Predictions)
+## 5.3 Getting Usefu
+# 5. Predictorsl Output (the Actual Predictions)
 
 In order to actually see the predictions, we'll have to update the model and predictor code a bit.
 Thankfully, it only requires a few small changes.
 
 First, we want to **get the logits** from the model:
 
-```
+```python
 class NerLstm(Model):
     ...
 
@@ -120,7 +119,7 @@ To map each set of logits to a tag, and a token, we have to change the predictor
 
 Thankfully, we can override the `Predictor`s `predict_instance(self, instance: Instance)` function:
 
-```
+```python
 from allennlp.predictors.predictor import Predictor
 from allennlp.common.util import JsonDict, sanitize
 from allennlp.data import Instance
