@@ -1,7 +1,7 @@
 allennlp:
   title: 'AllenNLP the Hard Way'
   status: ongoing
-  description: 'An <b>AllenNLP tutorial</b> that walks you from installation and setup all the way through building a state-of-the-art (or nearly) named entity recognizer. By the end we will have covered dataset readers, Hierarchical LSTMs and BERT, predictors, debugging, and experimental repeatability.'
+  description: 'This series is my <b>AllenNLP tutorial</b> that goes from installation through building a state-of-the-art (or nearly) named entity recognizer. By the end we will have covered dataset readers, Hierarchical LSTMs and BERT, predictors, debugging, and experimental repeatability. <br /><br /><b>All the code for the tutorial can be found in the <a href="https://github.com/jbarrow/allennlp_tutorial">associated Github repository</a>.</b>'
 
 papers:
   title: 'Literature Review'
