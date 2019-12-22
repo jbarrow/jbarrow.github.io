@@ -21,6 +21,7 @@ My name is Joe Barrow, and I'm an NLP PhD student at the University of Maryland 
   {% assign posts = (tag | last) | reverse %}
 
   <h2 id="{{t | downcase}}">{{ site.data.series[t].title }}</h2>
+  <p class="summary">{{ site.data.series[t].description }}</p>
   <div class="posts">
     {% for post in posts %}
       {% if post.tags contains t %}

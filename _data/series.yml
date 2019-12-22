@@ -1,11 +1,14 @@
 allennlp:
   title: 'AllenNLP the Hard Way'
   status: ongoing
+  description: 'An <b>AllenNLP tutorial</b> that walks you from installation and setup all the way through building a state-of-the-art (or nearly) named entity recognizer. By the end we will have covered dataset readers, Hierarchical LSTMs and BERT, predictors, debuggin, and experimental repeatability.'
 
 papers:
   title: 'Literature Review'
   status: ongoing
+  description: 'Not really a "series", mostly just summaries of interesting papers.'
 
 slam:
-  title: 'Second Language Acquisition Modeling'
+  title: 'How I Do Research: Second Language Acquisition Modeling'
   status: ongoing
+  description: ''
