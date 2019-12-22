@@ -28,6 +28,16 @@ Thankfully, AllenNLP has a flag called `--use-dataset-reader` which will allow u
 
 ## 5.2 Building a Basic Predictor
 
+We will start by creating a `predictors` folder to store any predictors we create and populate it with the files we'll need:
+
+```
+mkdir tagging/predictors
+touch tagging/predictors/__init__.py
+touch tagging/predictors/conll_predictor.py
+```
+
+(I missed this in the original post, so credit to [James Barry](https://github.com/Jbar-ry) for catching it.)
+
 As with `Model`s and `DatasetReader`s, we're going to start by inheriting from a base AllenNLP class and registering it so we can use it in the config file.
 In this case, the base class is `Predictor`, and we're going to give ours a descriptive name: the `conll_03_predictor`.
 
