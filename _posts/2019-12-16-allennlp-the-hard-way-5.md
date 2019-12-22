@@ -94,8 +94,7 @@ However, as it currently stands, it's not particularly useful, just giving us th
 
 If we instead want to see more useful information, like the text and tag predictions, we'll have to do a bit more work.
 
-## 5.3 Getting Usefu
-# 5. Predictorsl Output (the Actual Predictions)
+## 5.3 Getting Useful Output (the Actual Predictions)
 
 In order to actually see the predictions, we'll have to update the model and predictor code a bit.
 Thankfully, it only requires a few small changes.
