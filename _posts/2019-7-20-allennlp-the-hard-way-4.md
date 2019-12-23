@@ -4,6 +4,9 @@ title: Part 4 - Tackling Your Own Experiments
 tags: allennlp
 blurb: Recommendations on how to tackle your own experiments.
 letter: 4
+nav:
+  previous: 3
+  next: 5
 ---
 
 In this section, I'm revisiting what we've done thus far and how I recommend approaching new problems with AllenNLP.

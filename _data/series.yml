@@ -2,11 +2,33 @@ allennlp:
   title: 'AllenNLP the Hard Way'
   status: ongoing
   description: 'This series is my <b>AllenNLP tutorial</b> that goes from installation through building a state-of-the-art (or nearly) named entity recognizer. By the end we will have covered dataset readers, Hierarchical LSTMs and BERT, predictors, debugging, and experimental repeatability. <br /><br /><b>All the code for the tutorial can be found in the <a href="https://github.com/jbarrow/allennlp_tutorial">associated Github repository</a>.</b>'
+  posts:
+    0:
+      title: Part 0 - Setup
+      link: /allennlp-the-hard-way-0/
+    1:
+      title: Part 1 - Building a Dataset Reader
+      link: /allennlp-the-hard-way-1/
+    2:
+      title: Part 2 - Building a Baseline Model
+      link: /allennlp-the-hard-way-2/
+    3:
+      title: Part 3 - Configuring Experiments
+      link: /allennlp-the-hard-way-3/
+    4:
+      title: Part 4 - Tackling Your Own Experiments
+      link: /allennlp-the-hard-way-4/
+    5:
+      title: Part 5 - Building a Predictor
+      link: /allennlp-the-hard-way-5/
+    6:
+      title: Part 6 - Debugging
+      link: /allennlp-the-hard-way-6/
 
 papers:
   title: 'Literature Review'
   status: ongoing
-  description: 'Not really a "series", mostly just summaries of interesting papers.'
+  description: 'This series contains summaries of interesting papers.'
 
 slam:
   title: 'How I Do Research: Second Language Acquisition Modeling'

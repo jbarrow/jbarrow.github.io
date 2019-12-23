@@ -4,6 +4,9 @@ title: Part 5 - Building a Predictor
 tags: allennlp
 blurb: Exploring AllenNLP Predictors for using your trained models.
 letter: 5
+nav:
+  previous: 4
+  next: 6
 ---
 
 In this section we'll learn about how to build a `Predictor`, a bit of AllenNLP code which allows us to explore model outputs and apply our pretrained models to a new dataset.

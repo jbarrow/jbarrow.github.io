@@ -1,0 +1,11 @@
+<div class="footer-nav">
+  {% if include.back != -1 %}
+    <a href="{{ site.data.series[include.tag].posts[include.back].link }}" class="go-back">← {{ site.data.series[include.tag].posts[include.back].title }}</a>
+  {% endif %}
+
+  {% if include.next != -1 %}
+    <a href="{{ site.data.series[include.tag].posts[include.next].link }}" class="go-forward">{{ site.data.series[include.tag].posts[include.next].title }} →</a>
+  {% endif %}
+
+  <div class="clearfix"></div>
+</div>

@@ -4,6 +4,9 @@ title: Jointly Learning Sentence Embeddings and Syntax with Unsupervised Tree-LS
 tags: papers
 blurb: Summary of paper by Jean Maillard, Stephen Clark, and Dani Yogatama
 letter: J
+nav:
+  previous: -1
+  next: -1
 ---
 
 [Jointly Learning Sentence Embeddings and Syntax with Unsupervised Tree-LSTMs](https://arxiv.org/abs/1705.09189v1), by Jean Maillard, Stephen Clark, and Dani Yogatama.

@@ -4,6 +4,9 @@ title: Part 1 - Building a Dataset Reader
 tags: allennlp
 blurb: An introduction to Named Entity Recognition (NER) and the CoNLL'03 Dataset.
 letter: 1
+nav:
+  previous: 0
+  next: 2
 ---
 
 The first step of any NLP project should be reading the data.

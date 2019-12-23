@@ -4,6 +4,9 @@ title: Part 6 - Debugging
 tags: allennlp
 blurb: (In Progress) Commong debugging tips, tricks, and tools for AllenNLP and PyTorch.
 letter: 6
+nav:
+  previous: 5
+  next: -1
 ---
 
 # 6. Debugging

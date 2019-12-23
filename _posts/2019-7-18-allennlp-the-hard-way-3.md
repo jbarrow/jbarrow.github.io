@@ -4,6 +4,9 @@ title: Part 3 - Configuring Experiments
 tags: allennlp
 blurb: Combining the dataset readers and models to run our first experiment.
 letter: 3
+nav:
+  previous: 2
+  next: 4
 ---
 
 Now it's time to put everything together and actually train our model.

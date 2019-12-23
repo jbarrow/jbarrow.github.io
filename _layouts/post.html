@@ -2,11 +2,12 @@
 layout: default
 ---
 
+{% assign t = page.tags | first %}
+
 <article class="post">
   <h1>{{ page.title }}</h1>
 
   <p class="summary">
-    {% assign t = page.tags | first %}
     {{ site.data.series[t].description }}
   </p>
 
@@ -17,6 +18,8 @@ layout: default
   <div class="date">
     Written on {{ page.date | date: "%B %e, %Y" }}
   </div>
+
+  {% include nav.html tag=t back=page.nav.previous next=page.nav.next %}
 
   {% include disqus.html %}
 </article>

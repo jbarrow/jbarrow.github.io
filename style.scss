@@ -118,6 +118,7 @@ img {
 .date {
   font-style: italic;
   color: $gray;
+  margin-top: 10px;
 }
 
 // Specify the color of the selection
@@ -242,6 +243,27 @@ nav {
       margin: 0 10px;
       color: $blue;
     }
+  }
+}
+
+.footer-nav {
+  a {
+    padding: 10px;
+    background: #efefef;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  .go-forward {
+    float: right;
+    border-right: 4px solid #ccc;
+    padding-left: 20px;
+  }
+
+  .go-back {
+    float: left;
+    border-left: 4px solid #ccc;
+    padding-right: 20px;
   }
 }
 

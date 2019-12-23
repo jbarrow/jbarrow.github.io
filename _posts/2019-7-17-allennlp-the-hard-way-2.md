@@ -4,6 +4,9 @@ title: Part 2 - Building a Baseline Model
 tags: allennlp
 blurb: Building a sequence-tagging LSTM for Named Entity Recognition (NER).
 letter: 2
+nav:
+  previous: 1
+  next: 3
 ---
 
 Once we have ensured that the data can be properly read in, we'll want to do some sanity checks that the task is learnable.
