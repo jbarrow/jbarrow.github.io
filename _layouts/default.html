@@ -1,7 +1,15 @@
+{% if page.tags %}
+  {% assign t = page.tags | first %}
+  {% assign title = site.data.series[t].title | append: ' – ' | append: page.title %}
+{% else %}
+  {% assign title = page.title %}
+{% endif %}
+
+
 <!DOCTYPE html>
 <html>
   <head>
-    <title>{% if page.title %}{{ page.title }} – {% endif %}{{ site.name }} – {{ site.description }}</title>
+    <title>{% if page.title %}{{ title }} – {% endif %}{{ site.name }}</title>
 
     {% include meta.html %}
 

@@ -6,7 +6,7 @@ blurb: Covering Installation and Setup (including best practices)
 letter: 0
 nav:
   previous: -1
-  next: 1 
+  next: 1
 ---
 
 In this step we'll learn what AllenNLP is, what the takeaway from this tutorial is, and how to set it up on your machine.
