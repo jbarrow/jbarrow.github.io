@@ -4,7 +4,7 @@ title: About
 permalink: /about/
 ---
 
-My name is Joe Barrow, and I'm an NLP PhD student at the University of Maryland working for [Professor Philip Resnik](http://users.umiacs.umd.edu/~resnik/).
+My name is Joe Barrow, and I'm an NLP PhD student at the University of Maryland working for [Professor Philip Resnik](http://users.umiacs.umd.edu/~resnik/) and [Professor Doug Oard](https://terpconnect.umd.edu/~oard/).
 My research interests, and domains I have worked in, are:
 
 1. incorporating inductive bias into deep neural models,
