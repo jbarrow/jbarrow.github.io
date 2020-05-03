@@ -6,6 +6,8 @@ permalink: /publications/
 
 ### Publications
 
+### 2020
+
 - **A Joint Model for Document Segmentation and Segment Labeling** (*to appear* ACL 2020)<br />
   **Joe Barrow**, Rajiv Jain, Vlad I. Morariu, Varun Manjunatha, Philip Resnik, Douglas W. Oard
 
@@ -15,6 +17,8 @@ permalink: /publications/
 - **MATERIALizing Cross-Language Information Retrieval: A Snapshot** (LREC 2020, CLSSTS Workshop)<br />
   Petra Galuscakova, Douglas W. Oard, **Joe Barrow**, Suraj Nair, Han-Chin Shing, Elena Zotkina, Ramy Eskander, Rui Zhang
 
+### 2019
+
 - **Mitigating Noisy Inputs for Question Answering** (INTERSPEECH 2019)<br />
   Denis Peskov, **Joe Barrow**, Pedro Rodriguez, Graham Neubig, Jordan Boyd-Graber
 
@@ -23,6 +27,8 @@ permalink: /publications/
 
 - **Surprise Languages: Rapid-Response Cross-Language IR** (EVIA 2019)<br />
   (Many Authors)
+
+#### 2017
 
 - **UMDeep at SemEval-2017 Task 1: End-to-End Shared Weight LSTM Model for Semantic Textual Similarity** (SemEval 2017)<br />
   **Joe Barrow**, Denis Peskov
