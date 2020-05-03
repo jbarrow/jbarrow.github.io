@@ -42,10 +42,13 @@ permalink: /publications/
  - **[AllenNLP the Hard Way](https://github.com/jbarrow/allennlp_tutorial)**<br />
    An introduction to AllenNLP, where you learn how to build a neural NER tagger from scratch.
  
- - **[An Introduction to PyTorch for NLPers](https://github.com/jbarrow/pytorch_tutorial)**<br />
-   In which you can learn the basics of PyTorch.
+ - **[An Introduction to PyTorch for NLPers](https://github.com/jbarrow/pytorch-reading-group)**<br />
+   In which you can learn the basics of PyTorch. A reading group I led at UMD in 2017.
 
 # Software
+
+  - **[BERT from Scratch](https://github.com/jbarrow/bert_from_scratch)**<br />
+    A collection of helper scripts to train a BERT model from scratch on TPUs (using Google Compute Engine).
 
   - **[LambdaNet](https://github.com/jbarrow/LambdaNet)**<br />
     Deep learning framework in Haskell (built in 2014, without autograd).
