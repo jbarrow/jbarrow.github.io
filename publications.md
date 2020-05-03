@@ -26,6 +26,11 @@ permalink: /publications/
 
 - **Surprise Languages: Rapid-Response Cross-Language IR** (EVIA 2019)<br />
   *(Many Authors)*
+  
+### 2018
+
+- **From Network to Narrative: Understanding the Nature and Trajectory of Russian Disinformation in the U.S. News** (IJPP 2018)<br />
+  *Sarah Oates, **Joe Barrow**, Bobbie Foster*
 
 ### 2017
 
