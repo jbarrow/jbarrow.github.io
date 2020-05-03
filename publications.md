@@ -8,10 +8,10 @@ permalink: /publications/
 
 ### 2020
 
-- **A Joint Model for Document Segmentation and Segment Labeling** (*to appear* ACL 2020)<br />
+- **A Joint Model for Document Segmentation and Segment Labeling** (*to appear at* ACL 2020)<br />
   **Joe Barrow**, Rajiv Jain, Vlad I. Morariu, Varun Manjunatha, Philip Resnik, Douglas W. Oard
 
-- **It Takes Two to Lie: One to Lie and One to Listen** (*to appear* ACL 2020)<br />
+- **It Takes Two to Lie: One to Lie and One to Listen** (*to appear at* ACL 2020)<br />
   Denis Peskov, Benny Cheng, Ahmed Elgohary, **Joe Barrow**, Cristian Danescu-Niculescu-Mizil, Jordan Boyd-Graber
 
 - **MATERIALizing Cross-Language Information Retrieval: A Snapshot** (LREC 2020, CLSSTS Workshop)<br />
