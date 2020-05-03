@@ -4,34 +4,33 @@ title: Publications
 permalink: /publications/
 ---
 
-### Publications
-
 ### 2020
 
-- **A Joint Model for Document Segmentation and Segment Labeling** (*to appear at* ACL 2020)<br />
-  **Joe Barrow**, Rajiv Jain, Vlad I. Morariu, Varun Manjunatha, Philip Resnik, Douglas W. Oard
+- **A Joint Model for Document Segmentation and Segment Labeling** (ACL 2020)<br />
+  ***Joe Barrow**, Rajiv Jain, Vlad I. Morariu, Varun Manjunatha, Philip Resnik, Douglas W. Oard*
 
-- **It Takes Two to Lie: One to Lie and One to Listen** (*to appear at* ACL 2020)<br />
-  Denis Peskov, Benny Cheng, Ahmed Elgohary, **Joe Barrow**, Cristian Danescu-Niculescu-Mizil, Jordan Boyd-Graber
+- **It Takes Two to Lie: One to Lie and One to Listen** (ACL 2020)<br />
+  *Denis Peskov, Benny Cheng, Ahmed Elgohary, **Joe Barrow**, Cristian Danescu-Niculescu-Mizil, Jordan Boyd-Graber*
 
-- **MATERIALizing Cross-Language Information Retrieval: A Snapshot** (LREC 2020, CLSSTS Workshop)<br />
-  Petra Galuscakova, Douglas W. Oard, **Joe Barrow**, Suraj Nair, Han-Chin Shing, Elena Zotkina, Ramy Eskander, Rui Zhang
+- **MATERIALizing Cross-Language Information Retrieval: A Snapshot**<br /> 
+  (LREC 2020, CLSSTS Workshop)<br />
+  *Petra Galuscakova, Douglas W. Oard, **Joe Barrow**, Suraj Nair, Han-Chin Shing, Elena Zotkina, Ramy Eskander, Rui Zhang*
 
 ### 2019
 
 - **Mitigating Noisy Inputs for Question Answering** (INTERSPEECH 2019)<br />
-  Denis Peskov, **Joe Barrow**, Pedro Rodriguez, Graham Neubig, Jordan Boyd-Graber
+  *Denis Peskov, **Joe Barrow**, Pedro Rodriguez, Graham Neubig, Jordan Boyd-Graber*
 
 - **Unsupervised System Combination for Set-Based Retrieval with Expectation Maximization** (CLEF 2019)<br />
-  Han-Chin Shing, **Joe Barrow**, Petra Galuscakova, Douglas W. Oard, Philip Resnik
+  *Han-Chin Shing, **Joe Barrow**, Petra Galuscakova, Douglas W. Oard, Philip Resnik*
 
 - **Surprise Languages: Rapid-Response Cross-Language IR** (EVIA 2019)<br />
-  (Many Authors)
+  *(Many Authors)*
 
 #### 2017
 
 - **UMDeep at SemEval-2017 Task 1: End-to-End Shared Weight LSTM Model for Semantic Textual Similarity** (SemEval 2017)<br />
-  **Joe Barrow**, Denis Peskov
+  ***Joe Barrow**, Denis Peskov*
 
 ### Tutorials
 
