@@ -27,12 +27,12 @@ permalink: /publications/
 - **Surprise Languages: Rapid-Response Cross-Language IR** (EVIA 2019)<br />
   *(Many Authors)*
 
-#### 2017
+### 2017
 
 - **UMDeep at SemEval-2017 Task 1: End-to-End Shared Weight LSTM Model for Semantic Textual Similarity** (SemEval 2017)<br />
   ***Joe Barrow**, Denis Peskov*
 
-### Tutorials
+## Tutorials
 
  - **[AllenNLP the Hard Way](https://github.com/jbarrow/allennlp_tutorial)**<br />
    An introduction to AllenNLP, where you learn how to build a neural NER tagger from scratch.
@@ -40,7 +40,7 @@ permalink: /publications/
  - **[An Introduction to PyTorch for NLPers](https://github.com/jbarrow/pytorch_tutorial)**<br />
    In which you can learn the basics of PyTorch.
 
-### Software
+## Software
 
   - **[LambdaNet](https://github.com/jbarrow/LambdaNet)**<br />
     Deep learning framework in Haskell (built in 2014, without autograd).
