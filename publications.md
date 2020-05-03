@@ -43,7 +43,7 @@ permalink: /publications/
    An introduction to AllenNLP, where you learn how to build a neural NER tagger from scratch.
  
  - **[An Introduction to PyTorch for NLPers](https://github.com/jbarrow/pytorch-reading-group)**<br />
-   In which you can learn the basics of PyTorch. A reading group I led at UMD in 2017.
+   In which you can learn the basics of PyTorch. A reading group I led at UMD in 2018.
 
 # Software
 
