@@ -1,3 +1,9 @@
+---
+layout: page
+title: Tips & Resources
+permalink: /resources/
+---
+
 A collection of resources and tips for various topics that I encounter.
 The more complete sections will be used as references for full posts on things.
 
