@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tokenizers and Layout — Joe Barrow</title>
+  <meta name="description" content="How recent OCR-capable VLMs encode layout and position information.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../static/css/site.css">
+  <link rel="stylesheet" href="../static/css/code.css">
+
+
+
+</head>
+<body>
+
+  <header class="masthead">
+    <span class="masthead-title"><a href="../">Joe Barrow</a></span>
+    <nav class="masthead-nav">
+      <a href="../about/">about</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../publications/">publications</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../software/">software</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../garden/">field notes</a>
+    </nav>
+    <span class="masthead-meta">VOL_03 / N18</span>
+  </header>
+
+  <article class="article">
+    <p class="kicker">computer_vision / briefing</p>
+
+    <p class="series-tag">
+      The OCR Cambrian · part 2 of 2
+    </p>
+
+    <h1 class="headline">Tokenizers and Layout</h1>
+
+    <p class="standfirst">The second figure in the OCR Cambrian series. How modern document VLMs encode position — and why it matters more than the parameter count.
+</p>
+
+    <div class="byline">
+<span>By <strong>Your Name</strong></span><span class="byline-meta">2026-05-23</span><span class="byline-meta">6 min read</span>    </div>
+
+
+    <p>A page is not a sequence. The text on a printed form, a research paper,
+or an old newspaper carries information in two dimensions — left-to-right
+within a line, but also top-to-bottom across columns, with figures and
+captions drifting between them. Most language models flatten that
+geometry into a 1-D token stream and hope the prose itself encodes the
+spatial cues.</p>
+<p>Most document VLMs do something more deliberate.</p>
+<details class="margin-note">
+<summary></summary>
+<p><strong>Why &ldquo;tokenizer&rdquo; is the wrong word here.</strong> What we&rsquo;re really discussing
+is the visual patch encoder plus its position embedding scheme — the
+text tokenizer in these models is mostly inherited from the language
+backbone. I&rsquo;ll keep saying tokenizer because the field does, but mentally
+substitute <em>patch+position pipeline</em>.</p>
+</details>
+<p>The simplest scheme is to crop the page into a fixed grid of patches and
+let the encoder learn 2-D position embeddings. Qwen2-VL pushed this in
+an interesting direction with M-RoPE, factorising rotary embeddings
+into temporal, height, and width components, so the same underlying
+mechanism that encodes word order in text also encodes patch geometry
+in images.</p>
+<p>A minimal sketch of the idea:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">m_rope</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">dims</span><span class="o">=</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">)):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Multi-axis rotary position embedding.</span>
+
+<span class="sd">    x:    [B, T, D]   token features</span>
+<span class="sd">    t,h,w:[B, T]      per-token (time, row, col) indices</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dt</span><span class="p">,</span> <span class="n">dh</span><span class="p">,</span> <span class="n">dw</span> <span class="o">=</span> <span class="n">dims</span>
+    <span class="n">x_t</span> <span class="o">=</span> <span class="n">rotate</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="p">:</span><span class="n">dt</span><span class="p">],</span>         <span class="n">t</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
+    <span class="n">x_h</span> <span class="o">=</span> <span class="n">rotate</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span><span class="n">dt</span><span class="o">+</span><span class="n">dh</span><span class="p">],</span>    <span class="n">h</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
+    <span class="n">x_w</span> <span class="o">=</span> <span class="n">rotate</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">dt</span><span class="o">+</span><span class="n">dh</span><span class="p">:],</span>      <span class="n">w</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">x_t</span><span class="p">,</span> <span class="n">x_h</span><span class="p">,</span> <span class="n">x_w</span><span class="p">],</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div>
+
+<p>The decision to split the embedding <em>channels</em> rather than interleaving
+the rotations is what lets a sequence-only attention mechanism reason
+about page geometry without any architectural change downstream.</p>
+<details class="margin-note">
+<summary></summary>
+<p>The published M-RoPE allocations differ slightly between Qwen2-VL and
+Qwen2.5-VL — the 2.5 release rebalances toward the spatial axes for
+high-resolution document inputs.</p>
+</details>
+<p>Other recent work goes further. Granite Docling threads explicit layout
+tokens into the input — every block of text carries a structured tag
+identifying it as a heading, paragraph, table cell, or caption — letting
+the decoder treat the document as a tree rather than a stream. The cost
+is annotation: someone (or some system) had to label all that training
+data with structural roles.</p>
+<blockquote class="pullquote">
+<p>The interesting axis is no longer scale, but <em>what kind of layout
+information the model is allowed to see at training time.</em></p>
+</blockquote>
+<p>The figure for this post — a comparison of how five recent models tokenize
+the same densely formatted research page — will land in the next note.
+For now, <mark>the pattern to watch is the gap between models that learn
+geometry implicitly from pixels and those that get explicit layout
+supervision</mark>: the latter are quietly winning on tables.</p>
+<p>Related working notes: <a class="wiki-link" href="../garden/m-rope-allocation/">M-RoPE channel allocation across Qwen versions</a>
+and <a class="wiki-link" href="../garden/why-vlms-fail-at-tables/">Why VLMs Fail at Tables</a>.</p>
+
+    <nav class="series-nav">
+      <p class="series-nav-label">Series</p>
+      <p class="series-nav-title">The OCR Cambrian</p>
+      <ol>
+        <li class="">
+          <a href="../2026-05-09-ocr-cambrian/">The OCR Cambrian</a>
+        </li>
+        <li class="is-current">
+          <strong>Tokenizers and Layout</strong>
+        </li>
+      </ol>
+    </nav>
+  </article>
+
+  <footer class="site-footer">joe barrow · research scientist</footer>
+
+  <script src="../static/js/site.js" defer></script>
+
+
+
+
+</body>
+</html>

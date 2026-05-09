@@ -1,0 +1,118 @@
+[
+  {
+    "name": "TrOCR",
+    "release": "Sep 2021"
+  },
+  {
+    "name": "DONUT",
+    "release": "Nov 2021"
+  },
+  {
+    "name": "Pix2Struct",
+    "release": "Oct 2022"
+  },
+  {
+    "name": "Nougat",
+    "release": "Aug 2023"
+  },
+  {
+    "name": "Kosmos-2.5",
+    "release": "Sep 2023"
+  },
+  {
+    "name": "Vary",
+    "release": "Dec 2023"
+  },
+  {
+    "name": "Fox",
+    "release": "May 2024"
+  },
+  {
+    "name": "GOT 2.0",
+    "release": "Sep 2024"
+  },
+  {
+    "name": "Qwen2-VL",
+    "release": "Sep 2024"
+  },
+  {
+    "name": "Qwen2.5-VL",
+    "release": "Feb 2025"
+  },
+  {
+    "name": "OlmOCR",
+    "release": "Feb 2025"
+  },
+  {
+    "name": "RolmOCR",
+    "release": "Feb 2025"
+  },
+  {
+    "name": "Dolphin OCR",
+    "release": "May 2025"
+  },
+  {
+    "name": "NanoNets OCR",
+    "release": "Jun 2025"
+  },
+  {
+    "name": "MonkeyOCR",
+    "release": "Jun 2025"
+  },
+  {
+    "name": "OCRFlux",
+    "release": "Jun 2025"
+  },
+  {
+    "name": "dots.OCR",
+    "release": "Jul 2025"
+  },
+  {
+    "name": "Granite Docling",
+    "release": "Sep 2025"
+  },
+  {
+    "name": "Qwen3-VL",
+    "release": "Sep 2025"
+  },
+  {
+    "name": "MinerU2.5",
+    "release": "Sep 2025"
+  },
+  {
+    "name": "Deepseek-OCR",
+    "release": "Sep 2025"
+  },
+  {
+    "name": "NanoNets OCR2",
+    "release": "Oct 2025"
+  },
+  {
+    "name": "OlmOCR 2",
+    "release": "Oct 2025"
+  },
+  {
+    "name": "PaddleOCR-VL",
+    "release": "Oct 2025"
+  },
+  {
+    "name": "LightOn OCR",
+    "release": "Oct 2025"
+  },
+  {
+    "name": "Infinity-Parser 7B",
+    "release": "Oct 2025"
+  },
+  {
+    "name": "Chandra",
+    "release": "Oct 2025"
+  },
+  {
+    "name": "MonkeyOCR-v1.5",
+    "release": "Nov 2025"
+  },
+  {
+    "name": "HunyuanOCR",
+    "release": "Nov 2025"
+  }
+]

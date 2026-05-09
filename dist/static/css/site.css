@@ -1,0 +1,953 @@
+/* ============================================================================
+ * site.css — Page styles for the blog. Kept separate from viz.css so the
+ * chart library stays portable. Edit freely.
+ * ============================================================================ */
+
+:root {
+  --paper:        #fafaf7;
+  --ink:          #0a0a0a;
+  --ink-soft:     #525252;
+  --ink-faint:    #a3a3a3;
+  --rule:         #e5e5e2;
+  --accent:       #0f5499;
+  --accent-hover: #0a4078;
+  --green:        #1f7a4a;
+  --green-hover:  #155836;
+
+  --font-sans:    'Geist', system-ui, -apple-system, sans-serif;
+  --font-mono:    'Geist Mono', ui-monospace, SFMono-Regular, monospace;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  letter-spacing: -0.005em;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Masthead --------------------------------------------------------------- */
+
+.masthead {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 18px 32px;
+  border-bottom: 1px solid var(--rule);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.masthead-title {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+
+.masthead-title a { color: inherit; }
+
+.masthead-meta {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-faint);
+  letter-spacing: -0.02em;
+}
+
+.masthead-nav {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: -0.02em;
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+}
+
+.masthead-nav a {
+  color: var(--ink-soft);
+}
+
+.masthead-nav a:hover {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.masthead-nav-sep {
+  color: var(--ink-faint);
+}
+
+@media (max-width: 640px) {
+  /* Hide the meta slot on phones — keep masthead to two slots. */
+  .masthead { gap: 12px; flex-wrap: wrap; }
+  .masthead-meta { display: none; }
+  .masthead-nav { font-size: 11px; gap: 6px; }
+}
+
+/* Article ---------------------------------------------------------------- */
+
+.article {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 88px 32px 96px;
+}
+
+.kicker {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--accent);
+  margin: 0 0 24px;
+  letter-spacing: -0.01em;
+}
+
+.headline {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: clamp(36px, 5vw, 52px);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  margin: 0 0 24px;
+  color: var(--ink);
+}
+
+.standfirst {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: 19px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  margin: 0 0 36px;
+  max-width: 56ch;
+  letter-spacing: -0.012em;
+}
+
+.byline {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--ink-soft);
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--rule);
+  margin: 0 0 56px;
+  display: flex;
+  gap: 20px;
+  align-items: baseline;
+  flex-wrap: wrap;
+  letter-spacing: -0.005em;
+}
+
+.byline strong {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.byline-meta {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-faint);
+  letter-spacing: -0.02em;
+}
+
+/* Paper card + download buttons ------------------------------------------
+ *
+ * The card frames the buttons so it's clear the download targets are the
+ * *paper*, not the blog post you're reading. The card is set on a slightly
+ * darker paper-cream so it reads as a citation/object embedded in the
+ * article — not a continuation of the prose.
+ * ----------------------------------------------------------------------- */
+
+.paper-card {
+  position: relative;
+  background: #f3f0e7;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 22px 22px 20px;
+  margin: -16px 0 56px;
+}
+
+.paper-card-label {
+  position: absolute;
+  top: -9px;
+  left: 16px;
+  background: var(--paper);
+  padding: 0 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ink-soft);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.paper-card-title {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 1.3;
+  letter-spacing: -0.018em;
+  margin: 2px 0 6px;
+  color: var(--ink);
+  max-width: 56ch;
+}
+
+.paper-card-meta {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin: 0 0 16px;
+  line-height: 1.5;
+  letter-spacing: -0.005em;
+}
+
+.paper-card-meta .sep {
+  color: var(--ink-faint);
+  margin: 0 6px;
+}
+
+/* When there's no rich metadata, the buttons sit closer to the label. */
+.paper-card-title + .paper-downloads,
+.paper-card-meta + .paper-downloads {
+  margin-top: 4px;
+}
+
+.paper-downloads {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 9px 14px 10px;
+  border-radius: 4px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition:
+    background 140ms ease,
+    border-color 140ms ease,
+    transform 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.btn:hover {
+  text-decoration: none;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.btn:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.btn-icon {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1;
+  position: relative;
+  top: 1px;
+}
+
+.btn-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: -0.02em;
+  opacity: 0.8;
+}
+
+/* Primary — blue */
+.btn-paper {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+.btn-paper:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+  color: #fff;
+}
+
+/* Secondary — green */
+.btn-paper-annotated {
+  background: var(--green);
+  color: #fff;
+  border-color: var(--green);
+}
+.btn-paper-annotated:hover {
+  background: var(--green-hover);
+  border-color: var(--green-hover);
+  color: #fff;
+}
+
+/* On note pages the card follows a tighter heading block, so reset
+   the negative top-margin used to align it with post bylines. */
+.note .paper-card {
+  margin-top: 0;
+}
+
+/* Body copy -------------------------------------------------------------- */
+
+.article p { margin: 0 0 1.4em; }
+.article p strong { font-weight: 600; }
+
+.article img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 32px auto;
+}
+
+.article img.embed {
+  /* Obsidian ![[file]] embeds — slightly more confident framing. */
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--paper);
+}
+
+.article code {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  background: #f1f0eb;
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+.article pre {
+  background: #f1f0eb;
+  padding: 16px 18px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.55;
+  border-radius: 4px;
+}
+
+.article pre code { background: none; padding: 0; }
+
+/* Figure ----------------------------------------------------------------- */
+
+.figure {
+  /* Modest column-breakout — no frame */
+  width: calc(100% + 96px);
+  margin: 72px -48px;
+  padding: 0;
+  background: none;
+  border: none;
+}
+
+@media (max-width: 880px) {
+  .figure {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+.figure-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-faint);
+  margin: 0 0 14px;
+  letter-spacing: -0.02em;
+}
+
+.figure-title {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 19px;
+  line-height: 1.32;
+  letter-spacing: -0.022em;
+  margin: 0 0 6px;
+  color: var(--ink);
+  max-width: 64ch;
+}
+
+.figure-subtitle {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin: 0 0 32px;
+  max-width: 60ch;
+  letter-spacing: -0.005em;
+}
+
+.chart-host {
+  width: 100%;
+}
+
+.figure-source {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-faint);
+  margin-top: 24px;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  letter-spacing: -0.02em;
+}
+
+/* Margin notes / asides --------------------------------------------------
+ *
+ * Wide screens: the note floats into the right margin, always visible,
+ * <summary> hidden. Phones: the note collapses behind a tappable
+ * "note ▸" summary that expands inline on tap.
+ *
+ * Use <details class="margin-note" markdown="1">…</details> in posts.
+ * The site.js script keeps `open` in sync with the viewport.
+ * ----------------------------------------------------------------------- */
+
+.margin-note {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  letter-spacing: -0.005em;
+}
+
+.margin-note > summary {
+  display: none;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 4px 0;
+  list-style: none;
+}
+
+.margin-note > summary::-webkit-details-marker { display: none; }
+
+.margin-note > summary::before {
+  content: '▸ note';
+}
+
+.margin-note[open] > summary::before {
+  content: '▾ note';
+}
+
+@media (min-width: 1080px) {
+  /* Desktop: float into the right margin, sit alongside the prose. */
+  .margin-note {
+    float: right;
+    clear: right;
+    width: 220px;
+    margin: 4px -260px 16px 24px;
+    padding: 6px 0 6px 16px;
+    border-left: 2px solid var(--accent);
+  }
+  /* Tablet floor — keep the float, but smaller margin offset. */
+}
+
+@media (min-width: 880px) and (max-width: 1079px) {
+  .margin-note {
+    float: right;
+    clear: right;
+    width: 200px;
+    margin: 4px 0 16px 20px;
+    padding: 6px 0 6px 14px;
+    border-left: 2px solid var(--accent);
+  }
+}
+
+@media (max-width: 720px) {
+  /* Phone: a tappable summary expands the note inline. */
+  .margin-note {
+    display: block;
+    margin: 24px 0;
+    padding: 6px 0 6px 14px;
+    border-left: 2px solid var(--accent);
+  }
+  .margin-note > summary { display: list-item; }
+}
+
+.margin-note p { margin: 0 0 0.6em; }
+.margin-note p:last-child { margin-bottom: 0; }
+
+/* Code blocks ------------------------------------------------------------
+ *
+ * The token colours come from static/css/code.css (Pygments-generated
+ * stylesheet). Layout/spacing lives here.
+ * ----------------------------------------------------------------------- */
+
+.article .codehilite {
+  position: relative;
+  background: #f5f3ec;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 14px 18px;
+  margin: 28px 0;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.code-copy {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: -0.01em;
+  color: var(--ink-faint);
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 2px 8px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 120ms var(--viz-ease, ease), color 120ms ease, border-color 120ms ease;
+}
+
+.codehilite:hover .code-copy,
+.code-copy:focus {
+  opacity: 1;
+}
+
+.code-copy:hover {
+  color: var(--ink);
+  border-color: var(--ink-soft);
+}
+
+.code-copy.is-copied {
+  color: var(--accent);
+  border-color: var(--accent);
+  opacity: 1;
+}
+
+@media (max-width: 720px) {
+  /* Always-visible on touch devices — there's no hover. */
+  .code-copy { opacity: 1; }
+}
+
+.article .codehilite pre {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.article .codehilite code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+}
+
+/* Series ----------------------------------------------------------------- */
+
+.series-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--accent);
+  letter-spacing: -0.01em;
+  margin-bottom: 8px;
+}
+
+.series-nav {
+  margin: 48px 0 0;
+  padding: 24px 0 0;
+  border-top: 1px solid var(--rule);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+.series-nav-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 0 0 12px;
+}
+
+.series-nav-title {
+  font-weight: 500;
+  color: var(--ink);
+  margin: 0 0 12px;
+  font-size: 15px;
+}
+
+.series-nav ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  counter-reset: series;
+}
+
+.series-nav li {
+  counter-increment: series;
+  padding: 6px 0;
+}
+
+.series-nav li::before {
+  content: counter(series, decimal-leading-zero) ' · ';
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-faint);
+  letter-spacing: -0.02em;
+  margin-right: 4px;
+}
+
+.series-nav li.is-current { color: var(--ink); }
+.series-nav li.is-current strong { font-weight: 500; }
+
+.series-block {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 40px 32px 0;
+}
+
+.series-block:first-of-type { padding-top: 56px; }
+.series-block + .series-block { padding-top: 0; }
+
+.series-block-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 8px;
+  margin-bottom: 4px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.series-block-title {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: -0.01em;
+  margin: 0;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.series-block-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-faint);
+  letter-spacing: -0.02em;
+}
+
+.series-block .post-list-item {
+  padding: 14px 0;
+}
+
+.series-block .post-list-item:first-child { padding-top: 12px; }
+.series-block .post-list-item:last-child { border-bottom: none; }
+
+/* Pull quote ------------------------------------------------------------- */
+
+.pullquote {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--ink);
+  margin: 48px 0;
+  padding: 4px 0 4px 20px;
+  border-left: 2px solid var(--accent);
+  max-width: 56ch;
+  letter-spacing: -0.012em;
+  position: relative;
+}
+
+.pullquote::before {
+  content: 'NOTE';
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--accent);
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+}
+
+.pullquote p { margin: 0; }
+
+/* Index page ------------------------------------------------------------- */
+
+.post-list {
+  max-width: 720px;
+  margin: 0 auto;
+  /*padding: 56px 32px 32px;*/
+  padding: 12px 0 0; 
+  list-style: none;
+}
+
+.post-list-item {
+  padding: 18px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.post-list-item:first-child { padding-top: 0; }
+
+.post-list-kicker {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--accent);
+  margin: 0 0 6px;
+  letter-spacing: -0.01em;
+}
+
+.post-list-title {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 1.18;
+  letter-spacing: -0.02em;
+  margin: 0 0 4px;
+}
+
+.post-list-title a { color: var(--ink); }
+.post-list-title a:hover { color: var(--accent); text-decoration: none; }
+
+.post-list-standfirst {
+  font-size: 15px;
+  color: var(--ink-soft);
+  margin: 0 0 6px;
+  max-width: 60ch;
+}
+
+.post-list-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-faint);
+  letter-spacing: -0.02em;
+}
+
+/* Wiki links -------------------------------------------------------------
+ *
+ * [[Note Title]] in markdown becomes <a class="wiki-link">. Missing
+ * targets render as <span class="wiki-link wiki-link--missing">.
+ * ----------------------------------------------------------------------- */
+
+.wiki-link {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+  transition: border-color 120ms ease;
+}
+
+.wiki-link:hover {
+  text-decoration: none;
+  border-bottom-color: var(--accent);
+}
+
+.wiki-link--missing {
+  color: var(--ink-faint);
+  border-bottom: 1px dashed var(--ink-faint);
+  cursor: help;
+}
+
+/* Highlights -------------------------------------------------------------
+ *
+ * ==text== in markdown → <mark>text</mark>. Editorial-style highlight,
+ * not a flat yellow block — looks like a marker pen.
+ * ----------------------------------------------------------------------- */
+
+.article mark {
+  background: linear-gradient(transparent 60%, #ffe999 60%);
+  color: inherit;
+  padding: 0 2px;
+}
+
+/* Field Notes / Digital Garden -------------------------------------------
+ *
+ * The garden is a separate, lightweight section. Notes are undated (or
+ * use an "updated" field), have a smaller headline, and render in a
+ * compact list.
+ * ----------------------------------------------------------------------- */
+
+.note {
+  padding-top: 64px;
+}
+
+.note-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin: 0 0 18px;
+}
+
+.note-eyebrow a { color: var(--ink-faint); }
+.note-eyebrow a:hover { color: var(--accent); }
+
+.note-title {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 28px;
+  line-height: 1.18;
+  letter-spacing: -0.02em;
+  margin: 0 0 8px;
+  color: var(--ink);
+}
+
+.note-updated {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-faint);
+  letter-spacing: -0.02em;
+  margin: 0 0 36px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--rule);
+}
+
+/* Garden block on the home page */
+
+.garden-block {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 40px 32px 56px;
+}
+
+.garden-block-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 8px;
+  margin-bottom: 4px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.garden-block-title {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: -0.01em;
+  margin: 0;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.garden-block-title a { color: var(--ink); }
+.garden-block-title a:hover { color: var(--accent); }
+
+.garden-block-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-faint);
+  letter-spacing: -0.02em;
+}
+
+.garden-block-more {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-faint);
+  margin: 16px 0 0;
+  letter-spacing: -0.02em;
+}
+
+/* Garden index page */
+
+.garden-index {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 64px 32px 96px;
+}
+
+.garden-index-title {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 32px;
+  letter-spacing: -0.025em;
+  margin: 0 0 12px;
+}
+
+.garden-index-blurb {
+  font-size: 15px;
+  color: var(--ink-soft);
+  margin: 0 0 32px;
+  max-width: 56ch;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 24px;
+}
+
+/* Note list (used on home page + garden index) */
+
+.note-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.note-list-item {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--rule);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+  gap: 0px;
+}
+
+.note-list-item:last-child { border-bottom: none; }
+
+.note-list-title {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+
+.note-list-title:hover { color: var(--accent); text-decoration: none; }
+
+.note-list-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-faint);
+  letter-spacing: -0.02em;
+}
+
+.note-list-summary {
+  grid-column: 1 / -1;
+  font-size: 14px;
+  color: var(--ink-soft);
+  margin: 4px 0 0;
+  max-width: 60ch;
+}
+
+/* Footer ----------------------------------------------------------------- */
+
+footer.site-footer {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 40px 32px 56px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-faint);
+  text-align: center;
+  letter-spacing: -0.01em;
+}

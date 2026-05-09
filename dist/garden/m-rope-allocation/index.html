@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>M-RoPE channel allocation across Qwen versions — Field Notes — Joe Barrow</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../../static/css/site.css">
+  <link rel="stylesheet" href="../../static/css/code.css">
+
+
+
+</head>
+<body>
+
+  <header class="masthead">
+    <span class="masthead-title"><a href="../../">Joe Barrow</a></span>
+    <nav class="masthead-nav">
+      <a href="../../about/">about</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../publications/">publications</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../software/">software</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../garden/">field notes</a>
+    </nav>
+    <span class="masthead-meta">field_notes</span>
+  </header>
+
+  <article class="article note">
+    <p class="note-eyebrow">
+      <a href="../../garden/">Field Notes</a>
+    </p>
+
+    <h1 class="note-title">M-RoPE channel allocation across Qwen versions</h1>
+
+    <p class="note-updated">last updated 2026-05-22</p>
+
+
+    <p>Pulling apart how recent Qwen-family VLMs split rotary embedding
+channels. This note exists because I keep forgetting the exact numbers
+and having to re-read papers.</p>
+<h2>Qwen2-VL</h2>
+<p>Roughly equal split across the three axes. The temporal axis carries
+the most weight because the model is also used for video.</p>
+<h2>Qwen2.5-VL</h2>
+<p><mark>Rebalanced toward the spatial axes</mark> for high-resolution document
+inputs. The temporal allocation shrinks and the height/width budget
+grows. This is the change that matters for document OCR — a page is
+one frame, so the temporal channels are mostly wasted otherwise.</p>
+<h2>What I want to test</h2>
+<p>Whether you can recover the document-OCR gain from Qwen2-VL by simply
+rerouting the temporal channels into the spatial ones at finetune time,
+without retraining the position encoder from scratch.</p>
+<p>Related: <a class="wiki-link" href="../../garden/why-vlms-fail-at-tables/">Why VLMs Fail at Tables</a> and <a class="wiki-link" href="../../2026-05-23-tokenizers-and-layout/">Tokenizers and Layout</a>.</p>
+  </article>
+
+  <footer class="site-footer">joe barrow · research scientist</footer>
+
+  <script src="../../static/js/site.js" defer></script>
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,194 @@
+/* ============================================================================
+ * viz.css — Styles for the Viz chart library.
+ *
+ * All selectors are namespaced under .viz-* so this file can be dropped into
+ * any blog template without leaking. Override the custom properties below to
+ * retheme.
+ * ============================================================================ */
+
+:root {
+  --viz-paper:       #fafaf7;
+  --viz-ink:         #0a0a0a;
+  --viz-ink-soft:    #525252;
+  --viz-ink-faint:   #a3a3a3;
+  --viz-rule:        #e5e5e2;
+  --viz-gridline:    #ededea;
+  --viz-accent:      #0f5499;
+  --viz-bar:         #0a0a0a;
+  --viz-bar-hover:   #0f5499;
+
+  --viz-font-display: 'Geist', system-ui, sans-serif;
+  --viz-font-body:    'Geist', system-ui, sans-serif;
+  --viz-font-data:    'Geist', system-ui, sans-serif;
+  --viz-font-mono:    'Geist Mono', ui-monospace, SFMono-Regular, monospace;
+
+  --viz-ease:         cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Container ----------------------------------------------------------------- */
+
+.viz-chart {
+  position: relative;
+  font-family: var(--viz-font-data);
+  font-feature-settings: 'tnum' 1, 'lnum' 1;
+}
+
+.viz-chart svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+/* Bars ---------------------------------------------------------------------- */
+
+.viz-bar {
+  fill: var(--viz-bar);
+  transition:
+    fill   180ms var(--viz-ease),
+    y      600ms var(--viz-ease),
+    height 600ms var(--viz-ease);
+}
+
+.viz-bar.is-hover {
+  fill: var(--viz-bar-hover);
+}
+
+.viz-bar-hit {
+  fill: transparent;
+  cursor: crosshair;
+}
+
+/* Gridlines + axes ---------------------------------------------------------- */
+
+.viz-gridline {
+  stroke: var(--viz-gridline);
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+
+.viz-axis-line {
+  stroke: var(--viz-ink);
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+
+.viz-x-tick {
+  stroke: var(--viz-ink-soft);
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+
+/* Axis labels --------------------------------------------------------------- */
+
+.viz-y-tick-label {
+  font-family: var(--viz-font-mono);
+  font-size: 10px;
+  fill: var(--viz-ink-faint);
+  font-feature-settings: 'tnum' 1;
+  letter-spacing: -0.02em;
+}
+
+.viz-x-tick-label {
+  font-family: var(--viz-font-data);
+  font-size: 10px;
+  fill: var(--viz-ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 500;
+}
+
+.viz-y-axis-label {
+  font-family: var(--viz-font-data);
+  font-size: 10px;
+  fill: var(--viz-ink-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-weight: 500;
+}
+
+/* Annotations --------------------------------------------------------------- */
+
+.viz-annotation-line {
+  stroke: var(--viz-ink);
+  stroke-width: 1;
+  stroke-dasharray: 2 3;
+}
+
+.viz-annotation-dot {
+  fill: var(--viz-accent);
+  stroke: var(--viz-paper);
+  stroke-width: 2;
+}
+
+.viz-annotation-text {
+  font-family: var(--viz-font-data);
+  font-size: 12px;
+  fill: var(--viz-ink-soft);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+/* Tooltip ------------------------------------------------------------------- */
+
+.viz-tooltip {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  max-width: 260px;
+  padding: 12px 14px;
+  background: #fffbf5;
+  color: var(--viz-ink);
+  border: 1px solid var(--viz-rule);
+  border-top: 2px solid var(--viz-accent);
+  font-family: var(--viz-font-data);
+  font-size: 12px;
+  line-height: 1.55;
+  font-feature-settings: 'tnum' 1;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 8px 24px rgba(0, 0, 0, 0.08);
+  opacity: 0;
+  transition: opacity 140ms var(--viz-ease);
+}
+
+.viz-tooltip.is-visible { opacity: 1; }
+
+.viz-tooltip .tt-month {
+  font-family: var(--viz-font-data);
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: -0.015em;
+  color: var(--viz-ink);
+  margin: 0 0 2px;
+}
+
+.viz-tooltip .tt-count {
+  font-family: var(--viz-font-mono);
+  font-size: 11px;
+  color: var(--viz-ink-faint);
+  margin: 0 0 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--viz-rule);
+  letter-spacing: -0.02em;
+}
+
+.viz-tooltip ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.viz-tooltip li {
+  padding: 2px 0;
+  color: var(--viz-ink-soft);
+  font-size: 12px;
+}
+
+.viz-tooltip li + li {
+  border-top: 1px dotted var(--viz-rule);
+  padding-top: 3px;
+  margin-top: 1px;
+}

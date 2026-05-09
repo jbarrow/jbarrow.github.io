@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The OCR Cambrian — Joe Barrow</title>
+  <meta name="description" content="A field note on the recent flood of OCR-capable VLM releases.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../static/css/site.css">
+  <link rel="stylesheet" href="../static/css/code.css">
+
+  <link rel="stylesheet" href="../static/viz/viz.css">
+
+
+</head>
+<body>
+
+  <header class="masthead">
+    <span class="masthead-title"><a href="../">Joe Barrow</a></span>
+    <nav class="masthead-nav">
+      <a href="../about/">about</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../publications/">publications</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../software/">software</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../garden/">field notes</a>
+    </nav>
+    <span class="masthead-meta">VOL_03 / N17</span>
+  </header>
+
+  <article class="article">
+    <p class="kicker">computer_vision / briefing</p>
+
+    <p class="series-tag">
+      The OCR Cambrian · part 1 of 2
+    </p>
+
+    <h1 class="headline">The OCR Cambrian</h1>
+
+    <p class="standfirst">For most of a decade, optical character recognition felt like a settled engineering problem. In the last twelve months, it has become the most crowded frontier in vision–language modelling.
+</p>
+
+    <div class="byline">
+<span>By <strong>Your Name</strong></span><span class="byline-meta">2026-05-09</span><span class="byline-meta">4 min read</span>    </div>
+
+    <aside class="paper-card">
+      <span class="paper-card-label">Paper</span>
+      <h2 class="paper-card-title">The OCR Cambrian — A Field Survey of OCR-Capable VLMs (Sep 2021 – Nov 2025)</h2>
+      <p class="paper-card-meta">
+Joe Barrow<span class="sep">·</span>Field Notes · Vol. 03 No. 17 · 2026      </p>
+      <div class="paper-downloads">
+        <a class="btn btn-paper" href="ocr-cambrian.pdf" download>
+          <span class="btn-icon">↓</span>
+          <span class="btn-label">Download</span>
+          <span class="btn-meta">PDF</span>
+        </a>
+        <a class="btn btn-paper-annotated" href="ocr-cambrian-annotated.pdf" download>
+          <span class="btn-icon">↓</span>
+          <span class="btn-label">Download Annotated</span>
+          <span class="btn-meta">PDF</span>
+        </a>
+      </div>
+    </aside>
+
+    <p>Until very recently, the working list of OCR models worth knowing about
+fit comfortably on a postcard. TrOCR, DONUT, Pix2Struct, Nougat — a
+paper a year, give or take, mostly from a small set of labs revisiting
+the same encoder–decoder template. Then, somewhere around the start of
+2025, the trickle became a flood.</p>
+<p>The chart below records every named OCR-capable VLM release I have
+catalogued from September 2021 through November 2025. The shape of it
+is the story.</p>
+<figure class="figure" markdown="0">
+  <div class="figure-eyebrow">Fig. 01 / OCR releases</div>
+  <h2 class="figure-title">Models with explicit OCR or document-parsing capabilities, by release month</h2>
+  <p class="figure-subtitle">
+    Each bar counts named model releases in a given month. Hover any
+    column to see which models appeared.
+  </p>
+  <div id="histogram" class="chart-host"></div>
+  <div class="figure-source">
+    <span>Source / Author's catalogue · 2021—09 → 2025—11</span>
+    <span>n = 29 releases</span>
+  </div>
+</figure>
+
+<p><mark>October 2025 alone saw six new releases</mark> — more than the cumulative
+total for 2021 through 2023. The acceleration cannot be explained by
+any single architectural breakthrough; it is better read as a downstream
+effect of strong general-purpose VLM bases becoming widely available,
+with OCR-specific finetunes and small pretrains following quickly behind.
+The follow-up post, <a class="wiki-link" href="../2026-05-23-tokenizers-and-layout/">Tokenizers and Layout</a>, looks at one slice of why
+that base-model shift mattered.</p>
+<blockquote class="pullquote">
+<p>The interesting question is no longer whether a VLM can read a page,
+but which lab&rsquo;s reading you trust.</p>
+</blockquote>
+<p>What I find most striking is not the volume but the diversity. The
+recent cohort spans labs across three continents, parameter counts
+from sub-billion to flagship-scale, and licensing from fully open to
+closed-API. Subsequent figures in this series will compare how each
+handles a standard test page side by side, what their tokenizers do
+to layout information, and how patch-level attention behaves on
+dense documents.</p>
+
+    <nav class="series-nav">
+      <p class="series-nav-label">Series</p>
+      <p class="series-nav-title">The OCR Cambrian</p>
+      <ol>
+        <li class="is-current">
+          <strong>The OCR Cambrian</strong>
+        </li>
+        <li class="">
+          <a href="../2026-05-23-tokenizers-and-layout/">Tokenizers and Layout</a>
+        </li>
+      </ol>
+    </nav>
+  </article>
+
+  <footer class="site-footer">joe barrow · research scientist</footer>
+
+  <script src="../static/js/site.js" defer></script>
+
+  <script src="../static/viz/viz.js"></script>
+
+  <script src="chart.js"></script>
+
+
+</body>
+</html>

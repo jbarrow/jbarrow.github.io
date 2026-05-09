@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thinking in Systems — notes — Field Notes — Joe Barrow</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../../static/css/site.css">
+  <link rel="stylesheet" href="../../static/css/code.css">
+
+
+
+</head>
+<body>
+
+  <header class="masthead">
+    <span class="masthead-title"><a href="../../">Joe Barrow</a></span>
+    <nav class="masthead-nav">
+      <a href="../../about/">about</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../publications/">publications</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../software/">software</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../garden/">field notes</a>
+    </nav>
+    <span class="masthead-meta">field_notes</span>
+  </header>
+
+  <article class="article note">
+    <p class="note-eyebrow">
+      <a href="../../garden/">Field Notes</a>
+    </p>
+
+    <h1 class="note-title">Thinking in Systems — notes</h1>
+
+    <p class="note-updated">last updated 2026-05-15</p>
+
+    <aside class="paper-card">
+      <span class="paper-card-label">Source</span>
+      <h2 class="paper-card-title">Thinking in Systems: A Primer</h2>
+      <p class="paper-card-meta">
+Donella H. Meadows<span class="sep">·</span>Chelsea Green · 2008      </p>
+      <div class="paper-downloads">
+        <a class="btn btn-paper" href="../../garden/_attachments/thinking-in-systems.pdf" download>
+          <span class="btn-icon">↓</span>
+          <span class="btn-label">Download</span>
+          <span class="btn-meta">PDF</span>
+        </a>
+        <a class="btn btn-paper-annotated" href="../../garden/_attachments/thinking-in-systems-annotated.pdf" download>
+          <span class="btn-icon">↓</span>
+          <span class="btn-label">Download Annotated</span>
+          <span class="btn-meta">PDF</span>
+        </a>
+      </div>
+    </aside>
+
+    <p>A reading log on Donella Meadows&rsquo; <em>Thinking in Systems</em>. Filed here
+because most of the entries are half-thoughts that I&rsquo;ll come back to,
+not finished arguments.</p>
+<h2>Stocks dominate flows</h2>
+<p>The earliest mental shift the book asks for is to stop treating change
+as the unit of analysis. <mark>Stocks change slowly; flows change quickly</mark>,
+and most failure modes come from optimising the visible flow while
+ignoring what&rsquo;s accumulating in the background.</p>
+<p>This shows up in ML evaluation more often than you&rsquo;d expect. A model&rsquo;s
+<em>current</em> accuracy on a benchmark is the flow; the underlying drift in
+the test distribution is the stock. Watch the stock.</p>
+<h2>Leverage points</h2>
+<p>Meadows&rsquo; twelve leverage points list (in increasing order of leverage):</p>
+<ol>
+<li>constants, parameters, numbers</li>
+<li>the size of buffers</li>
+<li>structure of stocks and flows</li>
+<li>delays</li>
+<li>balancing feedback loops</li>
+<li>reinforcing feedback loops</li>
+<li>information flows</li>
+<li>rules of the system</li>
+<li>self-organisation</li>
+<li>goals</li>
+<li>paradigms</li>
+<li>transcending paradigms</li>
+</ol>
+<p>I keep returning to (7). Most engineering organisations have lots of
+information; very few have it routed to the people who can act on it.
+The cheapest interventions in real systems are usually the boring ones:
+moving a dashboard, changing who&rsquo;s on a thread, making a metric visible.</p>
+<h2>Open questions I&rsquo;m chasing</h2>
+<ul>
+<li>Is there a useful analogue of &ldquo;leverage points&rdquo; for ML systems specifically?</li>
+<li>The book&rsquo;s case studies all assume slow-moving systems. What changes when feedback is sub-second?</li>
+</ul>
+<p>For a parallel reading on second-order effects, see <a class="wiki-link" href="../../garden/why-vlms-fail-at-tables/">Why VLMs Fail at Tables</a>.</p>
+  </article>
+
+  <footer class="site-footer">joe barrow · research scientist</footer>
+
+  <script src="../../static/js/site.js" defer></script>
+
+
+
+
+</body>
+</html>
