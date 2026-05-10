@@ -1,30 +1,44 @@
-name,release
-TrOCR,Sep 2021
-DONUT,Nov 2021
-Pix2Struct,Oct 2022
-Nougat,Aug 2023
-Kosmos-2.5,Sep 2023
-Vary,Dec 2023
-Fox,May 2024
-GOT 2.0,Sep 2024
-Qwen2-VL,Sep 2024
-Qwen2.5-VL,Feb 2025
-OlmOCR,Feb 2025
-RolmOCR,Feb 2025
-Dolphin OCR,May 2025
-NanoNets OCR,Jun 2025
-MonkeyOCR,Jun 2025
-OCRFlux,Jun 2025
-dots.OCR,Jul 2025
-Granite Docling,Sep 2025
-Qwen3-VL,Sep 2025
-MinerU2.5,Sep 2025
-Deepseek-OCR,Sep 2025
-NanoNets OCR2,Oct 2025
-OlmOCR 2,Oct 2025
-PaddleOCR-VL,Oct 2025
-LightOn OCR,Oct 2025
-Infinity-Parser 7B,Oct 2025
-Chandra,Oct 2025
-MonkeyOCR-v1.5,Nov 2025
-HunyuanOCR,Nov 2025
+Model Name,Release Date,Paper Link
+TextMonkey,Mar 2024,https://arxiv.org/abs/2403.04473
+CogAgent,Dec 2023,https://arxiv.org/abs/2312.08914
+DocOwl-1.5,Mar 2024,https://arxiv.org/abs/2403.12895
+DocOwl-2,Sep 2024,https://arxiv.org/abs/2409.03420
+SmolDocling,Mar 2025,https://arxiv.org/abs/2503.11576
+InternVL3.5,Aug 2025,https://arxiv.org/abs/2508.18265
+POINTS-Reader,Sep 2025,https://arxiv.org/abs/2509.01215
+Websight,Mar 2024,https://arxiv.org/abs/2403.09029
+Image2Struct,Oct 2024,https://arxiv.org/abs/2410.22456
+Web2Code,Jun 2024,https://arxiv.org/abs/2406.20098
+Dolphin-2,Feb 2026,https://arxiv.org/abs/2602.05384
+LightOnOCR-2,Jan 2026,https://arxiv.org/abs/2601.14251
+GutenOCR,Jan 2026,https://arxiv.org/abs/2601.14490
+DeepseekOCR-2,Jan 2026,https://arxiv.org/abs/2601.20552
+TrOCR,Sep 2021,https://arxiv.org/abs/2109.10282
+DONUT,Nov 2021,https://arxiv.org/abs/2111.15664
+Pix2Struct (non-arxiv),Oct 2022,https://arxiv.org/abs/2210.03347
+Nougat,Aug 2023,https://arxiv.org/abs/2308.13418
+Kosmos-2.5,Sep 2023,https://arxiv.org/abs/2309.11419
+Vary,Dec 2023,https://arxiv.org/abs/2312.06109
+Fox,May 2024,https://arxiv.org/abs/2405.14295
+GOT 2.0,Sep 2024,https://arxiv.org/abs/2409.01704
+Qwen2-VL,Sep 2024,https://arxiv.org/abs/2409.12191
+Qwen2.5-VL,Feb 2025,https://arxiv.org/abs/2502.13923
+OlmOCR,Feb 2025,https://olmocr.allenai.org/papers/olmocr.pdf
+RolmOCR,Feb 2025,https://huggingface.co/reducto/RolmOCR
+Dolphin OCR,May 2025,https://arxiv.org/abs/2505.14059
+NanoNets OCR,Jun 2025,https://nanonets.com/research/nanonets-ocr-s/
+MonkeyOCR,Jun 2025,https://arxiv.org/abs/2506.05218
+OCRFlux,Jun 2025,https://ocrflux.pdfparser.io/#/blog
+dots.OCR,Jul 2025,https://github.com/rednote-hilab/dots.ocr
+Granite Docling,Sep 2025,https://www.ibm.com/new/announcements/granite-docling-end-to-end-document-conversion
+Qwen3-VL,Sep 2025,https://qwen.ai/blog?id=99f0335c4ad9ff6153e517418d48535ab6d8afef&from=research.latest-advancements-list
+MinerU2.5,Sep 2025,https://arxiv.org/pdf/2509.22186
+Deepseek-OCR,Sep 2025,https://arxiv.org/abs/2510.18234
+NanoNets OCR2,Oct 2025,https://nanonets.com/research/nanonets-ocr-2/
+OlmOCR 2,Oct 2025,https://arxiv.org/abs/2510.19817
+PaddleOCR-VL,Oct 2025,https://arxiv.org/pdf/2510.14528
+LightOn OCR,Oct 2025,https://huggingface.co/blog/lightonai/lightonocr
+Infinity-Parser 7B,Oct 2025,https://arxiv.org/pdf/2506.03197
+Chandra,Oct 2025,https://huggingface.co/datalab-to/chandra
+MonkeyOCR-v1.5,Nov 2025,https://arxiv.org/abs/2511.10390
+HunyuanOCR,Nov 2025,https://arxiv.org/abs/2511.19575

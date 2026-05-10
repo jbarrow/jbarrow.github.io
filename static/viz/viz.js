@@ -6,7 +6,7 @@
  *     Histogram,    // first concrete implementation
  *     Tooltip,      // reusable, works for any DOM node — not just SVG
  *     Scale,        // band + linear scales
- *     Util,         // date parsing, SVG factory, debounce
+ *     Util,         // SVG factory, month helpers, debounce
  *     TOKENS,       // colour + motion design tokens
  *   };
  *
@@ -44,14 +44,6 @@
   const MONTHS_LONG  = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
   const Util = {
-    /** Parse "Sep 2021" → { year: 2021, month: 9, key: '2021-09' }. */
-    parseMonthYear(str) {
-      const [m, y] = String(str).trim().split(/\s+/);
-      const month = MONTHS_SHORT.indexOf(m) + 1;
-      const year  = parseInt(y, 10);
-      return { year, month, key: `${year}-${String(month).padStart(2, '0')}` };
-    },
-
     /** Inclusive list of monthly bins between two {year, month} pairs. */
     monthsBetween(start, end) {
       const out = [];

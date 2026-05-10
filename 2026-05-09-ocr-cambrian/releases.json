@@ -1,118 +1,217 @@
 [
   {
-    "name": "TrOCR",
-    "release": "Sep 2021"
+    "Model Name": "TextMonkey",
+    "Release Date": "Mar 2024",
+    "Paper Link": "https://arxiv.org/abs/2403.04473"
   },
   {
-    "name": "DONUT",
-    "release": "Nov 2021"
+    "Model Name": "CogAgent",
+    "Release Date": "Dec 2023",
+    "Paper Link": "https://arxiv.org/abs/2312.08914"
   },
   {
-    "name": "Pix2Struct",
-    "release": "Oct 2022"
+    "Model Name": "DocOwl-1.5",
+    "Release Date": "Mar 2024",
+    "Paper Link": "https://arxiv.org/abs/2403.12895"
   },
   {
-    "name": "Nougat",
-    "release": "Aug 2023"
+    "Model Name": "DocOwl-2",
+    "Release Date": "Sep 2024",
+    "Paper Link": "https://arxiv.org/abs/2409.03420"
   },
   {
-    "name": "Kosmos-2.5",
-    "release": "Sep 2023"
+    "Model Name": "SmolDocling",
+    "Release Date": "Mar 2025",
+    "Paper Link": "https://arxiv.org/abs/2503.11576"
   },
   {
-    "name": "Vary",
-    "release": "Dec 2023"
+    "Model Name": "InternVL3.5",
+    "Release Date": "Aug 2025",
+    "Paper Link": "https://arxiv.org/abs/2508.18265"
   },
   {
-    "name": "Fox",
-    "release": "May 2024"
+    "Model Name": "POINTS-Reader",
+    "Release Date": "Sep 2025",
+    "Paper Link": "https://arxiv.org/abs/2509.01215"
   },
   {
-    "name": "GOT 2.0",
-    "release": "Sep 2024"
+    "Model Name": "Websight",
+    "Release Date": "Mar 2024",
+    "Paper Link": "https://arxiv.org/abs/2403.09029"
   },
   {
-    "name": "Qwen2-VL",
-    "release": "Sep 2024"
+    "Model Name": "Image2Struct",
+    "Release Date": "Oct 2024",
+    "Paper Link": "https://arxiv.org/abs/2410.22456"
   },
   {
-    "name": "Qwen2.5-VL",
-    "release": "Feb 2025"
+    "Model Name": "Web2Code",
+    "Release Date": "Jun 2024",
+    "Paper Link": "https://arxiv.org/abs/2406.20098"
   },
   {
-    "name": "OlmOCR",
-    "release": "Feb 2025"
+    "Model Name": "Dolphin-2",
+    "Release Date": "Feb 2026",
+    "Paper Link": "https://arxiv.org/abs/2602.05384"
   },
   {
-    "name": "RolmOCR",
-    "release": "Feb 2025"
+    "Model Name": "LightOnOCR-2",
+    "Release Date": "Jan 2026",
+    "Paper Link": "https://arxiv.org/abs/2601.14251"
   },
   {
-    "name": "Dolphin OCR",
-    "release": "May 2025"
+    "Model Name": "GutenOCR",
+    "Release Date": "Jan 2026",
+    "Paper Link": "https://arxiv.org/abs/2601.14490"
   },
   {
-    "name": "NanoNets OCR",
-    "release": "Jun 2025"
+    "Model Name": "DeepseekOCR-2",
+    "Release Date": "Jan 2026",
+    "Paper Link": "https://arxiv.org/abs/2601.20552"
   },
   {
-    "name": "MonkeyOCR",
-    "release": "Jun 2025"
+    "Model Name": "TrOCR",
+    "Release Date": "Sep 2021",
+    "Paper Link": "https://arxiv.org/abs/2109.10282"
   },
   {
-    "name": "OCRFlux",
-    "release": "Jun 2025"
+    "Model Name": "DONUT",
+    "Release Date": "Nov 2021",
+    "Paper Link": "https://arxiv.org/abs/2111.15664"
   },
   {
-    "name": "dots.OCR",
-    "release": "Jul 2025"
+    "Model Name": "Pix2Struct (non-arxiv)",
+    "Release Date": "Oct 2022",
+    "Paper Link": "https://arxiv.org/abs/2210.03347"
   },
   {
-    "name": "Granite Docling",
-    "release": "Sep 2025"
+    "Model Name": "Nougat",
+    "Release Date": "Aug 2023",
+    "Paper Link": "https://arxiv.org/abs/2308.13418"
   },
   {
-    "name": "Qwen3-VL",
-    "release": "Sep 2025"
+    "Model Name": "Kosmos-2.5",
+    "Release Date": "Sep 2023",
+    "Paper Link": "https://arxiv.org/abs/2309.11419"
   },
   {
-    "name": "MinerU2.5",
-    "release": "Sep 2025"
+    "Model Name": "Vary",
+    "Release Date": "Dec 2023",
+    "Paper Link": "https://arxiv.org/abs/2312.06109"
   },
   {
-    "name": "Deepseek-OCR",
-    "release": "Sep 2025"
+    "Model Name": "Fox",
+    "Release Date": "May 2024",
+    "Paper Link": "https://arxiv.org/abs/2405.14295"
   },
   {
-    "name": "NanoNets OCR2",
-    "release": "Oct 2025"
+    "Model Name": "GOT 2.0",
+    "Release Date": "Sep 2024",
+    "Paper Link": "https://arxiv.org/abs/2409.01704"
   },
   {
-    "name": "OlmOCR 2",
-    "release": "Oct 2025"
+    "Model Name": "Qwen2-VL",
+    "Release Date": "Sep 2024",
+    "Paper Link": "https://arxiv.org/abs/2409.12191"
   },
   {
-    "name": "PaddleOCR-VL",
-    "release": "Oct 2025"
+    "Model Name": "Qwen2.5-VL",
+    "Release Date": "Feb 2025",
+    "Paper Link": "https://arxiv.org/abs/2502.13923"
   },
   {
-    "name": "LightOn OCR",
-    "release": "Oct 2025"
+    "Model Name": "OlmOCR",
+    "Release Date": "Feb 2025",
+    "Paper Link": "https://olmocr.allenai.org/papers/olmocr.pdf"
   },
   {
-    "name": "Infinity-Parser 7B",
-    "release": "Oct 2025"
+    "Model Name": "RolmOCR",
+    "Release Date": "Feb 2025",
+    "Paper Link": "https://huggingface.co/reducto/RolmOCR"
   },
   {
-    "name": "Chandra",
-    "release": "Oct 2025"
+    "Model Name": "Dolphin OCR",
+    "Release Date": "May 2025",
+    "Paper Link": "https://arxiv.org/abs/2505.14059"
   },
   {
-    "name": "MonkeyOCR-v1.5",
-    "release": "Nov 2025"
+    "Model Name": "NanoNets OCR",
+    "Release Date": "Jun 2025",
+    "Paper Link": "https://nanonets.com/research/nanonets-ocr-s/"
   },
   {
-    "name": "HunyuanOCR",
-    "release": "Nov 2025"
+    "Model Name": "MonkeyOCR",
+    "Release Date": "Jun 2025",
+    "Paper Link": "https://arxiv.org/abs/2506.05218"
+  },
+  {
+    "Model Name": "OCRFlux",
+    "Release Date": "Jun 2025",
+    "Paper Link": "https://ocrflux.pdfparser.io/#/blog"
+  },
+  {
+    "Model Name": "dots.OCR",
+    "Release Date": "Jul 2025",
+    "Paper Link": "https://github.com/rednote-hilab/dots.ocr"
+  },
+  {
+    "Model Name": "Granite Docling",
+    "Release Date": "Sep 2025",
+    "Paper Link": "https://www.ibm.com/new/announcements/granite-docling-end-to-end-document-conversion"
+  },
+  {
+    "Model Name": "Qwen3-VL",
+    "Release Date": "Sep 2025",
+    "Paper Link": "https://qwen.ai/blog?id=99f0335c4ad9ff6153e517418d48535ab6d8afef&from=research.latest-advancements-list"
+  },
+  {
+    "Model Name": "MinerU2.5",
+    "Release Date": "Sep 2025",
+    "Paper Link": "https://arxiv.org/pdf/2509.22186"
+  },
+  {
+    "Model Name": "Deepseek-OCR",
+    "Release Date": "Sep 2025",
+    "Paper Link": "https://arxiv.org/abs/2510.18234"
+  },
+  {
+    "Model Name": "NanoNets OCR2",
+    "Release Date": "Oct 2025",
+    "Paper Link": "https://nanonets.com/research/nanonets-ocr-2/"
+  },
+  {
+    "Model Name": "OlmOCR 2",
+    "Release Date": "Oct 2025",
+    "Paper Link": "https://arxiv.org/abs/2510.19817"
+  },
+  {
+    "Model Name": "PaddleOCR-VL",
+    "Release Date": "Oct 2025",
+    "Paper Link": "https://arxiv.org/pdf/2510.14528"
+  },
+  {
+    "Model Name": "LightOn OCR",
+    "Release Date": "Oct 2025",
+    "Paper Link": "https://huggingface.co/blog/lightonai/lightonocr"
+  },
+  {
+    "Model Name": "Infinity-Parser 7B",
+    "Release Date": "Oct 2025",
+    "Paper Link": "https://arxiv.org/pdf/2506.03197"
+  },
+  {
+    "Model Name": "Chandra",
+    "Release Date": "Oct 2025",
+    "Paper Link": "https://huggingface.co/datalab-to/chandra"
+  },
+  {
+    "Model Name": "MonkeyOCR-v1.5",
+    "Release Date": "Nov 2025",
+    "Paper Link": "https://arxiv.org/abs/2511.10390"
+  },
+  {
+    "Model Name": "HunyuanOCR",
+    "Release Date": "Nov 2025",
+    "Paper Link": "https://arxiv.org/abs/2511.19575"
   }
 ]
