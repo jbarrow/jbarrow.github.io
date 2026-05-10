@@ -12,6 +12,8 @@
   <link rel="stylesheet" href="../../static/css/site.css">
   <link rel="stylesheet" href="../../static/css/code.css">
 
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous">
+
 
 
 </head>
@@ -44,9 +46,16 @@
     <p>Pulling apart how recent Qwen-family VLMs split rotary embedding
 channels. This note exists because I keep forgetting the exact numbers
 and having to re-read papers.</p>
+<p>The head dimension <span class="arithmatex">\(d\)</span> is partitioned across three axes — temporal,
+height, and width — with <span class="arithmatex">\(d_t + d_h + d_w = d\)</span>. For each axis <span class="arithmatex">\(a\)</span> the
+rotary frequencies are <span class="arithmatex">\(\theta_i^{(a)} = 10000^{-2i/d_a}\)</span> for
+<span class="arithmatex">\(i \in \{0, \dots, d_a/2 - 1\}\)</span>.</p>
 <h2>Qwen2-VL</h2>
 <p>Roughly equal split across the three axes. The temporal axis carries
 the most weight because the model is also used for video.</p>
+<div class="arithmatex">\[
+(d_t, d_h, d_w) = (16, 24, 24), \quad d = 64
+\]</div>
 <h2>Qwen2.5-VL</h2>
 <p><mark>Rebalanced toward the spatial axes</mark> for high-resolution document
 inputs. The temporal allocation shrinks and the height/width budget
@@ -62,6 +71,9 @@ without retraining the position encoder from scratch.</p>
   <footer class="site-footer">joe barrow · research scientist</footer>
 
   <script src="../../static/js/site.js" defer></script>
+
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" integrity="sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4lfFg" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZm+5JLgiwxl4IRWegW9+PdWf+wcRMBRBQiA/ocQ" crossorigin="anonymous" onload="renderMathInElement(document.body, {delimiters: [{left: '\\[', right: '\\]', display: true}, {left: '\\(', right: '\\)', display: false}], throwOnError: false});"></script>
 
 
 
