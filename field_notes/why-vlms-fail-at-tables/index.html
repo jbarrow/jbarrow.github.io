@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Why VLMs Fail at Tables — Field Notes — Joe Barrow</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../../static/css/site.css">
+  <link rel="stylesheet" href="../../static/css/code.css">
+
+
+
+</head>
+<body>
+
+  <header class="masthead">
+    <span class="masthead-title"><a href="../../">Joe Barrow</a></span>
+    <nav class="masthead-nav">
+      <a href="../../about/">about</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../publications/">publications</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../software/">software</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../field_notes/">field notes</a>
+    </nav>
+    <span class="masthead-meta">field_notes</span>
+  </header>
+
+  <article class="article note">
+    <p class="note-eyebrow">
+      <a href="../../field_notes/">Field Notes</a>
+    </p>
+
+    <h1 class="note-title">Why VLMs Fail at Tables</h1>
+
+    <p class="note-updated">last updated 2026-05-20</p>
+
+
+    <p>Working note on what goes wrong when you point a vision-language model
+at a financial filing or a research paper full of tables.</p>
+<h2>The failure modes I keep seeing</h2>
+<ol>
+<li><strong>Cell drift.</strong> The model reads cells in roughly the right order but
+   loses the row–column structure. Data ends up in the wrong column at
+   row boundaries, especially for sparse cells.</li>
+<li><strong>Header collapse.</strong> Multi-row headers get flattened into a single
+   row of text, losing hierarchy (&ldquo;Q1&rdquo; / &ldquo;2024&rdquo; become one cell).</li>
+<li><strong>Phantom rows.</strong> <mark>The model invents rows where the table has
+   visual rules but no actual data.</mark></li>
+<li><strong>Pagination amnesia.</strong> Tables that span pages lose their column
+   alignment between pages.</li>
+</ol>
+<p>A toy diagram of cell drift in a sparse table:</p>
+<p><img class="embed" src="../_attachments/cell-grid.png" alt="cell-grid.png"></p>
+<h2>The hypothesis</h2>
+<p>Most VLMs see tables as <em>images of text</em> and rely on the prose-style
+attention mechanism to recover structure. But a table is fundamentally
+2-D — a row is a <em>thing</em>, not a horizontal slice of pixels.</p>
+<p>For a longer take on the position-encoding side of this, see
+<a class="wiki-link" href="../../2026-05-23-tokenizers-and-layout/">Tokenizers and Layout</a> (part 2 of <a class="wiki-link" href="../../2026-05-09-ocr-cambrian/">The OCR Cambrian</a>).</p>
+<h2>Quick experiment to run</h2>
+<p>Take the <a class="wiki-link" href="../../2026-05-09-ocr-cambrian/">The OCR Cambrian</a> release list, render it as a table at three
+different aspect ratios (tall-and-narrow, wide-and-short, square), and
+measure cell-extraction error rate on each. If error scales with aspect
+ratio rather than with text density, the problem is geometric.</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># placeholder for the eval harness</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">cell_error_rate</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">table_image</span><span class="p">,</span> <span class="n">ground_truth</span><span class="p">):</span>
+    <span class="n">pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">extract_cells</span><span class="p">(</span><span class="n">table_image</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">diff</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">ground_truth</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">ground_truth</span><span class="p">)</span>
+</code></pre></div>
+  </article>
+
+  <footer class="site-footer">joe barrow · research scientist</footer>
+
+  <script src="../../static/js/site.js" defer></script>
+
+
+
+
+</body>
+</html>
