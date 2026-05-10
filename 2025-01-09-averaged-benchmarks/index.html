@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Be Careful Interpreting Averaged Benchmarks — Joe Barrow</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../static/css/site.css">
+  <link rel="stylesheet" href="../static/css/code.css">
+
+
+
+
+</head>
+<body>
+
+  <header class="masthead">
+    <span class="masthead-title"><a href="../">Joe Barrow</a></span>
+    <nav class="masthead-nav">
+      <a href="../about/">about</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../publications/">publications</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../software/">software</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../field_notes/">field notes</a>
+    </nav>
+    <span class="masthead-meta"></span>
+  </header>
+
+  <article class="article">
+
+
+    <h1 class="headline">Be Careful Interpreting Averaged Benchmarks</h1>
+
+    <p class="standfirst">Thoughts on averaged benchmarks and hidden correlations.</p>
+
+    <div class="byline">
+<span class="byline-meta">2025-01-09</span>    </div>
+
+
+    <p>New LLM releases come with fancy graphs that compare the averaged performance of this latest release with previous releases. For small/open models, the x-axis is often parameters or tokens/$ (Mistral invented the &ldquo;Upper Left Triangle&rdquo;) graph. But there&rsquo;s a problem with these graphs: <strong>averaged benchmark scores are misleading</strong>.</p>
+<p>Let&rsquo;s look at the specific case of multimodal models (which have been on my mind a lot lately, as you might guess). Reported benchmarks include: DocVQA, ChartQA, and OCRBench.</p>
+<p>But there&rsquo;s a problem: OCRBench is a dataset composed of instances <strong>pulled from DocVQA, ChartQA, and others</strong>. So you&rsquo;re double-counting all the instances from DocVQA/ChartQA/etc. when you also add in OCRBench.</p>
+<p>So if you want to juice your model performance, just train it to be really good at DocVQA. <em>Actually, just get really good at DocVQA regardless, it&rsquo;d make my life easier.</em></p>
+
+  </article>
+
+  <footer class="site-footer">joe barrow · research scientist</footer>
+
+  <script src="../static/js/site.js" defer></script>
+
+
+
+
+
+</body>
+</html>

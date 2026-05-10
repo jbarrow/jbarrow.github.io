@@ -35,45 +35,25 @@
 
   <article class="article">
     <h1 class="headline">Software</h1>
-    <p>A working list of projects. Some are research code, some are libraries,
-some are weekend experiments that I keep meaning to write up properly.
-Everything links to a GitHub repo unless marked otherwise.</p>
-<h2>Document understanding</h2>
-<ul>
-<li>
-<p><strong><a href="https://github.com/jbarrow/commonforms">CommonForms</a></strong> — TODO: one-line description.</p>
-</li>
-<li>
-<p><strong><a href="https://github.com/jbarrow/formalpdf">FormalPDF</a></strong> — TODO: one-line description.</p>
-</li>
-<li>
-<p><strong><a href="https://github.com/jbarrow/omniocr">OmniOCR</a></strong> — TODO: one-line description.</p>
-</li>
-</ul>
+    <h2>Document understanding</h2>
+<p><strong><a href="https://github.com/jbarrow/commonforms">CommonForms</a></strong> — automatically detect and insert form fields into PDFs.
+A family of object detectors.
+As easy as:</p>
+<div class="codehilite"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>commonforms
+commonforms<span class="w"> </span>input.pdf<span class="w"> </span>fillable.pdf
+</code></pre></div>
+
+<p><strong><a href="https://github.com/jbarrow/formalpdf">FormalPDF</a></strong> — <code>pypdfium2</code> wrapper for form operations in PDFs.</p>
+<p><strong><a href="https://github.com/jbarrow/omniocr">OmniOCR</a></strong> — use any open source OCR model behind a unified API.</p>
 <h2>Datasets</h2>
-<ul>
-<li>
-<p><strong><a href="https://huggingface.co/datasets/LocalLaws/LOCUS-v1">LOCUS-v1</a></strong>
+<p><strong><a href="https://huggingface.co/datasets/LocalLaws/LOCUS-v1">LOCUS-v1</a></strong> —
 The <strong>L</strong>ocal <strong>O</strong>rdinance <strong>C</strong>orpus for the <strong>U</strong>nited <strong>S</strong>tates, a dataset of 2.2 million municipal laws from around the united states.</p>
-</li>
-<li>
-<p><strong><a href="https://huggingface.co/datasets/jbarrow/commonforms">CommonForms</a></strong> 
+<p><strong><a href="https://huggingface.co/datasets/jbarrow/commonforms">CommonForms</a></strong> —
 A dataset of ~500k prepared form pages, used to train object detectors for form field detection.</p>
-</li>
-</ul>
 <h2>Other Things</h2>
-<ul>
-<li>
-<p><strong><a href="https://github.com/jbarrow/tinyhnsw">tinyhnsw</a></strong> — TODO.</p>
-</li>
-<li>
-<p><strong><a href="https://github.com/jbarrow/tinyhnsw">LambdaNet</a></strong> — TODO.</p>
-</li>
-<li>
-<p><strong><a href="https://github.com/jbarrow/tinyhnsw">AllenNLP: The Hard Way</a></strong> — TODO.</p>
-</li>
-</ul>
-<h2>Contributions</h2>
+<p><strong><a href="https://github.com/jbarrow/tinyhnsw">tinyhnsw</a></strong> — the littlest vector database. A full, readable HNSW implementation in python, for pedagogy.</p>
+<p><strong><a href="https://github.com/jbarrow/tinyhnsw">LambdaNet</a></strong> — the most popular Haskell deep learning framework. Built in 2015.</p>
+<p><strong><a href="https://github.com/jbarrow/tinyhnsw">AllenNLP: The Hard Way</a></strong> — a tutorial series for the (now defunct 😭) AllenNLP library.</p>
   </article>
 
   <footer class="site-footer">joe barrow · research scientist</footer>

@@ -488,6 +488,67 @@ a:hover { text-decoration: underline; }
 .margin-note p { margin: 0 0 0.6em; }
 .margin-note p:last-child { margin-bottom: 0; }
 
+/* Callouts (Obsidian `> [!TYPE]` admonitions) ----------------------------
+ *
+ * Authored as blockquote-prefixed blocks; build.py converts them into
+ * `<aside class="callout callout-TYPE">` (or `<details>` for foldable
+ * `[!TYPE]+` / `[!TYPE]-` variants).
+ * ----------------------------------------------------------------------- */
+
+.callout {
+  --callout-color: var(--accent);
+  --callout-tint: rgba(15, 84, 153, 0.05);
+  border-left: 3px solid var(--callout-color);
+  background: var(--callout-tint);
+  padding: 14px 18px;
+  margin: 24px 0;
+  border-radius: 0 4px 4px 0;
+}
+
+.callout-title {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--callout-color);
+  margin: 0 0 8px;
+}
+
+.callout-title strong { font-weight: 600; }
+
+.callout > p { margin: 0.4em 0; }
+.callout > p:last-child { margin-bottom: 0; }
+.callout > p:first-of-type:not(.callout-title) { margin-top: 0; }
+
+/* Foldable variant — `[!NOTE]+` / `[!NOTE]-` renders as <details>. */
+details.callout > summary.callout-title {
+  cursor: pointer;
+  list-style: none;
+}
+details.callout > summary.callout-title::-webkit-details-marker { display: none; }
+details.callout > summary.callout-title::before {
+  content: "▸ ";
+  display: inline-block;
+  width: 1em;
+}
+details.callout[open] > summary.callout-title::before { content: "▾ "; }
+
+/* Per-type accents */
+.callout-note,
+.callout-info     { --callout-color: var(--accent);    --callout-tint: rgba(15, 84, 153, 0.05); }
+.callout-abstract { --callout-color: #0e7490;          --callout-tint: rgba(14, 116, 144, 0.06); }
+.callout-tip,
+.callout-success  { --callout-color: var(--green);     --callout-tint: rgba(31, 122, 74, 0.06); }
+.callout-warning  { --callout-color: #b45309;          --callout-tint: rgba(180, 83, 9, 0.06);  }
+.callout-danger,
+.callout-failure,
+.callout-bug      { --callout-color: #b91c1c;          --callout-tint: rgba(185, 28, 28, 0.05); }
+.callout-question,
+.callout-example  { --callout-color: #7e22ce;          --callout-tint: rgba(126, 34, 206, 0.05); }
+.callout-todo,
+.callout-quote    { --callout-color: var(--ink-soft);  --callout-tint: rgba(82, 82, 82, 0.04); }
+
 /* Code blocks ------------------------------------------------------------
  *
  * The token colours come from static/css/code.css (Pygments-generated
@@ -730,6 +791,25 @@ a:hover { text-decoration: underline; }
 .post-list-title a { color: var(--ink); }
 .post-list-title a:hover { color: var(--accent); text-decoration: none; }
 
+.flair {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 3px;
+  vertical-align: middle;
+  margin-left: 8px;
+  position: relative;
+  top: -3px;
+}
+.flair-new {
+  background: var(--accent);
+  color: var(--paper);
+}
+
 .post-list-standfirst {
   font-size: 15px;
   color: var(--ink-soft);
@@ -950,4 +1030,14 @@ footer.site-footer {
   color: var(--ink-faint);
   text-align: center;
   letter-spacing: -0.01em;
+}
+
+/* About Portrait --- */
+
+.about-portrait {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto !important; 
 }

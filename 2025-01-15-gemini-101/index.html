@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Gemini 101 - Object Detection — Joe Barrow</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../static/css/site.css">
+  <link rel="stylesheet" href="../static/css/code.css">
+
+
+
+
+</head>
+<body>
+
+  <header class="masthead">
+    <span class="masthead-title"><a href="../">Joe Barrow</a></span>
+    <nav class="masthead-nav">
+      <a href="../about/">about</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../publications/">publications</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../software/">software</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../field_notes/">field notes</a>
+    </nav>
+    <span class="masthead-meta"></span>
+  </header>
+
+  <article class="article">
+
+
+    <h1 class="headline">Google Gemini 101 - Object Detection</h1>
+
+    <p class="standfirst">Navigating Gemini&#39;s API for object detection with vision and Structured Outputs.</p>
+
+    <div class="byline">
+<span class="byline-meta">2025-01-15</span>    </div>
+
+
+    <aside class="callout callout-note">
+<p class="callout-title"><strong>TL;DR</strong></p>
+<p>I walk you through how to build an object detector with Gemini 2.0 Flash as a first project: submit images in your calls, get back structured objects, how to get and visualize bounding boxes.</p>
+</aside>
+<p>This is a <em>missing manual</em> for how to get a simple working prototype up and running with Gemini&rsquo;s vision mode and structured outputs. I&rsquo;m confident that manual exists elsewhere, but I haven&rsquo;t been able to find it. And if it exists within the confusing labyrinth of Google&rsquo;s documentation, I&rsquo;m certain that I will <em>never</em> find it.</p>
+<p>My first experience with the Google Gemini docs resulted in far more questions than answers: should you use <code>vertexai</code> or <code>google-generativeai</code>? What&rsquo;s the difference? Are there differences in what the things you can <em>do</em> with the two APIs? What the hell is a billing profile in Google Cloud? I just want to:
+- put in a credit card
+- get an API key
+- write some code to solve my problem</p>
+<p>Which is largely how it works with any sane model provider (OpenAI, Mistral, etc). This guide is aimed at helping you do that, by showing you the happy path.</p>
+<p>As a motivating example, we&rsquo;re going to build a silly little object detector for tea parties. We want to find the teapots and the teacups in images, like so:</p>
+<p><img alt="gemini_out.jpg" src="gemini_out.jpg"></p>
+<p>I don&rsquo;t think this is the <em>best</em> use case of Gemini, but I do think it&rsquo;s a fun and illustrative one. 😀</p>
+<p>If you just want the code, I&rsquo;ve created a <a href="https://gist.github.com/jbarrow/c35279cbed578eeba4e1253dc6907c8c">Github gist</a> with it.</p>
+<h1>Getting Set Up</h1>
+<p>For this process, we&rsquo;re going to be doing everything through the Google AI Studio process, which includes:</p>
+<ul>
+<li>getting a key</li>
+<li>setting up a billing account</li>
+<li>preparing our dev environment (exporting the key and installing the <code>google-generativeai</code> python package)</li>
+</ul>
+<h2>Get an API Key</h2>
+<p>First, go to Google AI Studio: https://aistudio.google.com/app/apikey</p>
+<p>If this is your first time, you&rsquo;ll be greeted with this screen:</p>
+<p><img alt="gemini_start.png" src="gemini_start.png">
+Click &ldquo;Get API key&rdquo; and copy that key. If you&rsquo;re doing Paid, don&rsquo;t forget to follow through on &ldquo;Go To Billing&rdquo; and <strong>create and link a billing account</strong> on Google Cloud! Otherwise, you&rsquo;ll <strong>only have the free tier limitations</strong> on requests per minute and total tokens. This can be a fun one to debug if your calls are failing or taking too long to return.</p>
+<aside class="callout callout-warning">
+<p class="callout-title">Warning</p>
+<p>As of writing this, Gemini 2.0 Flash has a pretty low RPM allowance. You can use Gemini 1.5 Flash/Pro instead for higher throughput or wait for the full API release.</p>
+</aside>
+<h2>Export your API Key</h2>
+<p>You&rsquo;ll want to add it to your <code>.bashrc</code> or export it as <code>GOOGLE_API_KEY</code>. This is the default name that the Gemini package looks for, so if you use anything else you&rsquo;ll need to explicitly load it.</p>
+<div class="codehilite"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">GOOGLE_API_KEY</span><span class="o">=</span><span class="s2">&quot;&lt;PASTE_YOUR_KEY&gt;&quot;</span>
+</code></pre></div>
+
+<h2>Install Google GenAI</h2>
+<p>Since we&rsquo;re going through the Google AI Studio process and not the VertexAI one, we&rsquo;ll want to install the <code>google-generativeai</code> package.</p>
+<div class="codehilite"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span>google-generativeai
+</code></pre></div>
+
+<p>And there we go, we&rsquo;re now ready to write some code!</p>
+<h1>Step 1: Making an API Call</h1>
+<p>The first thing to do is just make an API call. We want to ensure that our key is working, that we have access to the <code>gemini-2.0-flash-exp</code>  model, and that we can work with the returns.</p>
+<p>The code for making an API call is pretty simple, you just need to 3 steps:
+1. add your key
+2. make the call to a specific model (in our case, <code>gemini-flash-2.0-exp</code>, which is the latest release as of my writing this)
+3. parse the results</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">google.generativeai</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">genai</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="c1"># step 1: add your key</span>
+    <span class="n">genai</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;GOOGLE_API_KEY&quot;</span><span class="p">))</span>
+    <span class="c1"># step 2: make the call to a specific model</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">genai</span><span class="o">.</span><span class="n">GenerativeModel</span><span class="p">(</span><span class="s2">&quot;gemini-2.0-flash-exp&quot;</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">generate_content</span><span class="p">([</span><span class="s2">&quot;Say hi, Gemini!&quot;</span><span class="p">])</span>
+    <span class="c1"># step 3: parse the outputs</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">candidates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</code></pre></div>
+
+<p>And here&rsquo;s the result I get running that:</p>
+<div class="codehilite"><pre><span></span><code>$ python gemini_structured.py
+Hi there! How can I help you today?
+</code></pre></div>
+
+<h1>Step 2: Adding Images to the Call</h1>
+<p>This is a great start, but for the purposes of this post we&rsquo;re interested in:
+1. using images with Gemini&rsquo;s vision mode
+2. getting structured outputs</p>
+<p>Let&rsquo;s start with vision mode. Passing an image to the call from Python is pretty easy, you can use a standard <code>PIL.Image</code> and then pass it in as part of the <code>generate_content</code> call (you just pass in a list of content parts, which can be text or images).</p>
+<p>For the first step, let&rsquo;s install <code>Pillow</code> (for <code>PIL</code>):</p>
+<div class="codehilite"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span>Pillow
+</code></pre></div>
+
+<p>We now have access to <code>PIL.Image</code>, which lets us load images with:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">PIL</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span>
+
+<span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Plugging that into our script, we get:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">PIL</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">google.generativeai</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">genai</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">image_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span>
+
+    <span class="n">model</span> <span class="o">=</span> <span class="n">genai</span><span class="o">.</span><span class="n">GenerativeModel</span><span class="p">(</span><span class="s2">&quot;gemini-2.0-flash-exp&quot;</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">generate_content</span><span class="p">(</span>
+        <span class="p">[</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;How many teacups and teapots are in this image?&quot;&quot;&quot;</span><span class="p">,</span>
+            <span class="n">image</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">candidates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">genai</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;GOOGLE_API_KEY&quot;</span><span class="p">))</span>
+
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;image_path&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to image file to process&quot;</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+
+    <span class="n">main</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">image_path</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Note, I also cleaned up the script to parse arguments, so we can pass an image in from the command line. I&rsquo;ll be using the following image (Creative Commons, from Pexels) saved as <code>image.jpeg</code> in my directory:</p>
+<p><img alt="gemini_in.jpeg" src="gemini_in.jpeg"></p>
+<p>And after running, I get:</p>
+<div class="codehilite"><pre><span></span><code>$ python gemini_structured.py image.jpeg
+Based on the image, there is **1 teacup** and **1 teapot**.
+</code></pre></div>
+
+<p>So we know that Gemini can see the picture, and can at least count to 1. 🎉</p>
+<h1>Step 3: Getting Structured Results</h1>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing_extensions</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypedDict</span><span class="p">,</span> <span class="n">Literal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PIL</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">ImageDraw</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">google.generativeai</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">genai</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TeaSet</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;Teacup&quot;</span><span class="p">,</span> <span class="s2">&quot;Teapot&quot;</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">image_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span>
+    <span class="c1"># I&#39;ve found that localization works better when the image is smaller</span>
+    <span class="n">image</span><span class="o">.</span><span class="n">thumbnail</span><span class="p">((</span><span class="n">size</span><span class="p">,</span> <span class="n">size</span><span class="p">))</span>
+
+    <span class="n">image</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;/Users/jbarrow/vaults/DocAI/Images/gemini-in.jpeg&quot;</span><span class="p">)</span>
+
+    <span class="n">model</span> <span class="o">=</span> <span class="n">genai</span><span class="o">.</span><span class="n">GenerativeModel</span><span class="p">(</span><span class="s2">&quot;gemini-2.0-flash-exp&quot;</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">generate_content</span><span class="p">(</span>
+        <span class="p">[</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Find all the teacups and teapots in the image.</span>
+<span class="sd">Return your answer as a list of JSON objects.&quot;&quot;&quot;</span><span class="p">,</span>
+            <span class="n">image</span><span class="p">,</span>
+        <span class="p">],</span>
+        <span class="n">generation_config</span><span class="o">=</span><span class="n">genai</span><span class="o">.</span><span class="n">GenerationConfig</span><span class="p">(</span>
+            <span class="n">response_mime_type</span><span class="o">=</span><span class="s2">&quot;application/json&quot;</span><span class="p">,</span>
+            <span class="n">response_schema</span><span class="o">=</span><span class="nb">list</span><span class="p">[</span><span class="n">TeaSet</span><span class="p">],</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="n">objects</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">candidates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">))</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">objects</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">genai</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;GOOGLE_API_KEY&quot;</span><span class="p">))</span>
+
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;image_path&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to image file to process&quot;</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+
+    <span class="n">main</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">image_path</span><span class="p">)</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code>[
+    {
+        &quot;type&quot;: &quot;Teacup&quot;
+    },
+    {
+        &quot;type&quot;: &quot;Teapot&quot;
+    }
+]
+</code></pre></div>
+
+<h1>Step 4: Bounding Boxes</h1>
+<p>One neat trick that Gemini can do quite well (better than GPT-4o but not perfectly) is localizing objects within an image by returning bounding boxes.</p>
+<p>You can do this by prompting Gemini to return a bounding box for the object in the format:</p>
+<div class="codehilite"><pre><span></span><code>`[ymin, xmin, ymax, xmax]`
+</code></pre></div>
+
+<p>In order to get the bounding boxes, it&rsquo;s 2 simple modifications to our above code. First, we have to add the <code>bounding_box</code> key to our <code>TeaSet</code> typed dict:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TeaSet</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;Teacup&quot;</span><span class="p">,</span> <span class="s2">&quot;Teapot&quot;</span><span class="p">]</span>
+    <span class="n">bounding_box</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+</code></pre></div>
+
+<p>(N.B. I would have preferred to use a <code>tuple[int, int, int, int]</code>, but that gets converted to an unsupported schema by Gemini using <code>maxItems</code>, so instead I&rsquo;m sticking with the above)</p>
+<p>And second, we update our prompt to tell Gemini what format to return the box in:</p>
+<div class="codehilite"><pre><span></span><code><span class="sd">&quot;&quot;&quot;Find all the teacups and teapots in the image.</span>
+<span class="sd">Return your answer as a list of JSON objects with the type and bounding box.</span>
+<span class="sd">Return the bounding box in [ymin, xmin, ymax, xmax] format.&quot;&quot;&quot;</span>
+</code></pre></div>
+
+<p>And that&rsquo;s it, we&rsquo;re now getting bounding box info!</p>
+<div class="codehilite"><pre><span></span><code>$ python gemini_structured.py image.jpeg
+[
+    {
+        &quot;bounding_box&quot;: [
+            165,
+            177,
+            696,
+            601
+        ],
+        &quot;type&quot;: &quot;Teacup&quot;
+    },
+    {
+        &quot;bounding_box&quot;: [
+            23,
+            596,
+            556,
+            984
+        ],
+        &quot;type&quot;: &quot;Teapot&quot;
+    }
+]
+</code></pre></div>
+
+<p>However, how good are those bounding boxes? What is the coordinate space? We&rsquo;ll want to plot them overtop our image to verify.</p>
+<h2>Drawing the Bounding Boxes</h2>
+<p>Each value in the returned bounding box will be <strong>between 0 and 1000</strong>, so to get the image coordinates you have to do some post-processing.</p>
+<p>Luckily, that post-processing is simple: divide the coordinate by 1000, and multiply by the image dimension (either height or width). We can write a quick little function that normalizes the bounding box and plots it over the image like so:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">PIL</span><span class="w"> </span><span class="kn">import</span> <span class="n">ImageDraw</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">draw_bounding_box</span><span class="p">(</span>
+    <span class="n">image</span><span class="p">:</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">,</span> <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">bbox</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">:</span>
+    <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">size</span>
+
+    <span class="n">draw</span> <span class="o">=</span> <span class="n">ImageDraw</span><span class="o">.</span><span class="n">Draw</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+
+    <span class="n">ymin</span><span class="p">,</span> <span class="n">xmin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">=</span> <span class="p">[</span><span class="n">coord</span> <span class="o">/</span> <span class="mi">1000</span> <span class="k">for</span> <span class="n">coord</span> <span class="ow">in</span> <span class="n">bbox</span><span class="p">]</span>
+
+    <span class="n">box_xmin</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">xmin</span> <span class="o">*</span> <span class="n">width</span><span class="p">)</span>
+    <span class="n">box_ymin</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ymin</span> <span class="o">*</span> <span class="n">height</span><span class="p">)</span>
+    <span class="n">box_xmax</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">xmax</span> <span class="o">*</span> <span class="n">width</span><span class="p">)</span>
+    <span class="n">box_ymax</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ymax</span> <span class="o">*</span> <span class="n">height</span><span class="p">)</span>
+
+    <span class="n">draw</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span>
+        <span class="p">[(</span><span class="n">box_xmin</span><span class="p">,</span> <span class="n">box_ymin</span><span class="p">),</span> <span class="p">(</span><span class="n">box_xmax</span><span class="p">,</span> <span class="n">box_ymax</span><span class="p">)],</span>
+        <span class="n">outline</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span>
+        <span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">draw</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">box_xmin</span><span class="p">,</span> <span class="n">box_ymin</span><span class="p">),</span>
+        <span class="nb">type</span><span class="p">,</span>
+        <span class="n">fill</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">image</span>
+</code></pre></div>
+
+<h2>Full Code</h2>
+<p>If we take all the above modifications and put it into a full script:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing_extensions</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypedDict</span><span class="p">,</span> <span class="n">Literal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PIL</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">ImageDraw</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">google.generativeai</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">genai</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">draw_bounding_box</span><span class="p">(</span>
+    <span class="n">image</span><span class="p">:</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">,</span> <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">bbox</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">:</span>
+    <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">size</span>
+
+    <span class="n">draw</span> <span class="o">=</span> <span class="n">ImageDraw</span><span class="o">.</span><span class="n">Draw</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+
+    <span class="n">ymin</span><span class="p">,</span> <span class="n">xmin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">=</span> <span class="p">[</span><span class="n">coord</span> <span class="o">/</span> <span class="mi">1000</span> <span class="k">for</span> <span class="n">coord</span> <span class="ow">in</span> <span class="n">bbox</span><span class="p">]</span>
+
+    <span class="n">box_xmin</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">xmin</span> <span class="o">*</span> <span class="n">width</span><span class="p">)</span>
+    <span class="n">box_ymin</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ymin</span> <span class="o">*</span> <span class="n">height</span><span class="p">)</span>
+    <span class="n">box_xmax</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">xmax</span> <span class="o">*</span> <span class="n">width</span><span class="p">)</span>
+    <span class="n">box_ymax</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ymax</span> <span class="o">*</span> <span class="n">height</span><span class="p">)</span>
+
+    <span class="n">draw</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span>
+        <span class="p">[(</span><span class="n">box_xmin</span><span class="p">,</span> <span class="n">box_ymin</span><span class="p">),</span> <span class="p">(</span><span class="n">box_xmax</span><span class="p">,</span> <span class="n">box_ymax</span><span class="p">)],</span>
+        <span class="n">outline</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span>
+        <span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">draw</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">box_xmin</span><span class="p">,</span> <span class="n">box_ymin</span><span class="p">),</span>
+        <span class="nb">type</span><span class="p">,</span>
+        <span class="n">fill</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">image</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TeaSet</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;Teacup&quot;</span><span class="p">,</span> <span class="s2">&quot;Teapot&quot;</span><span class="p">]</span>
+    <span class="n">bounding_box</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">image_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span>
+    <span class="c1"># I&#39;ve found that localization works better when the image is smaller</span>
+    <span class="n">image</span><span class="o">.</span><span class="n">thumbnail</span><span class="p">((</span><span class="n">size</span><span class="p">,</span> <span class="n">size</span><span class="p">))</span>
+
+    <span class="n">model</span> <span class="o">=</span> <span class="n">genai</span><span class="o">.</span><span class="n">GenerativeModel</span><span class="p">(</span><span class="s2">&quot;gemini-2.0-flash-exp&quot;</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">generate_content</span><span class="p">(</span>
+        <span class="p">[</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Find all the teacups and teapots in the image.</span>
+<span class="sd">Return your answer as a list of JSON objects with the type and bounding box.</span>
+<span class="sd">Return the bounding box in [ymin, xmin, ymax, xmax] format.&quot;&quot;&quot;</span><span class="p">,</span>
+            <span class="n">image</span><span class="p">,</span>
+        <span class="p">],</span>
+        <span class="n">generation_config</span><span class="o">=</span><span class="n">genai</span><span class="o">.</span><span class="n">GenerationConfig</span><span class="p">(</span>
+            <span class="n">response_mime_type</span><span class="o">=</span><span class="s2">&quot;application/json&quot;</span><span class="p">,</span>
+            <span class="n">response_schema</span><span class="o">=</span><span class="nb">list</span><span class="p">[</span><span class="n">TeaSet</span><span class="p">],</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="n">objects</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">candidates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="nb">object</span> <span class="ow">in</span> <span class="n">objects</span><span class="p">:</span>
+        <span class="n">details</span> <span class="o">=</span> <span class="n">TeaSet</span><span class="p">(</span><span class="o">**</span><span class="nb">object</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;bounding_box&quot;</span> <span class="ow">in</span> <span class="n">details</span><span class="p">:</span>
+            <span class="n">image</span> <span class="o">=</span> <span class="n">draw_bounding_box</span><span class="p">(</span>
+                <span class="n">image</span><span class="p">,</span> <span class="n">details</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">],</span> <span class="n">details</span><span class="p">[</span><span class="s2">&quot;bounding_box&quot;</span><span class="p">]</span>
+            <span class="p">)</span>
+
+    <span class="n">image</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">genai</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;GOOGLE_API_KEY&quot;</span><span class="p">))</span>
+
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;image_path&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to image file to process&quot;</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+
+    <span class="n">main</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">image_path</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Now when we run our code, we get something like the following result:
+<img alt="gemini_out.jpg" src="gemini_out.jpg"></p>
+<p>Pretty neat!</p>
+<p>Now, there are some caveats and gotchas with structured outputs from Gemini, but those are beyond the scope of this post. In the future, we&rsquo;ll look at a few, including:</p>
+<ul>
+<li>use of the OpenAI API with Gemini</li>
+<li>the funky subset of OpenAPI that Gemini uses</li>
+<li>setting some fields to be required (all fields are by default optional using the above methods)</li>
+<li>improving localization with few-shot</li>
+</ul>
+
+  </article>
+
+  <footer class="site-footer">joe barrow · research scientist</footer>
+
+  <script src="../static/js/site.js" defer></script>
+
+
+
+
+
+</body>
+</html>

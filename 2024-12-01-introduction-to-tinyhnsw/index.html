@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Introduction to TinyHNSW — Joe Barrow</title>
+  <meta name="description" content="An introduction to TinyHNSW, vector databases, and approximate nearest neighbors.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../static/css/site.css">
+  <link rel="stylesheet" href="../static/css/code.css">
+
+
+
+
+</head>
+<body>
+
+  <header class="masthead">
+    <span class="masthead-title"><a href="../">Joe Barrow</a></span>
+    <nav class="masthead-nav">
+      <a href="../about/">about</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../publications/">publications</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../software/">software</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../field_notes/">field notes</a>
+    </nav>
+    <span class="masthead-meta">VOL_01 / N1</span>
+  </header>
+
+  <article class="article">
+    <p class="kicker">tinyhnsw / introduction</p>
+
+    <p class="series-tag">
+      Build Your own Vector Database · part 1 of 1
+    </p>
+
+    <h1 class="headline">Introduction to TinyHNSW</h1>
+
+    <p class="standfirst">The first post in the TinyHNSW series, introducing the tutorial and the library.
+</p>
+
+    <div class="byline">
+<span>By <strong>Joe Barrow</strong></span><span class="byline-meta">2024-12-01</span><span class="byline-meta">10 min read</span>    </div>
+
+
+    <h1>Build Your Own Vector Database</h1>
+<p>Do you wonder how a &ldquo;generative search&rdquo; feature like Google&rsquo;s works?
+How Spotify finds similar music to recommend?
+How you can search images on the web with just a description?
+All of these applications are built on top of <strong>vector databases</strong>.</p>
+<p>Vector databases have rapidly grown in popularity recently, thanks to concepts like retrieval augmented generation (RAG).
+This has led to a flurry of start-ups in the space, like Pinecone, Weaviate, etc., which come on top of an already rich and thriving open source ecosystem.</p>
+<p>As vector databases grow in popularity, I think it&rsquo;s worthwhile to take a step back and understand how the tools we&rsquo;re employing work.
+The goal of this tutorial is to help you understand what vector databases are, why they&rsquo;re important, and how they work.</p>
+<p>In particular, we will walk through an hierarchical navigable small worlds (HNSW), a new(-ish) approach to fast approximate nearest neighbor search.
+After spending a few evenings going through this, you will have a deep grasp of HNSW and <strong>a fully working vector database of your own</strong>.</p>
+<div class="codehilite"><pre><span></span><code>⚠️ Much like cryptography, it&#39;s probably best that you stick with current, known implementations (e.g. FAISS, hnswlib, uSearch, etc.) rather than rolling your own for production.
+</code></pre></div>
+
+<h2>What this tutorial is</h2>
+<p>This tutorial will walk you through the process of implementing a simple vector database, and then making it more efficient by understanding an implementing a new, and popular, algorithm called hierarchical navigable small worlds (HNSW).</p>
+<h2>What this tutorial isn&rsquo;t</h2>
+<p>Although I will try to cover the introductory concepts at a high-level, this tutorial probably isn&rsquo;t the best introduction to concepts like: &ldquo;what is a vector&rdquo;.</p>
+<p>Similarly, I will not go into advanced optimization, serialization, or memory management strategies.
+Once you&rsquo;ve finished building <code>tinyhnsw</code> you&rsquo;ll have a small, working, and reasonably efficient vector database.
+However, you should see this as a launching off point more than anything!
+You could make it more efficient, or you could add different approximate nearest neighbors algorithm, or seek to optimize the serialization and space requirements, or make it resistant to crashes, or so many other things!
+The neat thing about small libraries that you can fully understand is that they&rsquo;re wonderful experimental test-beds.</p>
+<h2>Some Concepts</h2>
+<ul>
+<li><code>vector database</code> - a vector database is a piece of software that makes it easy to store and search vectors.</li>
+<li><code>retrieval augmented generation (RAG)</code> - retrieval augmented generation is an approach to using generative language models where relevant context is retrieved from a larger source (e.g., a document, or the web) and given to the model. Originally, it was trained end-to-end, but now it mostly means feeding the context into the prompt. It&rsquo;s commonly cited as a way of reducing hallucinations.</li>
+<li><code>nearest neighbors search</code> - nearest neighbors is a way of searching a vector database: given a query vector, find the closest stored vectors to that. For instance, we may choose to encode a text query as a vector, and use it to search a stored collection of image vectors.</li>
+<li><code>approximate nearest neighbors (ANN)</code> - nearest neighbors search can be an expensive operation. For instance, if you have 100 million vectors stored, every time you want to search them you have to do 100 million comparisons. In order to make this more computationally tractable, approximate nearest neighbors (ANN) search makes some simplifications at the trade-off of accuracy.</li>
+<li><code>hierarchical navigable small worlds (HNSW)</code> - hierarchical navigable small worlds is a nearest neighbor search algorithm developed in 2016 that uses a hierarchical collection of graphs to do a time-efficient approximate nearest neighbors search.</li>
+</ul>
+
+  </article>
+
+  <footer class="site-footer">joe barrow · research scientist</footer>
+
+  <script src="../static/js/site.js" defer></script>
+
+
+
+
+
+</body>
+</html>
