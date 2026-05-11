@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="../static/css/site.css?v=623b7643">
+  <link rel="stylesheet" href="../static/css/site.css?v=d17979be">
   <link rel="stylesheet" href="../static/css/code.css?v=678df866">
 
 
@@ -60,11 +60,14 @@ This has led to a flurry of start-ups in the space, like Pinecone, Weaviate, etc
 The goal of this tutorial is to help you understand what vector databases are, why they&rsquo;re important, and how they work.</p>
 <p>In particular, we will walk through an hierarchical navigable small worlds (HNSW), a new(-ish) approach to fast approximate nearest neighbor search.
 After spending a few evenings going through this, you will have a deep grasp of HNSW and <strong>a fully working vector database of your own</strong>.</p>
-<div class="codehilite"><pre><span></span><code>⚠️ Much like cryptography, it&#39;s probably best that you stick with current, known implementations (e.g. FAISS, hnswlib, uSearch, etc.) rather than rolling your own for production.
+<div class="codehilite"><pre><span></span><code>⚠️ Much like cryptography, it&#39;s probably best that you stick
+with current, known implementations (e.g. FAISS, hnswlib,
+uSearch, etc.) rather than rolling your own for production.
 </code></pre></div>
 
 <h2>What this tutorial is</h2>
-<p>This tutorial will walk you through the process of implementing a simple vector database, and then making it more efficient by understanding an implementing a new, and popular, algorithm called hierarchical navigable small worlds (HNSW).</p>
+<p>This tutorial will walk you through the process of implementing a simple vector database, and then making it more efficient by understanding an implementing an approximate nearest neighbors (ANN) algorithm.
+We build our vector database around Hierarchical Navigable Small Worlds (HNSW) <sup class="citation">[<a href="#ref-1">1</a>]</sup>, a <em>very</em> popular ANN algorithm</p>
 <h2>What this tutorial isn&rsquo;t</h2>
 <p>Although I will try to cover the introductory concepts at a high-level, this tutorial probably isn&rsquo;t the best introduction to concepts like: &ldquo;what is a vector&rdquo;.</p>
 <p>Similarly, I will not go into advanced optimization, serialization, or memory management strategies.
@@ -80,6 +83,12 @@ The neat thing about small libraries that you can fully understand is that they&
 <li><code>approximate nearest neighbors (ANN)</code> - nearest neighbors search can be an expensive operation. For instance, if you have 100 million vectors stored, every time you want to search them you have to do 100 million comparisons. In order to make this more computationally tractable, approximate nearest neighbors (ANN) search makes some simplifications at the trade-off of accuracy.</li>
 <li><code>hierarchical navigable small worlds (HNSW)</code> - hierarchical navigable small worlds is a nearest neighbor search algorithm developed in 2016 that uses a hierarchical collection of graphs to do a time-efficient approximate nearest neighbors search.</li>
 </ul>
+<section class="references">
+<h2 class="references-title">References</h2>
+<ol class="reference-list">
+<li id="ref-1" class="reference">Yu A Malkov, Dmitry A Yashunin. (2018). <span class="ref-title">Efficient and robust approximate nearest neighbor search using hierarchical navigable small world graphs</span>. <em>IEEE transactions on pattern analysis and machine intelligence</em>.</li>
+</ol>
+</section>
 
   </article>
 
