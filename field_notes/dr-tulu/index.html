@@ -93,9 +93,9 @@ For each claim, use an LLM-judge to score if the mapped citations are relevant t
 ]
 </code></pre></div>
 
-<p>We want to use this rubric to score an answer (<span class="arithmatex">\(y\)</span>) for to a given question (<span class="arithmatex">\(x\)</span>).
-$<span class="arithmatex">\(S(x, y) = \frac{\sum_{k=1}^{K}{w_{x,k} \cdot Judge(r_{x,k},y)}}{\sum_{k:w_{x,k}&gt;0}w_{x,k}}\)</span>$
-Breaking down the above equation:</p>
+<p>We want to use this rubric to score an answer (<span class="arithmatex">\(y\)</span>) for to a given question (<span class="arithmatex">\(x\)</span>).</p>
+<p><span class="arithmatex">\(S(x, y) = \frac{\sum_{k=1}^{K}{w_{x,k} \cdot Judge(r_{x,k},y)}}{\sum_{k:w_{x,k}&gt;0}w_{x,k}}\)</span></p>
+<p>Breaking down the above equation:</p>
 <table>
 <thead>
 <tr>
