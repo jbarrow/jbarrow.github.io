@@ -875,6 +875,31 @@ details.callout[open] > summary.callout-title::before { content: "▾ "; }
 .series-block .post-list-item:first-child { padding-top: 12px; }
 .series-block .post-list-item:last-child { border-bottom: none; }
 
+/* Collapsible series — native <details>/<summary>. */
+details.series-block--collapsible > summary {
+  cursor: pointer;
+  list-style: none;
+}
+details.series-block--collapsible > summary::-webkit-details-marker { display: none; }
+details.series-block--collapsible > summary::marker { display: none; }
+
+details.series-block--collapsible > summary .series-block-meta::after {
+  content: '−';
+  display: inline-block;
+  margin-left: 10px;
+  width: 0.75em;
+  text-align: center;
+  font-family: var(--font-mono);
+  color: var(--ink-faint);
+}
+details.series-block--collapsible:not([open]) > summary .series-block-meta::after {
+  content: '+';
+}
+
+details.series-block--collapsible > summary:hover .series-block-title {
+  color: var(--accent);
+}
+
 /* Pull quote ------------------------------------------------------------- */
 
 .pullquote {
@@ -958,6 +983,19 @@ details.callout[open] > summary.callout-title::before { content: "▾ "; }
 .flair-new {
   background: var(--accent);
   color: var(--paper);
+}
+.flair-draft {
+  background: transparent;
+  color: var(--ink-faint);
+  border: 1px solid var(--rule);
+}
+
+.post-list-item--draft .post-list-title > span:first-child {
+  color: var(--ink-faint);
+}
+.post-list-item--draft .post-list-standfirst,
+.post-list-item--draft .post-list-meta {
+  color: var(--ink-faint);
 }
 
 .post-list-standfirst {

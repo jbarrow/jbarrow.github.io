@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="./static/css/site.css?v=d17979be">
+  <link rel="stylesheet" href="./static/css/site.css?v=834fbb0c">
   <link rel="stylesheet" href="./static/css/code.css?v=678df866">
 
 
@@ -29,33 +29,100 @@
       <span class="masthead-nav-sep">·</span>
       <a href="./field_notes/">field notes</a>
     </nav>
-    <span class="masthead-meta">posts: 5</span>
+    <span class="masthead-meta">posts: 11</span>
   </header>
 
-    <section class="series-block">
-      <header class="series-block-header">
-        <h2 class="series-block-title">OCR&#39;s Cambrian Explosion</h2>
-        <span class="series-block-meta">1 part</span>
-      </header>
-      <ul class="post-list">
-  <li class="post-list-item">
+      <details class="series-block series-block--collapsible" open>
+        <summary class="series-block-header">
+          <h2 class="series-block-title">OCR&#39;s Cambrian Explosion</h2>
+          <span class="series-block-meta">7 parts</span>
+        </summary>
+        <ul class="post-list">
+  <li class="post-list-item post-list-item--draft">
     <p class="post-list-kicker">vlm ocr survey / introduction</p>
     <h2 class="post-list-title">
-      <a href="2026-05-09-ocr-cambrian/">Chronicling OCR&#39;s Cambrian Explosion</a>
-<span class="flair flair-new">New</span>    </h2>
+      <span>OCR&#39;s Cambrian Explosion 1 - Introduction</span>
+      <span class="flair flair-draft">Upcoming</span>
+    </h2>
     <p class="post-list-standfirst">Strong, open VLMs enabled an explosion of open OCR model releases, with little sign of things letting up. In this survey, I detail the models, their evaluation, research trends, and open questions.
 </p>
     <span class="post-list-meta">
-2026-05-10    </span>
+2026-05-12    </span>
   </li>
-      </ul>
-    </section>
-    <section class="series-block">
-      <header class="series-block-header">
-        <h2 class="series-block-title">General</h2>
-        <span class="series-block-meta">3</span>
-      </header>
-      <ul class="post-list">
+  <li class="post-list-item post-list-item--draft">
+    <p class="post-list-kicker">vlm ocr survey / core approaches</p>
+    <h2 class="post-list-title">
+      <span>OCR&#39;s Cambrian Explosion 2 - Models and Pipelines</span>
+      <span class="flair flair-draft">Upcoming</span>
+    </h2>
+    <p class="post-list-standfirst">Butterfly collecting &gt;40 different open model releases. Core approaches (single pass vs. pipelined), task decisions (general VLM vs. OCR-specific), and output formats allow us to fingerprint each model.
+</p>
+    <span class="post-list-meta">
+2026-05-19    </span>
+  </li>
+  <li class="post-list-item post-list-item--draft">
+    <p class="post-list-kicker">vlm ocr survey / training</p>
+    <h2 class="post-list-title">
+      <span>OCR&#39;s Cambrian Explosion 3 - Training and Data</span>
+      <span class="flair flair-draft">Upcoming</span>
+    </h2>
+    <p class="post-list-standfirst">There is a convergent evolution in how the labs source their training data. This points to blindspots in the models. Unfortunately, most trainign datasets  are not released. We collect the ones that are.
+</p>
+    <span class="post-list-meta">
+2026-05-26    </span>
+  </li>
+  <li class="post-list-item post-list-item--draft">
+    <p class="post-list-kicker">vlm ocr survey / benchmarking</p>
+    <h2 class="post-list-title">
+      <span>OCR&#39;s Cambrian Explosion 4 - Evaluation and Benchmarking</span>
+      <span class="flair flair-draft">Upcoming</span>
+    </h2>
+    <p class="post-list-standfirst">Two benchmarks have become the reporting standard: OlmOCR bench and OmniDocBench. What is contained in these benchmarks, how do the various models stack up, and what other benchmarks have been used to date?
+</p>
+    <span class="post-list-meta">
+2026-06-02    </span>
+  </li>
+  <li class="post-list-item post-list-item--draft">
+    <p class="post-list-kicker">vlm ocr survey / efficiency</p>
+    <h2 class="post-list-title">
+      <span>OCR&#39;s Cambrian Explosion 5 - Model Efficiency</span>
+      <span class="flair flair-draft">Upcoming</span>
+    </h2>
+    <p class="post-list-standfirst">VLMs as OCR models lift OCR accuracy, but are expensive to inference. We examine different approaches labs have used to improve efficiency, including diffusion language modeling, two-stage pipelines, and architectural innovations.
+</p>
+    <span class="post-list-meta">
+2026-06-09    </span>
+  </li>
+  <li class="post-list-item post-list-item--draft">
+    <p class="post-list-kicker">vlm ocr survey / backbones</p>
+    <h2 class="post-list-title">
+      <span>OCR&#39;s Cambrian Explosion 6 - Backbones</span>
+      <span class="flair flair-draft">Upcoming</span>
+    </h2>
+    <p class="post-list-standfirst">An OCR model is only as strong as its vision backbone. Choosing which backbone, input image resolution, and how the backbone passes information to the LLM have a significant effect on downstream efficiency and quality.
+</p>
+    <span class="post-list-meta">
+2026-06-16    </span>
+  </li>
+  <li class="post-list-item post-list-item--draft">
+    <p class="post-list-kicker">vlm ocr survey / open questions</p>
+    <h2 class="post-list-title">
+      <span>OCR&#39;s Cambrian Explosion 7 - Open Questions</span>
+      <span class="flair flair-draft">Upcoming</span>
+    </h2>
+    <p class="post-list-standfirst">In which we explore open research questions around improving OCR, what the limitations of the data tell us, and where the space might be heading over the next few years.
+</p>
+    <span class="post-list-meta">
+2026-06-23    </span>
+  </li>
+        </ul>
+      </details>
+      <details class="series-block series-block--collapsible" open>
+        <summary class="series-block-header">
+          <h2 class="series-block-title">General</h2>
+          <span class="series-block-meta">3 posts</span>
+        </summary>
+        <ul class="post-list">
   <li class="post-list-item">
     <h2 class="post-list-title">
       <a href="2025-01-22-gemini-102/">Google Gemini 102 - Advanced Structured Outputs</a>
@@ -80,14 +147,14 @@
     <span class="post-list-meta">
 2025-01-09    </span>
   </li>
-      </ul>
-    </section>
-    <section class="series-block">
-      <header class="series-block-header">
-        <h2 class="series-block-title">Build Your own Vector Database</h2>
-        <span class="series-block-meta">1 part</span>
-      </header>
-      <ul class="post-list">
+        </ul>
+      </details>
+      <details class="series-block series-block--collapsible" open>
+        <summary class="series-block-header">
+          <h2 class="series-block-title">Build Your own Vector Database</h2>
+          <span class="series-block-meta">1 part</span>
+        </summary>
+        <ul class="post-list">
   <li class="post-list-item">
     <p class="post-list-kicker">tinyhnsw / introduction</p>
     <h2 class="post-list-title">
@@ -98,8 +165,8 @@
     <span class="post-list-meta">
 2024-12-01 · 10 min read    </span>
   </li>
-      </ul>
-    </section>
+        </ul>
+      </details>
 
   <section class="garden-block">
     <header class="garden-block-header">
