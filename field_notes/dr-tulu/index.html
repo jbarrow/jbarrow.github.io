@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="../../static/css/code.css?v=678df866">
   <link rel="alternate" type="application/atom+xml" title="Joe Barrow" href="../../feed.xml">
 
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous">
 
 
 
@@ -64,7 +65,75 @@ Rulin Shao et al.<span class="sep">·</span>arXiv · 2026      </p>
       </div>
     </aside>
 
-    
+    <p>DR Tulu is a paper from AI2 where they train an 8B-parameter LLM to do deep research ~as effectively as GPT-5. The core idea is to generate rubrics on the fly with a strong model (GPT-4.1). These rubrics are based on the returned content of the tools across rollouts.</p>
+<p>Combine those rubric rewards with auxiliary rewards for citation correctness, format, and use of search, and perform a big RL run.</p>
+<p>They collect data in two ways:
+1. SFT by getting traces from GPT-5, with synthetic reasoning output
+2. Collect a bunch of questions for a specific corpus for the RL run</p>
+<h2>Auxiliary Rewards</h2>
+<p>DR Tulu uses 3 auxiliary rewards on top of the evolving rubric:
+1. format
+2. search
+3. citation</p>
+<h3>Citation Rewards</h3>
+<p>Extract a set of claims from the answer: <span class="arithmatex">\(\mathcal{C} = \{c_1,...,c_{|\mathcal{C}|}\} = ExtractClaims(y)\)</span>. <strong>Map these claims to the citation store.</strong> Measure recall and precision for the extracted claims, and use per-claim <span class="arithmatex">\(F_1\)</span> as the reward.</p>
+<p><strong>Recall</strong>
+How many returned claims are <em>cited</em>. For each claim, use an LLM-judge to score if the claim is supported by the mapped citations, either: {<code>Fully</code>, <code>Partially</code>, <code>No</code>}.</p>
+<p><strong>Precision</strong>
+For each claim, use an LLM-judge to score if the mapped citations are relevant to the claim, either: {<code>Relevant</code>, <code>Irrelevant</code>}.</p>
+<aside class="callout callout-info">
+<p class="callout-title">Note</p>
+<p>This is similar to Liu et al. (2023) &ldquo;Evaluating Verifiability in Generative Search Engines&rdquo;: https://aclanthology.org/2023.findings-emnlp.467/</p>
+</aside>
+<h2>Rubric Rewards</h2>
+<p>Rubric rewards are effectively unit tests that can be used to score a completion. Consider a sample rubric with two rubric items:</p>
+<div class="codehilite"><pre><span></span><code>[
+    &quot;Answer mentions cytokine signaling.&quot;,
+    &quot;Citations returned by the model must be present in the input.&quot;
+]
+</code></pre></div>
+
+<p>We want to use this rubric to score an answer (<span class="arithmatex">\(y\)</span>) for to a given question (<span class="arithmatex">\(x\)</span>).
+$<span class="arithmatex">\(S(x, y) = \frac{\sum_{k=1}^{K}{w_{x,k} \cdot Judge(r_{x,k},y)}}{\sum_{k:w_{x,k}&gt;0}w_{x,k}}\)</span>$
+Breaking down the above equation:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(x\)</span></td>
+<td>The deep-research <strong>question</strong>, e.g. <code>How can genetically engineered T cells be used as an anti-inflammatory therapy for IBD?</code></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(y\)</span></td>
+<td>The model&rsquo;s <strong>completion</strong></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(S(x, y)\)</span></td>
+<td><span class="arithmatex">\([0,1]\)</span>-normalized score score given a <strong>question</strong> <span class="arithmatex">\(x\)</span> and a <strong>completion</strong> <span class="arithmatex">\(y\)</span></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(K\)</span></td>
+<td>The number of items in the <strong>rubric</strong></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(r_{x, k}\)</span></td>
+<td>The rubric item <span class="arithmatex">\(k\)</span> for question <span class="arithmatex">\(x\)</span> (note that you might have question-specific rubrics). An example would be <code>Answer mentions cytokine signaling</code></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(w_{x,k}\)</span></td>
+<td>The <strong>weight</strong> of the k-th rubric item. Can be positive or negative. Note that we normalize <span class="arithmatex">\(S\)</span> by using only positive scores, though.</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(Judge(r, y)\)</span></td>
+<td>A reward model that judges (generally binary) whether or not the completion satisfies the rubric item.</td>
+</tr>
+</tbody>
+</table>
   </article>
 
   <footer class="site-footer">
@@ -75,6 +144,8 @@ Rulin Shao et al.<span class="sep">·</span>arXiv · 2026      </p>
 
   <script src="../../static/js/site.js?v=bfb16307" defer></script>
 
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" integrity="sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4lfFg" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous" onload="renderMathInElement(document.body, {delimiters: [{left: '\\[', right: '\\]', display: true}, {left: '\\(', right: '\\)', display: false}], throwOnError: false});"></script>
 
 
 

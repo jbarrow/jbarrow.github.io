@@ -4,10 +4,18 @@
   <link href="https://jbarrow.ai/" rel="alternate" type="text/html"/>
   <link href="https://jbarrow.ai/feed.xml" rel="self" type="application/atom+xml"/>
   <id>https://jbarrow.ai/</id>
-  <updated>2025-01-22T00:00:00Z</updated>
+  <updated>2026-05-12T00:00:00Z</updated>
   <author>
     <name>Joe Barrow</name>
   </author>
+  <entry>
+    <title>OCR&#39;s Cambrian Explosion 1 - Introduction</title>
+    <link href="https://jbarrow.ai/2026-05-09-ocr-cambrian/" rel="alternate" type="text/html"/>
+    <id>https://jbarrow.ai/2026-05-09-ocr-cambrian/</id>
+    <updated>2026-05-12T00:00:00Z</updated>
+    <summary>Strong, open VLMs enabled an explosion of open OCR model releases, with little sign of things letting up. In this survey, I detail the models, their evaluation, research trends, and open questions.</summary>
+    <author><name>Joe Barrow</name></author>
+  </entry>
   <entry>
     <title>Google Gemini 102 - Advanced Structured Outputs</title>
     <link href="https://jbarrow.ai/2025-01-22-gemini-102/" rel="alternate" type="text/html"/>
