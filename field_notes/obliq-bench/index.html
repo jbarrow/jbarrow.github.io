@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paper Notes: OBLIQ-Bench — Field Notes — Joe Barrow</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../../static/css/site.css?v=a0dddcaa">
+  <link rel="stylesheet" href="../../static/css/code.css?v=678df866">
+  <link rel="alternate" type="application/atom+xml" title="Joe Barrow" href="../../feed.xml">
+
+
+
+
+</head>
+<body>
+
+  <header class="masthead">
+    <span class="masthead-title"><a href="../../">Joe Barrow</a></span>
+    <nav class="masthead-nav">
+      <a href="../../about/">about</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../publications/">publications</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../software/">software</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../field_notes/">field notes</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../feed.xml">rss</a>
+    </nav>
+    <span class="masthead-meta">field_notes</span>
+  </header>
+
+  <article class="article note">
+    <p class="note-eyebrow">
+      <a href="../../field_notes/">Field Notes</a>
+    </p>
+
+    <h1 class="note-title">Paper Notes: OBLIQ-Bench</h1>
+
+    <p class="note-updated">last updated 2026-05-11</p>
+
+    <ul class="note-tags">
+      <li><a class="tag-pill" href="../../field_notes/?tag=multivector-retrieval">multivector-retrieval</a></li>
+    </ul>
+
+    <aside class="paper-card">
+      <span class="paper-card-label">Source</span>
+      <h2 class="paper-card-title">OBLIQ-Bench: Exposing Overlooked Bottlenecks in Modern Retrievers with Latent and Implicit Queries</h2>
+      <p class="paper-card-meta">
+Diane Tchindjo, Devavrat Shah, Omar Khattab<span class="sep">·</span>arXiv · 2026      </p>
+      <div class="paper-downloads">
+        <a class="btn btn-paper" href="../../field_notes/_attachments/obliq-bench.pdf" download>
+          <span class="btn-icon">↓</span>
+          <span class="btn-label">Download</span>
+          <span class="btn-meta">PDF</span>
+        </a>
+        <a class="btn btn-paper-annotated" href="../../field_notes/_attachments/obliq-bench-annotated.pdf" download>
+          <span class="btn-icon">↓</span>
+          <span class="btn-label">Download Annotated</span>
+          <span class="btn-meta">PDF</span>
+        </a>
+      </div>
+    </aside>
+
+    <aside class="callout callout-abstract">
+<p class="callout-title">TL;DR</p>
+<p>OBLIQ-Bench asks: what are retrieval tasks that are possible for reasoning LLMs to judge individual relevance, but even state-of-the-art retrievers perform poorly at.</p>
+</aside>
+<p>The paper turns on the definition of <strong>query obliqueness</strong>: <mark>&ldquo;the attributes that determine relevance are latent and have little or no surface expression in the document.&rdquo;</mark></p>
+<p>Three types of oblique queries:
+1. <strong>descriptive queries</strong> - &ldquo;latent property that can be inferred from document content&rdquo; (imo basically open-domain classification)
+2. <strong>analogue queries</strong> - &ldquo;all documents that share an archetype with the content of the query&rdquo; (a hard query-by-example)
+3. <strong>tip-of-the-tongue queries</strong> - &ldquo;match a fuzzy recollection to a specific passage&rdquo;</p>
+<p>Perhaps this is just my NLP brain, but one of the core ideas seems to be <mark>could you treat <em>classification</em> as <em>retrieval</em></mark>. I.e., the example of &ldquo;find all tweets that express a stance&rdquo; is, imo, a classification problem. In this light it underscores how difficult the problem is; <mark>your retriever has to be able to perform ad hoc classification</mark> using only the stored representations and your query representation.</p>
+<h2>Retrieval-Verification Asymmetry</h2>
+<p>By far my favorite insight of the paper: <mark>find meaningful tasks by selecting those that reasoning models <em>can</em> succeed at (high ceiling), but existing retrieval systems <em>don&rsquo;t</em> (low floor)</mark>. A lot of meaningful tasks are like this! And this reflects my experience at Pattern Data quite well.</p>
+<p>They formalize it as the difference between the best LLM&rsquo;s reranking performance on some quality metric (e.g., Recall@10) and the best retrieval model&rsquo;s performance on the same metric.</p>
+<h2>Dataset Construction</h2>
+<p>Like most IR datasets, limited by: how do you get high recall annotations without breaking the bank? Their basic solution is to run an LLM over every doc once to extract some attribute, cluster those attributes, generate queries from those clusters.</p>
+<h2>Evaluation Results</h2>
+<p>Super interesting, and worth copying in full at least one table. BM25 scores 0.0, LateOn (SotA open multivector retriever) 0.083, then a big boost from query rewriting agent, though that doesn&rsquo;t actually hold <em>across</em> tasks.
+ <img class="embed" src="../_attachments/obliq-bench-tott-queries.png" alt="obliq-bench-tott-queries.png"></p>
+<p><strong>For a <em>thorough</em> treatment of results, go read the paper!</strong> The section of results+takeaways is great!</p>
+<h2>Follow-Up Questions</h2>
+<ol>
+<li><mark>Is it possible to build a training set for oblique queries</mark>? At ~1k queries across all 5 tasks, query diversity is probably too limited for training.</li>
+<li>The types of oblique queries represented also certainly isn&rsquo;t exhaustive, so naturally: <mark>how much would training on these types of oblique queries generalize to improved retrieval performance</mark>?</li>
+<li>I&rsquo;d bet you&rsquo;d see a similar retriever-verifier gap if you just took a bunch of classification datasets and tried to retrieve by label. Bonus points if it&rsquo;s highly imbalanced so it&rsquo;s closer to a retrieval setup. <mark>How would you solve the &ldquo;ad hoc&rdquo; classification with a retriever problem</mark>? If you don&rsquo;t know a priori what the classes are, what do you store? Feels like there&rsquo;s some push towards query-by-example.</li>
+</ol>
+  </article>
+
+  <footer class="site-footer">
+    joe barrow · research scientist
+    <span class="site-footer-sep">·</span>
+    <a href="../../feed.xml">rss</a>
+  </footer>
+
+  <script src="../../static/js/site.js?v=bfb16307" defer></script>
+
+
+
+
+
+</body>
+</html>
