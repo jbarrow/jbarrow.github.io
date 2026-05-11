@@ -396,6 +396,65 @@ a:hover { text-decoration: underline; }
   width: 100%;
 }
 
+/* Phylogeny SVG figure ---------------------------------------------------- */
+
+.phylo {
+  width: 100%;
+}
+
+.phylo svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.phylo-branch {
+  fill: none;
+  stroke: var(--ink-soft);
+  stroke-width: 1.25;
+}
+
+.phylo-root {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  fill: var(--ink);
+  text-anchor: middle;
+}
+
+.phylo-node {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  fill: var(--ink-soft);
+  letter-spacing: -0.02em;
+}
+
+.phylo-tip {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  fill: var(--ink);
+  text-anchor: middle;
+}
+
+.phylo-tip-sub {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  fill: var(--ink-soft);
+  letter-spacing: -0.005em;
+  text-anchor: middle;
+}
+
+.phylo-tip-eg {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  fill: var(--ink-faint);
+  letter-spacing: -0.02em;
+  text-anchor: middle;
+}
+
 .figure-source {
   font-family: var(--font-mono);
   font-size: 11px;
