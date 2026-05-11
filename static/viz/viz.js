@@ -318,11 +318,29 @@
         }, this.xTickFormat(d, i)));
       });
 
-      // ── Annotations: leader line + dot + italic note ───────────────────────
+      // ── Annotations ────────────────────────────────────────────────────────
+      // `type: 'vline'` draws a full-height vertical rule with a label at the
+      // top — for marking moments on the x-axis (e.g. a release date).
+      // Default is a leader line + dot + italic note pointing at a data point.
       this.annotations.forEach(ann => {
         const cx = x(ann.x);
         if (cx == null) return;
         const ax = cx + x.bandwidth() / 2;
+
+        if (ann.type === 'vline') {
+          this.g.appendChild(Util.svg('line', {
+            class: 'viz-vline',
+            x1: ax, x2: ax, y1: 0, y2: innerHeight,
+          }));
+          this.g.appendChild(Util.svg('text', {
+            class: 'viz-vline-label',
+            x: ax + (ann.dx ?? 6),
+            y: ann.dy ?? -8,
+            'text-anchor': ann.anchor || 'start',
+          }, ann.text));
+          return;
+        }
+
         const ay = y(ann.y != null ? ann.y : yMax);
         const tx = ax + (ann.dx ?? 24);
         const ty = ay + (ann.dy ?? -28);

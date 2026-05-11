@@ -68,11 +68,9 @@
         margin:         { top: 32, right: 24, bottom: 56, left: 36 },
         annotations: [
           {
+            type: 'vline',
             x: '2025-02',
             text: 'Qwen2.5-VL Release',
-            dx: -150,
-            dy: -36,
-            anchor: 'middle',
           },
         ],
       });

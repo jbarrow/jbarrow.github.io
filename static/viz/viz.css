@@ -129,6 +129,19 @@
   letter-spacing: -0.01em;
 }
 
+.viz-vline {
+  stroke: #0f5499;
+  stroke-width: 1.5;
+}
+
+.viz-vline-label {
+  font-family: var(--viz-font-data);
+  font-size: 11px;
+  fill: #0f5499;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
 /* Tooltip ------------------------------------------------------------------- */
 
 .viz-tooltip {
