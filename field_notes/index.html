@@ -9,8 +9,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="../static/css/site.css">
-  <link rel="stylesheet" href="../static/css/code.css">
+  <link rel="stylesheet" href="../static/css/site.css?v=623b7643">
+  <link rel="stylesheet" href="../static/css/code.css?v=678df866">
 
 
 
@@ -40,23 +40,189 @@
       revised in place.
     </p>
 
-    <ul class="note-list">
-      <li class="note-list-item">
+    <div class="tag-filter" data-tag-filter-root role="group" aria-label="Filter by tag">
+      <button type="button" class="tag-chip is-active" data-tag-filter="">all</button>
+      <button type="button" class="tag-chip" data-tag-filter="deep-research">deep-research</button>
+      <button type="button" class="tag-chip" data-tag-filter="rl">rl</button>
+      <button type="button" class="tag-chip" data-tag-filter="rubrics">rubrics</button>
+      <button type="button" class="tag-chip" data-tag-filter="small-models">small-models</button>
+      <button type="button" class="tag-chip" data-tag-filter="theorem-proving">theorem-proving</button>
+    </div>
+
+    <ul class="note-list" data-note-list>
+      <li class="note-list-item" data-tags="">
+        <a class="note-list-title" href="chandra/">Paper Notes: Chandra</a>
+        <span class="note-list-meta">2026-05-10</span>
+        <p class="note-list-summary">TODO</p>
+      </li>
+      <li class="note-list-item" data-tags="">
+        <a class="note-list-title" href="donut/">Paper Notes: DONUT</a>
+        <span class="note-list-meta">2026-05-10</span>
+        <p class="note-list-summary">TODO</p>
+      </li>
+      <li class="note-list-item" data-tags="deep-research rl rubrics">
         <a class="note-list-title" href="dr-tulu/">Paper Notes: DR Tulu</a>
         <span class="note-list-meta">2026-05-10</span>
         <p class="note-list-summary">Evolving rubrics for training a small, powerful deep research model.</p>
+        <ul class="note-tags">
+          <li><button type="button" class="tag-pill" data-tag-filter="deep-research">deep-research</button></li>
+          <li><button type="button" class="tag-pill" data-tag-filter="rl">rl</button></li>
+          <li><button type="button" class="tag-pill" data-tag-filter="rubrics">rubrics</button></li>
+        </ul>
       </li>
-      <li class="note-list-item">
+      <li class="note-list-item" data-tags="">
+        <a class="note-list-title" href="deepseek-ocr/">Paper Notes: Deepseek-OCR</a>
+        <span class="note-list-meta">2026-05-10</span>
+        <p class="note-list-summary">TODO</p>
+      </li>
+      <li class="note-list-item" data-tags="">
+        <a class="note-list-title" href="dolphin-ocr/">Paper Notes: Dolphin OCR</a>
+        <span class="note-list-meta">2026-05-10</span>
+        <p class="note-list-summary">TODO</p>
+      </li>
+      <li class="note-list-item" data-tags="">
+        <a class="note-list-title" href="fox/">Paper Notes: Fox</a>
+        <span class="note-list-meta">2026-05-10</span>
+        <p class="note-list-summary">TODO</p>
+      </li>
+      <li class="note-list-item" data-tags="">
+        <a class="note-list-title" href="got-2-0/">Paper Notes: GOT 2.0</a>
+        <span class="note-list-meta">2026-05-10</span>
+        <p class="note-list-summary">TODO</p>
+      </li>
+      <li class="note-list-item" data-tags="">
+        <a class="note-list-title" href="granite-docling/">Paper Notes: Granite Docling</a>
+        <span class="note-list-meta">2026-05-10</span>
+        <p class="note-list-summary">TODO</p>
+      </li>
+      <li class="note-list-item" data-tags="">
+        <a class="note-list-title" href="hunyuanocr/">Paper Notes: HunyuanOCR</a>
+        <span class="note-list-meta">2026-05-10</span>
+        <p class="note-list-summary">TODO</p>
+      </li>
+      <li class="note-list-item" data-tags="">
+        <a class="note-list-title" href="kosmos-2-5/">Paper Notes: Kosmos-2.5</a>
+        <span class="note-list-meta">2026-05-10</span>
+        <p class="note-list-summary">TODO</p>
+      </li>
+      <li class="note-list-item" data-tags="">
+        <a class="note-list-title" href="lighton-ocr/">Paper Notes: LightOn OCR</a>
+        <span class="note-list-meta">2026-05-10</span>
+        <p class="note-list-summary">TODO</p>
+      </li>
+      <li class="note-list-item" data-tags="">
+        <a class="note-list-title" href="lightonocr-1-and-2/">Paper Notes: LightOnOCR1 and 2</a>
+        <span class="note-list-meta">2026-05-10</span>
+        <p class="note-list-summary">TODO</p>
+      </li>
+      <li class="note-list-item" data-tags="">
+        <a class="note-list-title" href="mineru2-5/">Paper Notes: MinerU2.5</a>
+        <span class="note-list-meta">2026-05-10</span>
+        <p class="note-list-summary">TODO</p>
+      </li>
+      <li class="note-list-item" data-tags="">
+        <a class="note-list-title" href="monkeyocr-v1-5/">Paper Notes: MonkeyOCR-v1.5</a>
+        <span class="note-list-meta">2026-05-10</span>
+        <p class="note-list-summary">TODO</p>
+      </li>
+      <li class="note-list-item" data-tags="">
+        <a class="note-list-title" href="monkeyocr/">Paper Notes: MonkeyOCR</a>
+        <span class="note-list-meta">2026-05-10</span>
+        <p class="note-list-summary">TODO</p>
+      </li>
+      <li class="note-list-item" data-tags="">
+        <a class="note-list-title" href="nanonets-ocr/">Paper Notes: NanoNets OCR</a>
+        <span class="note-list-meta">2026-05-10</span>
+        <p class="note-list-summary">TODO</p>
+      </li>
+      <li class="note-list-item" data-tags="">
+        <a class="note-list-title" href="nanonets-ocr2/">Paper Notes: NanoNets OCR2</a>
+        <span class="note-list-meta">2026-05-10</span>
+        <p class="note-list-summary">TODO</p>
+      </li>
+      <li class="note-list-item" data-tags="">
+        <a class="note-list-title" href="nougat/">Paper Notes: Nougat</a>
+        <span class="note-list-meta">2026-05-10</span>
+        <p class="note-list-summary">TODO</p>
+      </li>
+      <li class="note-list-item" data-tags="">
+        <a class="note-list-title" href="ocrflux/">Paper Notes: OCRFlux</a>
+        <span class="note-list-meta">2026-05-10</span>
+        <p class="note-list-summary">TODO</p>
+      </li>
+      <li class="note-list-item" data-tags="">
+        <a class="note-list-title" href="olmocr-2/">Paper Notes: OlmOCR 2</a>
+        <span class="note-list-meta">2026-05-10</span>
+        <p class="note-list-summary">TODO</p>
+      </li>
+      <li class="note-list-item" data-tags="">
+        <a class="note-list-title" href="olmocr/">Paper Notes: OlmOCR</a>
+        <span class="note-list-meta">2026-05-10</span>
+        <p class="note-list-summary">TODO</p>
+      </li>
+      <li class="note-list-item" data-tags="">
+        <a class="note-list-title" href="paddleocr-vl/">Paper Notes: PaddleOCR-VL</a>
+        <span class="note-list-meta">2026-05-10</span>
+        <p class="note-list-summary">TODO</p>
+      </li>
+      <li class="note-list-item" data-tags="">
+        <a class="note-list-title" href="pix2struct/">Paper Notes: Pix2Struct</a>
+        <span class="note-list-meta">2026-05-10</span>
+        <p class="note-list-summary">TODO</p>
+      </li>
+      <li class="note-list-item" data-tags="rl small-models theorem-proving">
         <a class="note-list-title" href="qed-nano/">Paper Notes: QED-Nano</a>
         <span class="note-list-meta">2026-05-10</span>
         <p class="note-list-summary">Novel RL techniques for training a surprisingly powerful small prover.</p>
+        <ul class="note-tags">
+          <li><button type="button" class="tag-pill" data-tag-filter="rl">rl</button></li>
+          <li><button type="button" class="tag-pill" data-tag-filter="small-models">small-models</button></li>
+          <li><button type="button" class="tag-pill" data-tag-filter="theorem-proving">theorem-proving</button></li>
+        </ul>
+      </li>
+      <li class="note-list-item" data-tags="">
+        <a class="note-list-title" href="qwen2-vl/">Paper Notes: Qwen2-VL</a>
+        <span class="note-list-meta">2026-05-10</span>
+        <p class="note-list-summary">TODO</p>
+      </li>
+      <li class="note-list-item" data-tags="">
+        <a class="note-list-title" href="qwen2-5-vl/">Paper Notes: Qwen2.5-VL</a>
+        <span class="note-list-meta">2026-05-10</span>
+        <p class="note-list-summary">TODO</p>
+      </li>
+      <li class="note-list-item" data-tags="">
+        <a class="note-list-title" href="qwen3-vl/">Paper Notes: Qwen3-VL</a>
+        <span class="note-list-meta">2026-05-10</span>
+        <p class="note-list-summary">TODO</p>
+      </li>
+      <li class="note-list-item" data-tags="">
+        <a class="note-list-title" href="rolmocr/">Paper Notes: RolmOCR</a>
+        <span class="note-list-meta">2026-05-10</span>
+        <p class="note-list-summary">TODO</p>
+      </li>
+      <li class="note-list-item" data-tags="">
+        <a class="note-list-title" href="trocr/">Paper Notes: TrOCR</a>
+        <span class="note-list-meta">2026-05-10</span>
+        <p class="note-list-summary">TODO</p>
+      </li>
+      <li class="note-list-item" data-tags="">
+        <a class="note-list-title" href="vary/">Paper Notes: Vary</a>
+        <span class="note-list-meta">2026-05-10</span>
+        <p class="note-list-summary">TODO</p>
+      </li>
+      <li class="note-list-item" data-tags="">
+        <a class="note-list-title" href="dots-ocr/">Paper Notes: dots.OCR</a>
+        <span class="note-list-meta">2026-05-10</span>
+        <p class="note-list-summary">TODO</p>
       </li>
     </ul>
+
+    <p class="note-list-empty" data-note-list-empty hidden>No notes match the selected tags.</p>
   </section>
 
   <footer class="site-footer">joe barrow · research scientist</footer>
 
-  <script src="../static/js/site.js" defer></script>
+  <script src="../static/js/site.js?v=bfb16307" defer></script>
 
 
 

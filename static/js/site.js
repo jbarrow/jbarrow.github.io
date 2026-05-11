@@ -51,11 +51,91 @@
     });
   }
 
+  // -- Tag filter ----------------------------------------------------------
+  //
+  // Field-notes index: clicking a .tag-chip toggles a filter. Multiple
+  // selections OR together. Tag pills inside note items behave as shortcut
+  // "select only this tag" actions. URL stays in sync via ?tag=a,b so links
+  // are shareable.
+
+  function attachTagFilter() {
+    const root = document.querySelector('[data-tag-filter-root]');
+    const list = document.querySelector('[data-note-list]');
+    if (!root || !list) return;
+
+    const empty = document.querySelector('[data-note-list-empty]');
+    const items = Array.from(list.querySelectorAll('.note-list-item'));
+    const chips = Array.from(root.querySelectorAll('.tag-chip'));
+
+    const active = new Set();
+    const fromUrl = new URLSearchParams(window.location.search).get('tag');
+    if (fromUrl) {
+      fromUrl.split(',').map(s => s.trim().toLowerCase()).filter(Boolean).forEach(t => active.add(t));
+    }
+
+    function syncUrl() {
+      const params = new URLSearchParams(window.location.search);
+      if (active.size === 0) {
+        params.delete('tag');
+      } else {
+        params.set('tag', Array.from(active).join(','));
+      }
+      const qs = params.toString();
+      const url = window.location.pathname + (qs ? '?' + qs : '') + window.location.hash;
+      window.history.replaceState(null, '', url);
+    }
+
+    function render() {
+      chips.forEach(c => {
+        const t = c.dataset.tagFilter;
+        const on = t === '' ? active.size === 0 : active.has(t);
+        c.classList.toggle('is-active', on);
+      });
+      let shown = 0;
+      items.forEach(li => {
+        const tags = (li.dataset.tags || '').split(/\s+/).filter(Boolean);
+        const match = active.size === 0 || tags.some(t => active.has(t));
+        li.classList.toggle('is-hidden', !match);
+        if (match) shown += 1;
+      });
+      if (empty) empty.hidden = shown !== 0;
+      syncUrl();
+    }
+
+    chips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        const t = chip.dataset.tagFilter;
+        if (t === '') {
+          active.clear();
+        } else if (active.has(t)) {
+          active.delete(t);
+        } else {
+          active.add(t);
+        }
+        render();
+      });
+    });
+
+    list.querySelectorAll('.note-tags .tag-pill').forEach(pill => {
+      pill.addEventListener('click', evt => {
+        evt.preventDefault();
+        const t = pill.dataset.tagFilter;
+        if (!t) return;
+        active.clear();
+        active.add(t);
+        render();
+      });
+    });
+
+    render();
+  }
+
   // -- Init ----------------------------------------------------------------
 
   function init() {
     syncAsides();
     attachCopyButtons();
+    attachTagFilter();
   }
 
   if (document.readyState === 'loading') {

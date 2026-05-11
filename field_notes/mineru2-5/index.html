@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Paper Notes: QED-Nano — Field Notes — Joe Barrow</title>
+  <title>Paper Notes: MinerU2.5 — Field Notes — Joe Barrow</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -37,23 +37,18 @@
       <a href="../../field_notes/">Field Notes</a>
     </p>
 
-    <h1 class="note-title">Paper Notes: QED-Nano</h1>
+    <h1 class="note-title">Paper Notes: MinerU2.5</h1>
 
     <p class="note-updated">last updated 2026-05-10</p>
 
-    <ul class="note-tags">
-      <li><a class="tag-pill" href="../../field_notes/?tag=rl">rl</a></li>
-      <li><a class="tag-pill" href="../../field_notes/?tag=small-models">small-models</a></li>
-      <li><a class="tag-pill" href="../../field_notes/?tag=theorem-proving">theorem-proving</a></li>
-    </ul>
 
     <aside class="paper-card">
       <span class="paper-card-label">Source</span>
-      <h2 class="paper-card-title">QED-Nano: Teaching a Tiny Model to Prove Hard Theorems</h2>
+      <h2 class="paper-card-title">TODO</h2>
       <p class="paper-card-meta">
-LM-Provers Team<span class="sep">·</span>arXiv · 2026      </p>
+TODO<span class="sep">·</span>TODO      </p>
       <div class="paper-downloads">
-        <a class="btn btn-paper" href="../../field_notes/_attachments/qed-nano.pdf" download>
+        <a class="btn btn-paper" href="../../field_notes/_attachments/mineru2-5.pdf" download>
           <span class="btn-icon">↓</span>
           <span class="btn-label">Download</span>
           <span class="btn-meta">PDF</span>
@@ -61,7 +56,11 @@ LM-Provers Team<span class="sep">·</span>arXiv · 2026      </p>
       </div>
     </aside>
 
-    
+    <p>Dataset: &ldquo;model-labeled data and public datasets&rdquo;; Stage (1) data: 2.3MM for layout analysis, 2.4MM for text blocks; 1.1MM for formula blocks; 1.1MM for table blocks. Use the resulting model from stage (1) to sample hard examples for human annotation for stage (2). Stage (2) dataset: 43k layout analysis, 300k text blocks, 147k formula blocks, 140k table blocks.</p>
+<p>Notes: two-stage model, 500MM decoder, 675MM image NativeResVIT encoder. First stage does a resize to 1036x1036 to detect layout elements (uses a Kosmos-like token system, but also predicts orientation and type). Second stage uses native resolution of the boxes of the detected images.</p>
+<p>Like GOT-2.0, they do a multi-stage training pipeline: (0) modality alignment, training only the 2-layer MLP within the patch merger, with image captions (558k); then unfreeze the full model and finetune image captioning+OCR+VQA (665k); (1) layout and OCR pre-training (6.9MM) 2 epochs; (2) layout and OCR finetuning (630k) 3 epochs.</p>
+<p>Separate prompts for layout detection, tables, formula, and text recognition.</p>
+<p>Data Augmentation: Spatial transformations were not applied to layout analysis samples.</p>
   </article>
 
   <footer class="site-footer">joe barrow · research scientist</footer>

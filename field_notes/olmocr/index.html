@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Paper Notes: QED-Nano — Field Notes — Joe Barrow</title>
+  <title>Paper Notes: OlmOCR — Field Notes — Joe Barrow</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -37,23 +37,18 @@
       <a href="../../field_notes/">Field Notes</a>
     </p>
 
-    <h1 class="note-title">Paper Notes: QED-Nano</h1>
+    <h1 class="note-title">Paper Notes: OlmOCR</h1>
 
     <p class="note-updated">last updated 2026-05-10</p>
 
-    <ul class="note-tags">
-      <li><a class="tag-pill" href="../../field_notes/?tag=rl">rl</a></li>
-      <li><a class="tag-pill" href="../../field_notes/?tag=small-models">small-models</a></li>
-      <li><a class="tag-pill" href="../../field_notes/?tag=theorem-proving">theorem-proving</a></li>
-    </ul>
 
     <aside class="paper-card">
       <span class="paper-card-label">Source</span>
-      <h2 class="paper-card-title">QED-Nano: Teaching a Tiny Model to Prove Hard Theorems</h2>
+      <h2 class="paper-card-title">TODO</h2>
       <p class="paper-card-meta">
-LM-Provers Team<span class="sep">·</span>arXiv · 2026      </p>
+TODO<span class="sep">·</span>TODO      </p>
       <div class="paper-downloads">
-        <a class="btn btn-paper" href="../../field_notes/_attachments/qed-nano.pdf" download>
+        <a class="btn btn-paper" href="../../field_notes/_attachments/olmocr.pdf" download>
           <span class="btn-icon">↓</span>
           <span class="btn-label">Download</span>
           <span class="btn-meta">PDF</span>
@@ -61,7 +56,10 @@ LM-Provers Team<span class="sep">·</span>arXiv · 2026      </p>
       </div>
     </aside>
 
-    
+    <p>Dataset: OlmOCR Mix – 260k pages taken from 100k pdfs from the internet; OCR output computed by GPT-4o. Filtered to English docs (using the Lingua package). Sample up to 3 pages from each of the 100k PDFs. Use GPT-4o to generate OCR using: image, text blocks, and locations (task they refer to as DOCUMENT-ANCHORING)</p>
+<p>Evaluation Data: OlmOCR-Bench, 1400 PDFs, 7000 unit tests for evaluation. A super interesting and simple evaluation approach (several binary judgements per page, compute accuracy) rather than the hodgepodge of edit-distance-based metrics.</p>
+<p>text segments are 1-3 sentence spans, verify presence with fuzzy matching. reading order checks that a pair of text segments have the correct ordering. table checks that a table with a cell with a specific value is contained, and is relationally above/below/left/right of another cell with another value. formula checks symbol bounding boxes after rendered with KaTeX.</p>
+<p>Notes: Single training run is 16 hours on an 8xH100 node (7B Qwen model), for 1.2 epochs. PDF is rendered to a max of 1024px on the longest edge, aspect ratio is retained. Typical prompt is 1k tokens for the image, and 1800 tokens for the anchor text.</p>
   </article>
 
   <footer class="site-footer">joe barrow · research scientist</footer>

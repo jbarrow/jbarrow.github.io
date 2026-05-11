@@ -302,7 +302,7 @@ a:hover { text-decoration: underline; }
 /* On note pages the card follows a tighter heading block, so reset
    the negative top-margin used to align it with post bylines. */
 .note .paper-card {
-  margin-top: 0;
+  margin-top: 20px;
 }
 
 /* Body copy -------------------------------------------------------------- */
@@ -1076,6 +1076,83 @@ details.callout[open] > summary.callout-title::before { content: "▾ "; }
   color: var(--ink-soft);
   margin: 4px 0 0;
   max-width: 60ch;
+}
+
+/* Tags ------------------------------------------------------------------- */
+
+.note-tags {
+  grid-column: 1 / -1;
+  list-style: none;
+  margin: 8px 8px 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.note .note-tags {
+  margin: 4px 0 0;
+}
+
+.tag-pill {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-soft);
+  background: transparent;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 1px 7px;
+  letter-spacing: -0.01em;
+  line-height: 1.5;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.tag-pill:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  text-decoration: none;
+}
+
+.tag-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 24px;
+}
+
+.tag-chip {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-soft);
+  background: transparent;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 3px 9px;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  line-height: 1.5;
+}
+
+.tag-chip:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.tag-chip.is-active {
+  color: var(--paper);
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+.note-list-item.is-hidden { display: none; }
+
+.note-list-empty {
+  font-size: 14px;
+  color: var(--ink-faint);
+  font-style: italic;
+  padding: 16px 0;
 }
 
 /* Footer ----------------------------------------------------------------- */

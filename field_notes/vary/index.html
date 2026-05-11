@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Paper Notes: QED-Nano — Field Notes — Joe Barrow</title>
+  <title>Paper Notes: Vary — Field Notes — Joe Barrow</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -37,23 +37,18 @@
       <a href="../../field_notes/">Field Notes</a>
     </p>
 
-    <h1 class="note-title">Paper Notes: QED-Nano</h1>
+    <h1 class="note-title">Paper Notes: Vary</h1>
 
     <p class="note-updated">last updated 2026-05-10</p>
 
-    <ul class="note-tags">
-      <li><a class="tag-pill" href="../../field_notes/?tag=rl">rl</a></li>
-      <li><a class="tag-pill" href="../../field_notes/?tag=small-models">small-models</a></li>
-      <li><a class="tag-pill" href="../../field_notes/?tag=theorem-proving">theorem-proving</a></li>
-    </ul>
 
     <aside class="paper-card">
       <span class="paper-card-label">Source</span>
-      <h2 class="paper-card-title">QED-Nano: Teaching a Tiny Model to Prove Hard Theorems</h2>
+      <h2 class="paper-card-title">TODO</h2>
       <p class="paper-card-meta">
-LM-Provers Team<span class="sep">·</span>arXiv · 2026      </p>
+TODO<span class="sep">·</span>TODO      </p>
       <div class="paper-downloads">
-        <a class="btn btn-paper" href="../../field_notes/_attachments/qed-nano.pdf" download>
+        <a class="btn btn-paper" href="../../field_notes/_attachments/vary.pdf" download>
           <span class="btn-icon">↓</span>
           <span class="btn-label">Download</span>
           <span class="btn-meta">PDF</span>
@@ -61,7 +56,13 @@ LM-Provers Team<span class="sep">·</span>arXiv · 2026      </p>
       </div>
     </aside>
 
-    
+    <p>Dataset: Two phases.</p>
+<p>First &ldquo;generation&rdquo; phase data engine: pdfs from arXiv and CC-MAIN-2021-31-PDFUNTRUNCATED, plus Chinese eBooks. PyMuPDF to extract all the text and render the PDFs. 1MM english and 1MM chinese pages. 250k charts in Chinese and English using matplotlib, and 500k charts in Chinese and English using pyecharts. Title, y-axis, x-axis, etc. are randomly selected from an NLP corpus.</p>
+<p>Second &ldquo;scaling up&rdquo; phase data engine: .tex files from arxiv, rendered onto single pages. 500k english pages and 400k chinese pages. GPT-4 generated charts (200k).</p>
+<p>DocVQA and ChartQA data for conversation format.</p>
+<p>Model size: vary-tiny: 136MM (ViTDet) + 125MM (OPT-125M) = 261MM, vary-base: 136MM + 250MM (CLIP-L) + 7B ~= 7B</p>
+<p>Notes: &ldquo;Scaling up Vision vocabulary&rdquo;, the authors train a second high-res (1024x1024) ViT on document images that they use to augment the frozen CLIP embeddings (computed from a 224x224 image). They use a two-stage training pipeline to do this, first using OPT-125M as the decoder, then scaling up to a 7B param decoder.</p>
+<p>They do a token resampling step using a convolutional neural network (really just to align the VitDET 64x64x256 outputs to the CLIP 256x1024 outputs): 64x64x256 -&gt; 32x32x512 -&gt; 16x16x1024.</p>
   </article>
 
   <footer class="site-footer">joe barrow · research scientist</footer>
