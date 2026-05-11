@@ -1297,6 +1297,10 @@ footer.site-footer {
   letter-spacing: -0.01em;
 }
 
+.site-footer a { color: inherit; }
+.site-footer a:hover { color: var(--accent); }
+.site-footer-sep { margin: 0 6px; }
+
 /* About Portrait --- */
 
 .about-portrait {

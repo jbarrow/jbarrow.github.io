@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Joe Barrow</title>
+  <link href="https://jbarrow.ai/" rel="alternate" type="text/html"/>
+  <link href="https://jbarrow.ai/feed.xml" rel="self" type="application/atom+xml"/>
+  <id>https://jbarrow.ai/</id>
+  <updated>2025-01-22T00:00:00Z</updated>
+  <author>
+    <name>Joe Barrow</name>
+  </author>
+  <entry>
+    <title>Google Gemini 102 - Advanced Structured Outputs</title>
+    <link href="https://jbarrow.ai/2025-01-22-gemini-102/" rel="alternate" type="text/html"/>
+    <id>https://jbarrow.ai/2025-01-22-gemini-102/</id>
+    <updated>2025-01-22T00:00:00Z</updated>
+    <summary>Probing the supported output types of Gemini.</summary>
+    <author><name>Joe Barrow</name></author>
+  </entry>
+  <entry>
+    <title>Google Gemini 101 - Object Detection</title>
+    <link href="https://jbarrow.ai/2025-01-15-gemini-101/" rel="alternate" type="text/html"/>
+    <id>https://jbarrow.ai/2025-01-15-gemini-101/</id>
+    <updated>2025-01-15T00:00:00Z</updated>
+    <summary>Navigating Gemini&#39;s API for object detection with vision and Structured Outputs.</summary>
+    <author><name>Joe Barrow</name></author>
+  </entry>
+  <entry>
+    <title>Be Careful Interpreting Averaged Benchmarks</title>
+    <link href="https://jbarrow.ai/2025-01-09-averaged-benchmarks/" rel="alternate" type="text/html"/>
+    <id>https://jbarrow.ai/2025-01-09-averaged-benchmarks/</id>
+    <updated>2025-01-09T00:00:00Z</updated>
+    <summary>Thoughts on averaged benchmarks and hidden correlations.</summary>
+    <author><name>Joe Barrow</name></author>
+  </entry>
+  <entry>
+    <title>Introduction to TinyHNSW</title>
+    <link href="https://jbarrow.ai/2024-12-01-introduction-to-tinyhnsw/" rel="alternate" type="text/html"/>
+    <id>https://jbarrow.ai/2024-12-01-introduction-to-tinyhnsw/</id>
+    <updated>2024-12-01T00:00:00Z</updated>
+    <summary>The first post in the TinyHNSW series, introducing the tutorial and the library.</summary>
+    <author><name>Joe Barrow</name></author>
+  </entry>
+</feed>
