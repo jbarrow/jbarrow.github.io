@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Paper Notes: LightOnOCR 2 — Field Notes — Joe Barrow</title>
+  <title>Paper Notes: dots.mOCR — Field Notes — Joe Barrow</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -56,27 +56,39 @@
       <a href="../../field_notes/">Field Notes</a>
     </p>
 
-    <h1 class="note-title">Paper Notes: LightOnOCR 2</h1>
+    <h1 class="note-title">Paper Notes: dots.mOCR</h1>
 
-    <p class="note-updated">last updated 2026-05-10</p>
+    <p class="note-updated">last updated 2026-05-12</p>
 
+    <ul class="note-tags">
+      <li><a class="tag-pill" href="../../field_notes/?tag=vlm-ocr">vlm-ocr</a></li>
+    </ul>
 
     <aside class="paper-card">
       <span class="paper-card-label">Source</span>
-      <h2 class="paper-card-title">TODO</h2>
+      <h2 class="paper-card-title">Multimodal OCR: Parse Anything from Documents</h2>
       <p class="paper-card-meta">
-TODO<span class="sep">·</span>TODO      </p>
+Handong Zheng et al.<span class="sep">·</span>arXiv · 2026      </p>
       <div class="paper-downloads">
-        <a class="btn btn-paper" href="../../field_notes/_attachments/lightonocr-1-and-2.pdf" download>
+        <a class="btn btn-paper" href="../../field_notes/_attachments/dots.mocr.pdf" download>
           <span class="btn-icon">↓</span>
           <span class="btn-label">Download</span>
+          <span class="btn-meta">PDF</span>
+        </a>
+        <a class="btn btn-paper-annotated" href="../../field_notes/_attachments/dots.mocr-annotated.pdf" download>
+          <span class="btn-icon">↓</span>
+          <span class="btn-label">Download Annotated</span>
           <span class="btn-meta">PDF</span>
         </a>
       </div>
     </aside>
 
-    <p>https://arxiv.org/pdf/2601.14251</p>
-<p>RLVR like OlmOCR, open data set (16MM pages from the PDFA corpus)</p>
+    <aside class="callout callout-abstract">
+<p class="callout-title">Abstract</p>
+<p>A 3B param VLM that scores 83.9 on olmOCR bench. Trained not only to generate text, but to derender charts, tables, formulas, and SVGs.</p>
+</aside>
+<p>An extension to <a class="wiki-link" href="../../field_notes/dots-ocr/">dots.OCR</a>. They claim to <mark>introduce a new task, <strong>Multimodal OCR</strong> that parses ~all parts of a document into some representation</mark> (SVG, LaTeX equation, HTML table, etc.). Note that formulas and table derendering is already a pretty standard part of many OCR models, e.g., <a class="wiki-link" href="../../field_notes/olmocr-2/">OlmOCR 2</a>, which has a custom RL reward for formulas or <a class="wiki-link" href="../../field_notes/lightonocr-1-and-2/">LightOnOCR 2</a>, which outputs HTML tables. CharXiv is used to derender chart figures.</p>
+<p>Paper also points to <a href="https://arxiv.org/abs/2312.11556">StarVector</a>, a model/dataset for generating SVGs from images.</p>
   </article>
 
   <footer class="site-footer">

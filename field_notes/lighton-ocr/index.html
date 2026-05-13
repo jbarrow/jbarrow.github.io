@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Paper Notes: LightOn OCR — Field Notes — Joe Barrow</title>
+  <title>Paper Notes: LightOnOCR — Field Notes — Joe Barrow</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -56,9 +56,9 @@
       <a href="../../field_notes/">Field Notes</a>
     </p>
 
-    <h1 class="note-title">Paper Notes: LightOn OCR</h1>
+    <h1 class="note-title">Paper Notes: LightOnOCR</h1>
 
-    <p class="note-updated">last updated 2026-05-10</p>
+    <p class="note-updated">last updated 2026-05-12</p>
 
 
     <aside class="paper-card">
@@ -75,7 +75,11 @@ TODO<span class="sep">·</span>TODO      </p>
       </div>
     </aside>
 
-    <p>Notes: 400MM param NaViT vision encoder, 600MM param language encoder (Qwen-3). They also show that 2-stage training is ~on par with (and maybe even a little worse than) 1 stage training! Cite FineVision as a model that found something similar. Huge improvements to using the 72B qwen as opposed to the 7B qwen.</p>
+    <aside class="callout callout-abstract">
+<p class="callout-title">TL;DR</p>
+<p>They assemble their own Qwen3-VL-1B (Qwen3-VL comes in 2B+ variants) by combining NaViT and Qwen3-0.6B into a single VLM-based OCR model. Train it on 16MM pages from PixParse (from the PDFA corpus) and release it.</p>
+</aside>
+<p>Notes: 400MM param NaViT vision encoder, 600MM param language encoder (Qwen-3). They also show that 2-stage training is ~on par with (and maybe even a little worse than) 1 stage training! Cite FineVision as a model that found something similar. Huge improvements to using the 72B qwen as opposed to the 7B qwen.</p>
 <p>Another paper that shows that resolution matters!</p>
 <p>Distill data from Qwen2-VL-72B-Instruct, prompted to do OCR to markdown with latex formatting. Compare against legacy OCR systems to filter for hallucinations. Generate a full dataset of 17.6MM pages, and 45.5B tokens.</p>
   </article>
