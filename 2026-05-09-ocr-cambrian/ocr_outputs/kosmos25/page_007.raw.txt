@@ -1,0 +1,80 @@
+<bbox><x_85><y_103><x_431><y_119></bbox>Table 3. Object detection performance (AP; higher is better) by
+<bbox><x_85><y_119><x_150><y_135></bbox>widget type.
+<bbox><x_94><y_154><x_134><y_173></bbox>Model
+<bbox><x_234><y_154><x_261><y_173></bbox>Text
+<bbox><x_282><y_154><x_325><y_173></bbox>Choice
+<bbox><x_341><y_154><x_363><y_173></bbox>Sig.
+<bbox><x_395><y_154><x_414><y_173></bbox>All
+<bbox><x_238><y_172><x_257><y_189></bbox>AP
+<bbox><x_290><y_172><x_309><y_189></bbox>AP
+<bbox><x_343><y_172><x_361><y_189></bbox>AP
+<bbox><x_395><y_172><x_414><y_189></bbox>AP
+<bbox><x_239><y_192><x_256><y_217></bbox>( ↑ )
+<bbox><x_291><y_192><x_308><y_217></bbox>( ↑ )
+<bbox><x_343><y_192><x_361><y_217></bbox>( ↑ )
+<bbox><x_396><y_192><x_413><y_217></bbox>( ↑ )
+<bbox><x_94><y_214><x_212><y_231></bbox>FFDNet-S (1216px)
+<bbox><x_235><y_214><x_260><y_231></bbox>61.5
+<bbox><x_287><y_214><x_312><y_231></bbox>71.3
+<bbox><x_339><y_214><x_365><y_231></bbox>84.2
+<bbox><x_392><y_214><x_418><y_231></bbox>72.3
+<bbox><x_94><y_231><x_212><y_249></bbox>FFDNet-L (1216px)
+<bbox><x_235><y_231><x_260><y_249></bbox>71.4
+<bbox><x_287><y_231><x_312><y_249></bbox>78.1
+<bbox><x_339><y_231><x_365><y_249></bbox>93.5
+<bbox><x_392><y_231><x_418><y_249></bbox>81.0
+<bbox><x_157><y_270><x_359><y_286></bbox>Table 4. Object detection performance
+<bbox><x_91><y_305><x_157><y_324></bbox>Resolution
+<bbox><x_183><y_305><x_210><y_324></bbox>Text
+<bbox><x_242><y_305><x_285><y_324></bbox>Choice
+<bbox><x_319><y_305><x_342><y_324></bbox>Sig.
+<bbox><x_388><y_305><x_407><y_324></bbox>All
+<bbox><x_177><y_323><x_216><y_350></bbox>AP ( ↑ )
+<bbox><x_244><y_323><x_283><y_350></bbox>AP ( ↑ )
+<bbox><x_310><y_323><x_350><y_350></bbox>AP ( ↑ )
+<bbox><x_378><y_323><x_417><y_350></bbox>AP ( ↑ )
+<bbox><x_91><y_347><x_127><y_365></bbox>640px
+<bbox><x_184><y_347><x_209><y_365></bbox>49.2
+<bbox><x_251><y_347><x_276><y_365></bbox>52.2
+<bbox><x_317><y_347><x_343><y_365></bbox>26.7
+<bbox><x_385><y_347><x_410><y_365></bbox>42.7
+<bbox><x_91><y_365><x_127><y_382></bbox>960px
+<bbox><x_184><y_365><x_209><y_382></bbox>52.3
+<bbox><x_251><y_365><x_276><y_382></bbox>62.0
+<bbox><x_317><y_365><x_343><y_382></bbox>44.0
+<bbox><x_385><y_365><x_410><y_382></bbox>52.8
+<bbox><x_91><y_382><x_135><y_399></bbox>1216px
+<bbox><x_184><y_382><x_209><y_399></bbox>53.0
+<bbox><x_251><y_382><x_276><y_399></bbox>65.8
+<bbox><x_317><y_382><x_343><y_399></bbox>54.9
+<bbox><x_385><y_382><x_410><y_399></bbox>57.9
+<bbox><x_91><y_399><x_135><y_417></bbox>1536px
+<bbox><x_184><y_399><x_209><y_417></bbox>53.2
+<bbox><x_251><y_399><x_276><y_417></bbox>67.9
+<bbox><x_317><y_399><x_343><y_417></bbox>65.3
+<bbox><x_385><y_399><x_410><y_417></bbox>62.1
+<bbox><x_85><y_452><x_431><y_469></bbox>ing tens of form ﬁelds per form page, and low precision,
+<bbox><x_85><y_469><x_367><y_487></bbox>table elements and separator lines for text ﬁelds.
+<bbox><x_85><y_496><x_429><y_516></bbox>5.3. FFDNet is Robust Across Languages/Domains
+<bbox><x_85><y_522><x_431><y_540></bbox>Building on the language and domain analysis from Sec-
+<bbox><x_85><y_540><x_431><y_557></bbox>tion 3 , we can compare the performance per-language and
+<bbox><x_85><y_557><x_156><y_575></bbox>per-domain.
+<bbox><x_103><y_575><x_431><y_592></bbox>Both sizes of FFDNet have similar performance across
+<bbox><x_85><y_592><x_431><y_609></bbox>9 of the 10 most common languages, though they suffer
+<bbox><x_85><y_609><x_431><y_627></bbox>from degraded performance in Russian. FFDNet-S has a
+<bbox><x_85><y_627><x_431><y_644></bbox>higher variance across languages, as the network is likely
+<bbox><x_85><y_644><x_431><y_662></bbox>not equipped with enough parameters to faithfully capture
+<bbox><x_85><y_661><x_282><y_679></bbox>textual signals across languages.
+<bbox><x_293><y_661><x_431><y_679></bbox>Similarly, both models
+<bbox><x_85><y_679><x_431><y_696></bbox>perform conssitently across domains, with FFDNet-S hav-
+<bbox><x_85><y_696><x_353><y_714></bbox>ing a slightly higher variance than FFDNet-L.
+<bbox><x_85><y_723><x_350><y_744></bbox>5.4. Filtering Improves Data Efﬁciency
+<bbox><x_85><y_750><x_431><y_767></bbox>C OMMON F ORMS employs an aggressive ﬁltering strategy
+<bbox><x_85><y_767><x_431><y_785></bbox>to maximize the likelihood that pages in the dataset are
+<bbox><x_85><y_785><x_431><y_802></bbox>well-prepared forms. However, this is done at the cost of
+<bbox><x_85><y_802><x_431><y_819></bbox>potentially more usable data ending up in the training set.
+<bbox><x_85><y_819><x_431><y_837></bbox>To evaluate this trade-off, we train a 6 million parameter
+<bbox><x_85><y_837><x_431><y_854></bbox>FFDNet model on 10k form pages drawn from the ﬁltered
+<bbox><x_85><y_854><x_431><y_872></bbox>set of forms (59k documents), and the same model on 10k
+<bbox><x_85><y_871><x_431><y_889></bbox>form pages drawn from the set of all forms (760k docu-
+<bbox><x_85><y_889><x_431><y_914></bbox>ments). The mAP 50 − 95 when measured on the test set

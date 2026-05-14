@@ -1,0 +1,147 @@
+<bbox><x_207><y_266><x_231><y_282></bbox>English
+<bbox><x_222><y_266><x_254><y_286></bbox>Vietnamese
+<bbox><x_253><y_266><x_278><y_282></bbox>German
+<bbox><x_279><y_266><x_302><y_282></bbox>Korean
+<bbox><x_301><y_266><x_326><y_283></bbox>Spanish
+<bbox><x_328><y_266><x_350><y_282></bbox>French
+<bbox><x_350><y_266><x_374><y_282></bbox>Russian
+<bbox><x_377><y_266><x_398><y_282></bbox>Italian
+<bbox><x_386><y_266><x_422><y_286></bbox>Portuguese
+<bbox><x_421><y_266><x_447><y_282></bbox>Oriental
+<bbox><x_450><y_266><x_470><y_281></bbox>Dutch
+<bbox><x_471><y_266><x_494><y_282></bbox>Danish
+<bbox><x_498><y_266><x_518><y_281></bbox>Greek
+<bbox><x_515><y_266><x_542><y_283></bbox>German
+<bbox><x_542><y_266><x_566><y_282></bbox>Italiano
+<bbox><x_557><y_266><x_590><y_286></bbox>Portuguese
+<bbox><x_588><y_266><x_614><y_282></bbox>Russian
+<bbox><x_614><y_266><x_637><y_282></bbox>Bosnian
+<bbox><x_641><y_266><x_662><y_281></bbox>Czech
+<bbox><x_661><y_266><x_686><y_282></bbox>Turkish
+<bbox><x_189><y_259><x_193><y_268></bbox>0
+<bbox><x_185><y_238><x_193><y_247></bbox>10
+<bbox><x_185><y_217><x_193><y_226></bbox>20
+<bbox><x_185><y_196><x_193><y_205></bbox>30
+<bbox><x_185><y_175><x_193><y_184></bbox>40
+<bbox><x_185><y_154><x_193><y_163></bbox>50
+<bbox><x_185><y_133><x_193><y_142></bbox>60
+<bbox><x_185><y_112><x_193><y_121></bbox>70
+<bbox><x_173><y_156><x_183><y_220></bbox>Percent of Pages (%)
+<bbox><x_220><y_121><x_240><y_130></bbox>63.6%
+<bbox><x_244><y_227><x_264><y_236></bbox>12.6%
+<bbox><x_270><y_239><x_286><y_248></bbox>6.8%
+<bbox><x_294><y_248><x_310><y_257></bbox>2.6%
+<bbox><x_318><y_249><x_334><y_258></bbox>2.0%
+<bbox><x_342><y_249><x_358><y_258></bbox>2.2%
+<bbox><x_366><y_252><x_382><y_261></bbox>1.0%
+<bbox><x_390><y_252><x_406><y_261></bbox>0.9%
+<bbox><x_415><y_252><x_430><y_261></bbox>0.9%
+<bbox><x_438><y_252><x_454><y_261></bbox>0.7%
+<bbox><x_462><y_252><x_478><y_261></bbox>0.6%
+<bbox><x_486><y_252><x_502><y_261></bbox>0.6%
+<bbox><x_510><y_252><x_526><y_261></bbox>0.6%
+<bbox><x_534><y_252><x_550><y_261></bbox>0.5%
+<bbox><x_558><y_252><x_574><y_261></bbox>0.5%
+<bbox><x_582><y_252><x_598><y_261></bbox>0.4%
+<bbox><x_606><y_252><x_621><y_261></bbox>0.3%
+<bbox><x_630><y_252><x_646><y_261></bbox>0.2%
+<bbox><x_654><y_252><x_669><y_261></bbox>0.2%
+<bbox><x_678><y_253><x_694><y_262></bbox>0.2%
+<bbox><x_396><y_102><x_519><y_113></bbox>Top Languages in CommonForms
+<bbox><x_225><y_289><x_670><y_303></bbox>(a) Language distribution of the top 20 languages. One third of the documents are non-English.
+<bbox><x_215><y_455><x_234><y_470></bbox>Greek
+<bbox><x_225><y_455><x_263><y_480></bbox>CommonText
+<bbox><x_247><y_455><x_291><y_484></bbox>Mortgage Only
+<bbox><x_282><y_455><x_319><y_480></bbox>English Only
+<bbox><x_305><y_455><x_347><y_482></bbox>English & UK
+<bbox><x_332><y_455><x_375><y_482></bbox>English & USA
+<bbox><x_362><y_455><x_403><y_482></bbox>Use & permit
+<bbox><x_408><y_455><x_430><y_471></bbox>French
+<bbox><x_427><y_455><x_459><y_476></bbox>EducaText
+<bbox><x_447><y_455><x_487><y_480></bbox>EmotionText
+<bbox><x_486><y_455><x_515><y_474></bbox>Bulgarian
+<bbox><x_499><y_455><x_543><y_483></bbox>Bulgarian Text
+<bbox><x_501><y_455><x_571><y_489></bbox>Cultural & language
+<bbox><x_563><y_455><x_598><y_478></bbox>Best English
+<bbox><x_592><y_455><x_626><y_478></bbox>Best permit
+<bbox><x_596><y_455><x_654><y_491></bbox>Sports & Recreation
+<bbox><x_626><y_455><x_682><y_491></bbox>Telecommunication
+<bbox><x_191><y_447><x_195><y_456></bbox>0
+<bbox><x_191><y_425><x_195><y_434></bbox>5
+<bbox><x_187><y_404><x_195><y_413></bbox>10
+<bbox><x_187><y_382><x_195><y_391></bbox>15
+<bbox><x_187><y_360><x_195><y_369></bbox>20
+<bbox><x_187><y_339><x_195><y_348></bbox>25
+<bbox><x_187><y_317><x_195><y_326></bbox>30
+<bbox><x_176><y_355><x_186><y_418></bbox>Percent of Pages (%)
+<bbox><x_224><y_347><x_244><y_356></bbox>22.1%
+<bbox><x_254><y_400><x_270><y_409></bbox>9.9%
+<bbox><x_282><y_411><x_298><y_420></bbox>7.4%
+<bbox><x_310><y_412><x_326><y_421></bbox>7.1%
+<bbox><x_338><y_415><x_354><y_424></bbox>6.5%
+<bbox><x_366><y_417><x_382><y_426></bbox>6.1%
+<bbox><x_394><y_417><x_410><y_426></bbox>6.0%
+<bbox><x_422><y_418><x_438><y_427></bbox>5.8%
+<bbox><x_450><y_419><x_466><y_428></bbox>5.7%
+<bbox><x_478><y_421><x_494><y_430></bbox>5.1%
+<bbox><x_505><y_424><x_522><y_433></bbox>4.5%
+<bbox><x_534><y_426><x_550><y_435></bbox>4.0%
+<bbox><x_561><y_427><x_577><y_436></bbox>3.7%
+<bbox><x_589><y_433><x_605><y_442></bbox>2.4%
+<bbox><x_617><y_433><x_634><y_442></bbox>2.1%
+<bbox><x_646><y_438><x_662><y_447></bbox>1.1%
+<bbox><x_674><y_441><x_690><y_450></bbox>0.5%
+<bbox><x_387><y_310><x_528><y_320></bbox>Domain Distribution of CommonForms
+<bbox><x_356><y_501><x_539><y_515></bbox>(b) Domain distribution of 14 domains.
+<bbox><x_166><y_530><x_729><y_545></bbox>Figure 3. Distributions showing the diverse set of languages and domains represented in C OMMON F ORMS .
+<bbox><x_103><y_577><x_431><y_594></bbox>We split the data into a training, validation, and test set.
+<bbox><x_85><y_594><x_431><y_611></bbox>We split the train set by document, rather than page, to en-
+<bbox><x_85><y_611><x_431><y_629></bbox>sure that similar pages used in training do not leak into the
+<bbox><x_85><y_629><x_431><y_646></bbox>validation and test sets. We build an 8k page validation set
+<bbox><x_85><y_646><x_431><y_663></bbox>and a 25k page test set, reserving the rest of the documents
+<bbox><x_85><y_663><x_155><y_681></bbox>for training.
+<bbox><x_85><y_694><x_277><y_715></bbox>3.2. Annotation Consistency
+<bbox><x_85><y_722><x_431><y_740></bbox>Forms from the Web are not consistently annotated. De-
+<bbox><x_85><y_740><x_431><y_757></bbox>spite extensive ﬁltering that reduces the candidate set of
+<bbox><x_85><y_757><x_431><y_774></bbox>documents by more than 99%, there are still annotation in-
+<bbox><x_85><y_774><x_431><y_792></bbox>consistencies in the prepared forms. These can negatively
+<bbox><x_85><y_792><x_431><y_809></bbox>impact the real-world performance of any models trained
+<bbox><x_85><y_809><x_431><y_827></bbox>on C OMMON F ORMS . We provide a representative, but not
+<bbox><x_85><y_827><x_400><y_844></bbox>exhaustive, catalog of such inconsistencies in Table 1 .
+<bbox><x_103><y_845><x_431><y_863></bbox>Some of these arise from unconventional or incorrect use
+<bbox><x_85><y_863><x_431><y_880></bbox>of form elements. A common pattern is to see form ﬁelds
+<bbox><x_85><y_880><x_431><y_897></bbox>used as headers and footers in a document. The automati-
+<bbox><x_85><y_897><x_431><y_915></bbox>cally prepared forms can suffer from misleading heuristics,
+<bbox><x_85><y_915><x_431><y_932></bbox>which often look for straight horizontal lines where form
+<bbox><x_85><y_932><x_431><y_950></bbox>ﬁelds would likely be placed. This leads to the inclusion
+<bbox><x_85><y_950><x_431><y_967></bbox>of spurious form ﬁelds. Text ﬁelds can be used in place of
+<bbox><x_85><y_967><x_431><y_984></bbox>signature ﬁelds, or signature ﬁelds are left blank, intended
+<bbox><x_85><y_984><x_372><y_1002></bbox>for a wet signature rather than a digital signature.
+<bbox><x_103><y_1003><x_431><y_1020></bbox>However, some of these are related to the semantics of
+<bbox><x_85><y_1020><x_431><y_1038></bbox>the form itself. “For Ofﬁcial Use Only” sections are some-
+<bbox><x_464><y_577><x_667><y_594></bbox>times ﬁllable and sometimes not.
+<bbox><x_680><y_577><x_810><y_594></bbox>Similarly, forms with
+<bbox><x_464><y_594><x_810><y_611></bbox>“Circle All that Apply” sections are only occasionally in-
+<bbox><x_464><y_611><x_757><y_629></bbox>teractive, even if the rest of the form is interactive.
+<bbox><x_481><y_630><x_810><y_647></bbox>Qualitative results show that despite these inconsisten-
+<bbox><x_464><y_647><x_810><y_665></bbox>cies, models trained on C OMMON F ORMS are eminently
+<bbox><x_464><y_665><x_810><y_682></bbox>useful, even on complex forms. These systematic incon-
+<bbox><x_464><y_682><x_810><y_700></bbox>sistencies provide an adverse training signal, and are a con-
+<bbox><x_464><y_700><x_810><y_717></bbox>sequence of using scraped forms rather than manually an-
+<bbox><x_464><y_717><x_810><y_734></bbox>notating a dataset. However, they are a trade-off made to
+<bbox><x_464><y_734><x_810><y_752></bbox>scale the dataset to a practical size. We do not attempt to
+<bbox><x_464><y_752><x_810><y_769></bbox>ﬁlter any of these annotation inconsistencies and leave that
+<bbox><x_464><y_769><x_592><y_787></bbox>effort for future work.
+<bbox><x_464><y_800><x_655><y_821></bbox>3.3. Language Identiﬁcation
+<bbox><x_464><y_828><x_810><y_845></bbox>Although many cues for where a form ﬁeld should go are vi-
+<bbox><x_464><y_845><x_810><y_863></bbox>sual, such as an underline or empty box, there are many tex-
+<bbox><x_464><y_863><x_810><y_880></bbox>tual cues as well. Cues such as colons before blank spaces,
+<bbox><x_464><y_880><x_810><y_897></bbox>circle or check all that apply sequences, and column headers
+<bbox><x_464><y_897><x_810><y_915></bbox>all use text to indicate the presence of a form ﬁeld. There
+<bbox><x_464><y_915><x_810><y_932></bbox>is also a difference in form ﬁeld placement in right-to-left
+<bbox><x_464><y_932><x_810><y_950></bbox>and left-to-right language. As such, models trained to de-
+<bbox><x_464><y_950><x_810><y_967></bbox>tect form ﬁelds beneﬁt from a large number of examples for
+<bbox><x_464><y_967><x_551><y_984></bbox>each language.
+<bbox><x_481><y_986><x_809><y_1003></bbox>We perform language identiﬁcation on C OMMON -
+<bbox><x_464><y_1003><x_810><y_1020></bbox>F ORMS by extracting all of the text from every page, and
+<bbox><x_464><y_1020><x_810><y_1038></bbox>FastText [ 12 ] to classify the likeliest language per page. We

@@ -17,6 +17,7 @@
 
   <link rel="stylesheet" href="../static/viz/viz.css?v=102d13da">
 
+  <link rel="stylesheet" href="ocr_viz.css">
 
 
   <script>
@@ -135,6 +136,14 @@ It&rsquo;s not an exact science, but the trends are still there.</p>
     </svg>
   </div>
 </figure>
+
+<h2>Comparing OCR Outputs</h2>
+<p>To make the differences between approaches concrete, the figures below run three open models — LightOnOCR-2-1b (ungrounded markdown), KOSMOS-2.5 (line-level blocks, no roles), and Chandra (block-level with role labels) — against the same input pages. Switch tabs to overlay each model&rsquo;s blocks on the page; the raw output sits next to it.</p>
+<figure class="figure" markdown="0">
+  <div class="figure-eyebrow">Fig. 03 / OCR comparison — page 1</div>
+  <h2 class="figure-title">Three OCR models, three types of outputs</h2>
+  <div class="ocr-viz" data-page="0"></div>
+</figure>
 <section class="references">
 <h2 class="references-title">References</h2>
 <ol class="reference-list">
@@ -192,6 +201,7 @@ It&rsquo;s not an exact science, but the trends are still there.</p>
   <script src="../static/viz/viz.js?v=169fa9b7"></script>
 
   <script src="chart.js"></script>
+  <script src="ocr_viz.js"></script>
 
 
 </body>

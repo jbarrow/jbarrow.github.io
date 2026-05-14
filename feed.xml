@@ -4,10 +4,18 @@
   <link href="https://jbarrow.ai/" rel="alternate" type="text/html"/>
   <link href="https://jbarrow.ai/feed.xml" rel="self" type="application/atom+xml"/>
   <id>https://jbarrow.ai/</id>
-  <updated>2026-05-12T00:00:00Z</updated>
+  <updated>2026-05-13T00:00:00Z</updated>
   <author>
     <name>Joe Barrow</name>
   </author>
+  <entry>
+    <title>Agents have (Information) Needs</title>
+    <link href="https://jbarrow.ai/2026-05-13-agentic-information-need/" rel="alternate" type="text/html"/>
+    <id>https://jbarrow.ai/2026-05-13-agentic-information-need/</id>
+    <updated>2026-05-13T00:00:00Z</updated>
+    <summary>Information retrieval isn&#39;t about queries, it&#39;s about satisfying an information need. Your agent is capable of expressing one, so you should probably use it.</summary>
+    <author><name>Joe Barrow</name></author>
+  </entry>
   <entry>
     <title>OCR&#39;s Cambrian Explosion 1 - Introduction</title>
     <link href="https://jbarrow.ai/2026-05-09-ocr-cambrian/" rel="alternate" type="text/html"/>

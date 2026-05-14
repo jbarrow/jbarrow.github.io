@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="650" viewBox="0 0 620 300" role="img">
+  <title>The anatomy of information retrieval</title>
+  <desc>A user's latent information need becomes a query to a retrieval system, which returns ranked documents back to the user as a feedback loop.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <style>
+      @font-face { font-family: 'Geist'; font-weight: 400; src: url('https://cdn.jsdelivr.net/npm/@fontsource/geist/files/geist-latin-400-normal.woff2') format('woff2'); }
+      @font-face { font-family: 'Geist'; font-weight: 500; src: url('https://cdn.jsdelivr.net/npm/@fontsource/geist/files/geist-latin-500-normal.woff2') format('woff2'); }
+      text { font-family: 'Geist', system-ui, sans-serif; fill: #1c1c1a; }
+      .ts { font-size: 12px; fill: #5f5e5a; }
+      .th { font-size: 14px; font-weight: 500; }
+      .coral-fill { fill: #FAECE7; stroke: #993C1D; }
+      .coral-text-th { fill: #4A1B0C; font-size: 14px; font-weight: 500; }
+      .coral-text-ts { fill: #712B13; font-size: 12px; }
+      .blue-fill { fill: #E6F1FB; stroke: #185FA5; }
+      .blue-text-th { fill: #042C53; font-size: 14px; font-weight: 500; }
+      .blue-text-ts { fill: #0C447C; font-size: 12px; }
+      .doc-fill { fill: #f4f3ec; stroke: #b4b2a9; }
+      .arr { stroke: #5f5e5a; stroke-width: 1.5; fill: none; stroke-linecap: round; }
+    </style>
+  </defs>
+
+  <rect class="coral-fill" x="40" y="10" width="160" height="56" rx="4" stroke-width="0.5"/>
+  <text class="coral-text-th" x="120" y="30" text-anchor="middle" dominant-baseline="central">Information need</text>
+  <text class="coral-text-ts" x="120" y="48" text-anchor="middle" dominant-baseline="central">Latent, in the mind</text>
+
+  <circle cx="115" cy="80" r="3" fill="#D85A30" opacity="0.55"/>
+  <circle cx="110" cy="92" r="2.4" fill="#D85A30" opacity="0.4"/>
+  <circle cx="105" cy="102" r="1.8" fill="#D85A30" opacity="0.3"/>
+
+  <circle class="coral-fill" cx="103" cy="125" r="20" stroke-width="0.5"/>
+  <text class="ts" x="100" y="165" text-anchor="middle">User</text>
+
+  <text class="ts" x="220" y="118" text-anchor="middle">Query</text>
+  <line x1="129" y1="125" x2="312" y2="125" class="arr" marker-end="url(#arrow)"/>
+
+  <rect class="blue-fill" x="320" y="100" width="220" height="56" rx="4" stroke-width="0.5"/>
+  <text class="blue-text-th" x="430" y="120" text-anchor="middle" dominant-baseline="central">Retrieval system</text>
+  <text class="blue-text-ts" x="430" y="138" text-anchor="middle" dominant-baseline="central">Ranks by relevance</text>
+
+  <line x1="430" y1="162" x2="430" y2="194" class="arr" marker-end="url(#arrow)"/>
+
+  <rect class="doc-fill" x="390" y="200" width="68" height="44" rx="2" stroke-width="0.5"/>
+  <rect class="doc-fill" x="396" y="208" width="68" height="44" rx="2" stroke-width="0.5"/>
+  <rect class="doc-fill" x="402" y="216" width="68" height="44" rx="2" stroke-width="0.5"/>
+  <text class="ts" x="430" y="280" text-anchor="middle">Ranked results</text>
+
+  <path d="M 384 230 L 35 230 L 35 125 L 77 125" stroke="#D85A30" stroke-width="1.5" stroke-linecap="round" fill="none" marker-end="url(#arrow)" stroke-dasharray="4 3"/>
+  <text class="ts" x="175" y="220" text-anchor="middle">Refine and search again</text>
+</svg>
+

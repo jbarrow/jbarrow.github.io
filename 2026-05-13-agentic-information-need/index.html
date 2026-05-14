@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agents have (Information) Needs — Joe Barrow</title>
+  <meta name="description" content=".">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../static/css/site.css?v=a0dddcaa">
+  <link rel="stylesheet" href="../static/css/code.css?v=678df866">
+  <link rel="alternate" type="application/atom+xml" title="Joe Barrow" href="../feed.xml">
+
+
+
+
+
+  <script>
+    (function () {
+      var h = window.location.hostname;
+      if (h === "localhost" || h === "127.0.0.1" || h === "" || h.endsWith(".local")) return;
+      var s = document.createElement("script");
+      s.async = true;
+      s.src = "https://www.googletagmanager.com/gtag/js?id=G-GXC0J2XPHL";
+      document.head.appendChild(s);
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){ dataLayer.push(arguments); }
+      window.gtag = gtag;
+      gtag("js", new Date());
+      gtag("config", "G-GXC0J2XPHL");
+    })();
+  </script>
+</head>
+<body>
+
+  <header class="masthead">
+    <span class="masthead-title"><a href="../">Joe Barrow</a></span>
+    <nav class="masthead-nav">
+      <a href="../about/">about</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../publications/">publications</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../software/">software</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../field_notes/">field notes</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../feed.xml">rss</a>
+    </nav>
+    <span class="masthead-meta"></span>
+  </header>
+
+  <article class="article">
+    <p class="kicker">retrieval</p>
+
+
+    <h1 class="headline">Agents have (Information) Needs</h1>
+
+    <p class="standfirst">Information retrieval isn&#39;t about queries, it&#39;s about satisfying an information need. Your agent is capable of expressing one, so you should probably use it.
+</p>
+
+    <div class="byline">
+<span>By <strong>Joe Barrow</strong></span><span class="byline-meta">2026-05-13</span>    </div>
+
+
+    <aside class="callout callout-abstract">
+<p class="callout-title">TL;DR</p>
+<p><mark>Information retrieval is about satisfying an information need.</mark>
+An agent&rsquo;s reasoning traces reveal a lot about its information need, so we probably shouldn&rsquo;t throw it away.
+Instead, we should build a good retrieval system can account for it.</p>
+</aside>
+<p>One thing that seems to get lost in the hubbub around harness design is <em>why</em> we give agents access to retrieval tools.
+We give agents retrieval tools <mark>so they can <strong>satisfy some information need</strong></mark>.</p>
+<p>A sufficiently persistent user, given access to even basic tools, will be able to satisfy their information need through repeated querying and refining.
+Recent work like Direct Corpus Interaction (DCI) <sup class="citation">[<a href="#ref-1">1</a>]</sup> shows that agentic retrieval systems can do a pretty good job of finding things with just <code>grep</code> and <code>bash</code>.
+(It just happens to take 2x the number of queries.)</p>
+<p>What does it mean that an agent has an information need?
+The idea of information need is an <em>old</em> idea in information retrieval: when you go to execute a Google search, <mark>your query is just a compromise you have to make to satisfy your information need</mark>.
+What you&rsquo;re <em>actually</em> searching for is your <strong>information need</strong>, which is latent in your mind:</p>
+<object data="your.svg" type="image/svg+xml">
+  <img src="information_need.svg" />
+</object>
+
+<p>A good example of &ldquo;information need&rdquo; comes from old-school TREC queries.
+They were called &ldquo;TDN&rdquo; queries, for &ldquo;Topic, Description, Narrative.&rdquo;
+The queries include a long-form <strong>description</strong> of the key aspects of the topic, and a <strong>narrative</strong> describing relevant documents.</p>
+<p>Here&rsquo;s an example from the TREC 1999 Ad Hoc dataset <sup class="citation">[<a href="#ref-2">2</a>]</sup>.</p>
+<div class="codehilite"><pre><span></span><code>&lt;title&gt; osteoporosis 
+
+&lt;desc&gt;
+Find information on the effects of the dietary intakes
+of potassium, magnesium and fruits and vegetables as
+determinants of bone mineral density in elderly men
+and women thus preventing osteoporosis (bone decay). 
+
+&lt;narr&gt;
+A relevant document may include one or more of the
+dietary intakes in the prevention of osteoporosis.
+Any discussion of the disturbance of nutrition and
+mineral metabolism that results in a decrease in 
+bone mass is also relevant.
+</code></pre></div>
+
+<p>Agents similarly have an information need they&rsquo;re seeking to satisfy when they issue and refine queries.
+When you ask an agent &ldquo;will fruits and vegatables help with my osteoporosis,&rdquo; and it starts searching for <code>osteoporosis fruits and vegetables</code> and <code>bone density vegetables</code>, it&rsquo;s issuing and refining queries to satisfy some information need.</p>
+<p>But those queries are <em>a compromise</em>.
+They are a retrieval-system-friendly representation of the actual information need.
+The agent can infer a lot more about the <em>user&rsquo;s</em> information need, like the fact that they&rsquo;re asking for personal health, probably wants actionable information, etc.</p>
+<h2>A BRIGHT Idea</h2>
+<p>At some point the retrieval community agreed to not use the Descriptions or Narratives.
+But what if we just&hellip; <mark>let the agent express their own information need</mark>?
+And used that to inform our search?</p>
+<details class="margin-note">
+<summary>BRIGHT</summary>
+<p>BRIGHT is a &ldquo;benchmark for reasoning-intensive retrieval,&rdquo; where traditional lexical retrievers don&rsquo;t perform well.
+Consider the LeetCode examples in BRIGHT: find problems whose solutions share an algorithm with this sample problem.</p>
+</details>
+<p>This is, in my opinion, one of the key results from BRIGHT <sup class="citation">[<a href="#ref-3">3</a>]</sup> and subsequent work.
+From the paper:</p>
+<aside class="callout callout-quote">
+<p class="callout-title">BRIGHT p. 8</p>
+<p><strong>Querying with LLM reasoning steps improves retrieval performance.</strong></p>
+</aside>
+<p>And follow-on work, like Reason-ModernCOLBERT from Antoine Chaffin <sup class="citation">[<a href="#ref-4">4</a>]</sup> or Reason-IR <sup class="citation">[<a href="#ref-5">5</a>]</sup> shows that we can actually build this right into our retrieval system!
+By training the retrieval system <em>with</em> reasoning data in the queries, and using that reasoning data in the harness, you see pretty substantial gains in agentic retrieval performance:</p>
+<p><img src="browsecomp.png" /></p>
+<p>What does this look like?
+Well, an awful lot like a TDN query!
+The agent generates</p>
+<p>This can provide wins over simpler search tools.
+DCI showed that agents can execute long-horizon search tasks to satisfy information needs.
+But <mark>if we account for those information needs to begin with, we can get better retrieval &ndash; and results!</mark></p>
+<section class="references">
+<h2 class="references-title">References</h2>
+<ol class="reference-list">
+<li id="ref-1" class="reference">Zhuofeng Li, Haoxiang Zhang, Cong Wei, Pan Lu, Ping Nie, Yi Lu, Yuyang Bai, Shangbin Feng, Hangxiao Zhu, Ming Zhong, others. (2026). <span class="ref-title">Beyond Semantic Similarity: Rethinking Retrieval for Agentic Search via Direct Corpus Interaction</span>. <em>arXiv preprint arXiv:2605.05242</em>.</li>
+<li id="ref-2" class="reference">Ian Soboroff. (2024). <span class="ref-title">TREC 1999 Adhoc Dataset</span>. <em>National Institute of Standards and Technology</em>. <a class="ref-url" href="https://doi.org/10.18434/mds2-3620">https://doi.org/10.18434/mds2-3620</a></li>
+<li id="ref-3" class="reference">Hongjin Su, Howard Yen, Mengzhou Xia, Weijia Shi, Niklas Muennighoff, Han-yu Wang, Liu Haisu, Quan Shi, Zachary Siegel, Michael Tang, others. (2025). <span class="ref-title">Bright: A realistic and challenging benchmark for reasoning-intensive retrieval</span>. <em>International Conference on Learning Representations</em>.</li>
+<li id="ref-4" class="reference">Antoine Chaffin. (2025). <span class="ref-title">Reason-ModernColBERT</span>. <a class="ref-url" href="https://huggingface.co/lightonai/Reason-ModernColBERT">https://huggingface.co/lightonai/Reason-ModernColBERT</a></li>
+<li id="ref-5" class="reference">Rulin Shao, Rui Qiao, Varsha Kishore, Niklas Muennighoff, Xi Victoria Lin, Daniela Rus, Bryan Kian Hsiang Low, Sewon Min, Wen-tau Yih, Pang Wei Koh, others. (2025). <span class="ref-title">Reasonir: Training retrievers for reasoning tasks</span>. <em>arXiv preprint arXiv:2504.20595</em>.</li>
+</ol>
+</section>
+
+  </article>
+
+  <footer class="site-footer">
+    joe barrow · research scientist
+    <span class="site-footer-sep">·</span>
+    <a href="../feed.xml">rss</a>
+  </footer>
+
+  <script src="../static/js/site.js?v=bfb16307" defer></script>
+
+
+
+
+
+</body>
+</html>

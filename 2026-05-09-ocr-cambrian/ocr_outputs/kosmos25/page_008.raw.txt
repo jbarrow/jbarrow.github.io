@@ -1,0 +1,53 @@
+<bbox><x_85><y_102><x_166><y_125></bbox>References
+<bbox><x_92><y_133><x_431><y_149></bbox>[1] Milan Aggarwal, Hiresh Gupta, Mausoom Sarkar, and Balaji
+<bbox><x_114><y_149><x_431><y_165></bbox>Krishnamurthy. Form2Seq : A framework for higher-order
+<bbox><x_114><y_165><x_431><y_180></bbox>form structure extraction. In Proceedings of the 2020 Confer-
+<bbox><x_114><y_181><x_431><y_196></bbox>ence on Empirical Methods in Natural Language Processing
+<bbox><x_114><y_197><x_431><y_212></bbox>(EMNLP) , pages 3830–3840, Online, 2020. Association for
+<bbox><x_114><y_213><x_282><y_228></bbox>Computational Linguistics. 1 , 2
+<bbox><x_92><y_229><x_431><y_245></bbox>[2] Milan Aggarwal, Mausoom Sarkar, Hiresh Gupta, and Balaji
+<bbox><x_114><y_245><x_431><y_261></bbox>Krishnamurthy. Multi-modal association based grouping for
+<bbox><x_114><y_261><x_431><y_277></bbox>form structure extraction. In The IEEE Winter Conference on
+<bbox><x_114><y_277><x_431><y_293></bbox>Applications of Computer Vision , pages 2075–2084, 2020. 1 ,
+<bbox><x_114><y_293><x_121><y_309></bbox>2
+<bbox><x_92><y_310><x_431><y_326></bbox>[3] Apostolos Antonacopoulos, David Bridson, Christos Pa-
+<bbox><x_114><y_326><x_431><y_342></bbox>padopoulos, and Stefan Pletschacher. A realistic dataset for
+<bbox><x_114><y_342><x_431><y_358></bbox>performance evaluation of document layout analysis. In 2009
+<bbox><x_114><y_358><x_431><y_374></bbox>10th International Conference on Document Analysis and
+<bbox><x_114><y_374><x_346><y_390></bbox>Recognition , pages 296–300. IEEE, 2009. 3
+<bbox><x_92><y_391><x_431><y_407></bbox>[4] David M Blei, Andrew Y Ng, and Michael I Jordan. Latent
+<bbox><x_114><y_407><x_431><y_423></bbox>dirichlet allocation. Journal of machine Learning research ,
+<bbox><x_114><y_423><x_251><y_439></bbox>3(Jan):993–1022, 2003. 6
+<bbox><x_92><y_440><x_431><y_455></bbox>[5] Brian Davis, Bryan Morse, Scott Cohen, Brian Price, and
+<bbox><x_114><y_456><x_431><y_471></bbox>Chris Tensmeyer. Deep visual template-free form parsing.
+<bbox><x_114><y_472><x_431><y_487></bbox>In 2019 International Conference on Document Analysis and
+<bbox><x_114><y_488><x_396><y_503></bbox>Recognition (ICDAR) , pages 134–141. IEEE, 2019. 2
+<bbox><x_92><y_504><x_431><y_520></bbox>[6] Brian Davis, Bryan Morse, Brian Price, Chris Tensmeyer,
+<bbox><x_114><y_520><x_229><y_536></bbox>and Curtis Wiginton.
+<bbox><x_242><y_520><x_431><y_536></bbox>Visual FUDGE: Form understand-
+<bbox><x_114><y_536><x_286><y_552></bbox>ing via dynamic graph editing.
+<bbox><x_298><y_536><x_431><y_552></bbox>In International Confer-
+<bbox><x_114><y_552><x_431><y_568></bbox>ence on Document Analysis and Recognition , pages 416–
+<bbox><x_114><y_568><x_233><y_584></bbox>431. Springer, 2021. 3
+<bbox><x_92><y_585><x_431><y_601></bbox>[7] Jacob Devlin, Ming-Wei Chang, Kenton Lee, and Kristina
+<bbox><x_114><y_601><x_431><y_617></bbox>Toutanova. BERT: Pre-training of deep bidirectional trans-
+<bbox><x_114><y_617><x_431><y_633></bbox>formers for language understanding. In Proceedings of the
+<bbox><x_114><y_633><x_431><y_649></bbox>2019 conference of the North American chapter of the asso-
+<bbox><x_114><y_649><x_431><y_664></bbox>ciation for computational linguistics: human language tech-
+<bbox><x_114><y_665><x_431><y_681></bbox>nologies, volume 1 (long and short papers) , pages 4171–
+<bbox><x_114><y_681><x_188><y_697></bbox>4186, 2019. 2
+<bbox><x_92><y_698><x_431><y_713></bbox>[8] Yupan Huang, Tengchao Lv, Lei Cui, Yutong Lu, and Furu
+<bbox><x_114><y_714><x_431><y_729></bbox>Wei. Layoutlmv3: Pre-training for document ai with uniﬁed
+<bbox><x_114><y_730><x_431><y_745></bbox>text and image masking. In Proceedings of the 30th ACM
+<bbox><x_114><y_746><x_431><y_761></bbox>international conference on multimedia , pages 4083–4091,
+<bbox><x_114><y_762><x_155><y_777></bbox>2022. 2
+<bbox><x_92><y_778><x_168><y_794></bbox>[9] Document
+<bbox><x_182><y_778><x_305><y_794></bbox>management—Portable
+<bbox><x_319><y_778><x_370><y_794></bbox>document
+<bbox><x_384><y_778><x_431><y_794></bbox>format—
+<bbox><x_114><y_794><x_431><y_810></bbox>Part 1: PDF 1.7 . International Organization for Standard-
+<bbox><x_114><y_810><x_431><y_826></bbox>ization (ISO), Geneva, Switzerland, ﬁrst edition edition,
+<bbox><x_114><y_826><x_261><y_842></bbox>2008. ISO 32000-1:2008. 3
+<bbox><x_85><y_843><x_431><y_859></bbox>[10] Guillaume Jaume, Hazim Kemal Ekenel, and Jean-Philippe
+<bbox><x_114><y_859><x_431><y_875></bbox>Thiran. Funsd: A dataset for form understanding in noisy
+<bbox><x_114><y_875><x_431><y_891></bbox>scanned documents. In

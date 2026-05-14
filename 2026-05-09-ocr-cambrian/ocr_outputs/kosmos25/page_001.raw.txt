@@ -1,0 +1,59 @@
+<bbox><x_291><y_457><x_604><y_473></bbox>Figure 1. Overview of form ﬁeld detection and preparation.
+<bbox><x_85><y_504><x_431><y_531></bbox>Input , Signature } . This means that, unlike Adobe Ac-
+<bbox><x_85><y_522><x_431><y_539></bbox>robat and Apple Preview, FFDNet can predict the location
+<bbox><x_85><y_539><x_431><y_556></bbox>of choice buttons (i.e. checkboxes and radio buttons). As
+<bbox><x_85><y_556><x_431><y_574></bbox>of the time of publication, these tools only predict text form
+<bbox><x_85><y_574><x_120><y_591></bbox>ﬁelds.
+<bbox><x_103><y_592><x_431><y_609></bbox>The FFDNet models are high-resolution (1216px)
+<bbox><x_85><y_609><x_431><y_627></bbox>YOLO11 [ 11 ] object detectors. Our ablation results show
+<bbox><x_85><y_627><x_431><y_644></bbox>that high-resolution inputs are crucial to quality; models
+<bbox><x_85><y_644><x_431><y_662></bbox>trained on 10k pages at varying resolutions show a range
+<bbox><x_85><y_662><x_348><y_679></bbox>of roughly 20 mean average precision points.
+<bbox><x_103><y_680><x_294><y_697></bbox>Our contributions are as follows:
+<bbox><x_85><y_697><x_431><y_716></bbox>• we prepare release C OMMON F ORMS , a large, diverse,
+<bbox><x_98><y_715><x_380><y_733></bbox>and high quality dataset for form ﬁeld detection;
+<bbox><x_85><y_732><x_431><y_751></bbox>• we train and release a family of form ﬁeld detec-
+<bbox><x_98><y_750><x_431><y_769></bbox>tion models on C OMMON F ORMS , FFDNet-Small and
+<bbox><x_98><y_767><x_194><y_785></bbox>FFDNet-Large 1 ;
+<bbox><x_85><y_784><x_431><y_803></bbox>• we provide an in depth analysis of C OMMON F ORMS to
+<bbox><x_98><y_802><x_404><y_820></bbox>identify the represented languages and domains; and
+<bbox><x_85><y_819><x_431><y_838></bbox>• we compare the FFDNet models against the most pop-
+<bbox><x_98><y_837><x_431><y_856></bbox>ular commercial system , Adobe Acrobat, and show that
+<bbox><x_98><y_855><x_377><y_872></bbox>they produce substantially higher quality forms.
+<bbox><x_85><y_889><x_207><y_912></bbox>2. Related Work
+<bbox><x_85><y_921><x_431><y_938></bbox>Machine-learning-based work on document forms can be
+<bbox><x_85><y_938><x_431><y_956></bbox>viewed as two broad categories: form preparation and form
+<bbox><x_85><y_956><x_431><y_973></bbox>understanding. Form preparation is the task of making a
+<bbox><x_85><y_973><x_431><y_991></bbox>form ﬁllable, whether that is detecting widgets or building
+<bbox><x_85><y_991><x_431><y_1008></bbox>a semantic model of the form. Form understanding, also
+<bbox><x_101><y_1022><x_309><y_1037></bbox>1 supported by a LambdaLabs compute grant
+<bbox><x_464><y_504><x_810><y_521></bbox>known as key information extraction (KIE), is an informa-
+<bbox><x_464><y_522><x_810><y_539></bbox>tion extraction task on ﬁlled-out document forms. This pa-
+<bbox><x_464><y_539><x_810><y_556></bbox>per is an instance of form preparation, which is the smaller
+<bbox><x_464><y_556><x_582><y_574></bbox>of the two subﬁelds.
+<bbox><x_464><y_601><x_709><y_620></bbox>Form Preparation and Understanding
+<bbox><x_724><y_602><x_810><y_619></bbox>Representative
+<bbox><x_464><y_619><x_810><y_637></bbox>work on form preparation includes the line of work on
+<bbox><x_464><y_637><x_810><y_654></bbox>Form2Seq [ 1 , 2 ] and FormA11y [ 18 ]. Form2Seq formalizes
+<bbox><x_464><y_654><x_810><y_671></bbox>a semantic form model, treating it as a joint classiﬁcation
+<bbox><x_464><y_671><x_810><y_689></bbox>and grouping task. Lower-level elements like widgets and
+<bbox><x_464><y_689><x_810><y_706></bbox>text blocks are ﬁrst classiﬁed into, e.g. ChoiceButton
+<bbox><x_464><y_706><x_810><y_724></bbox>or TextField , and then grouped into higher-order cate-
+<bbox><x_464><y_724><x_810><y_741></bbox>gories like ChoiceGroup . However, it is assumed that
+<bbox><x_464><y_741><x_810><y_758></bbox>the interactive form widgets have already been correctly
+<bbox><x_464><y_758><x_810><y_776></bbox>detected. FormA11y takes a human-in-the-loop approach
+<bbox><x_464><y_776><x_810><y_793></bbox>in which users match labels to widgets to create accessible
+<bbox><x_464><y_793><x_810><y_811></bbox>forms. In contrast to both of these, C OMMON F ORMS in-
+<bbox><x_464><y_811><x_810><y_828></bbox>troduces a large-scale dataset and baseline models for auto-
+<bbox><x_464><y_828><x_810><y_845></bbox>matic detection of the form ﬁelds themselves, allowing the
+<bbox><x_464><y_845><x_784><y_863></bbox>end-to-end preparation of a form from a ﬂat document.
+<bbox><x_481><y_864><x_810><y_881></bbox>Form understanding (KIE) focuses on extracting key-
+<bbox><x_464><y_881><x_810><y_899></bbox>value pairs from completed forms. Common form under-
+<bbox><x_464><y_899><x_810><y_916></bbox>standing datasets tend to be small, such as FUNSD [ 10 ]
+<bbox><x_464><y_916><x_810><y_933></bbox>(199 labeled forms), and NAF [ 5 ] (77 labeled forms).
+<bbox><x_464><y_933><x_810><y_951></bbox>Methodologically, work in the area has employed a diverse
+<bbox><x_464><y_951><x_810><y_968></bbox>body of models, including: purely visual models, such as
+<bbox><x_464><y_968><x_810><y_986></bbox>image segmentation [ 23 ]; purely textual models, such as
+<bbox><x_464><y_986><x_810><y_1003></bbox>BERT [ 7 ]; multimodal models that can model vision, text,
+<bbox><x_464><y_1003><x_810><y_1020></bbox>and layout information jointly, such as the LayoutLM se-
+<bbox><x_464><y_1020><x_810><y_1038></bbox>ries [ 8 , 25 , 26 ]; as well as vision and graph-based models

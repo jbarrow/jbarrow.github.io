@@ -1,0 +1,92 @@
+<div data-bbox="92 89 912 118" data-label="Caption">
+<p>Table 2. Qualitative comparison between Adobe Acrobat and FFDNet-S/L. Acrobat does not predict checkboxes, and has substantially lower precision and recall for text and signature form fields than FFDNet.</p>
+</div>
+<div data-bbox="98 135 912 878" data-label="Table">
+<table border="1">
+<thead>
+<tr>
+<th>Input</th>
+<th>Adobe Acrobat</th>
+<th>FFDNet-S (ours)</th>
+<th>FFDNet-L (ours)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td rowspan="2">
+<img alt="Adobe Acrobat sample form: APPLICATION FOR SPECIAL ORGANIZATION REGISTRATION PLATE. Includes fields for Name, Address, and various checkboxes." data-bbox="100 155 300 330"/>
+</td>
+<td rowspan="2">
+<img alt="Adobe Acrobat prediction of the sample form. Shows detected text and checkboxes, but some checkboxes are missing." data-bbox="310 155 510 330"/>
+</td>
+<td rowspan="2">
+<img alt="FFDNet-S prediction of the sample form. Shows high precision in detecting text and checkboxes." data-bbox="520 155 720 330"/>
+</td>
+<td rowspan="2">
+<img alt="FFDNet-L prediction of the sample form. Shows high precision in detecting text and checkboxes." data-bbox="730 155 930 330"/>
+</td>
+</tr>
+<tr>
+<td>
+<img alt="FFDNet-L prediction of the sample form (alternative view)." data-bbox="730 155 930 330"/>
+</td>
+</tr>
+<tr>
+<td rowspan="2">
+<img alt="Page 1 of the sample form: PAYMENT FOR SERVICES RENDERED. Includes a table of services and charges." data-bbox="100 340 300 490"/>
+</td>
+<td rowspan="2">
+<img alt="Page 1 prediction of the sample form. Shows detected text and checkboxes." data-bbox="310 340 510 490"/>
+</td>
+<td rowspan="2">
+<img alt="Page 1 prediction of the sample form (FFDNet-S)." data-bbox="520 340 720 490"/>
+</td>
+<td rowspan="2">
+<img alt="Page 1 prediction of the sample form (FFDNet-L)." data-bbox="730 340 930 490"/>
+</td>
+</tr>
+<tr>
+<td>
+<img alt="Page 2 of the sample form: CERTIFICATION AND AUTHORIZATION. Includes a table of services and charges." data-bbox="100 500 300 650"/>
+</td>
+<td>
+<img alt="Page 2 prediction of the sample form. Shows detected text and checkboxes." data-bbox="310 500 510 650"/>
+</td>
+<td>
+<img alt="Page 2 prediction of the sample form (FFDNet-S)." data-bbox="520 500 720 650"/>
+</td>
+<td>
+<img alt="Page 2 prediction of the sample form (FFDNet-L)." data-bbox="730 500 930 650"/>
+</td>
+</tr>
+<tr>
+<td rowspan="2">
+<img alt="Page 3 of the sample form: Level 1 Summary. Includes a table of competencies and a 'What now?' section." data-bbox="100 660 300 870"/>
+</td>
+<td rowspan="2">
+<img alt="Page 3 prediction of the sample form. Shows detected text and checkboxes." data-bbox="310 660 510 870"/>
+</td>
+<td rowspan="2">
+<img alt="Page 3 prediction of the sample form (FFDNet-S)." data-bbox="520 660 720 870"/>
+</td>
+<td rowspan="2">
+<img alt="Page 3 prediction of the sample form (FFDNet-L)." data-bbox="730 660 930 870"/>
+</td>
+</tr>
+<tr>
+<td>
+<img alt="Page 4 of the sample form: Level 2 Summary. Includes a table of competencies and a 'What now?' section." data-bbox="100 880 300 1000"/>
+</td>
+<td>
+<img alt="Page 4 prediction of the sample form. Shows detected text and checkboxes." data-bbox="310 880 510 1000"/>
+</td>
+<td>
+<img alt="Page 4 prediction of the sample form (FFDNet-S)." data-bbox="520 880 720 1000"/>
+</td>
+<td>
+<img alt="Page 4 prediction of the sample form (FFDNet-L)." data-bbox="730 880 930 1000"/>
+</td>
+</tr>
+</tbody>
+</table>
+</div>

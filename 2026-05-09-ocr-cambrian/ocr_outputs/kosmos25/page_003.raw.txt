@@ -1,0 +1,29 @@
+<bbox><x_138><y_104><x_756><y_120></bbox>Table 1. Common inconsistencies in real-world PDF forms. This is not an exhaustive list, merely a representative list.
+<bbox><x_92><y_142><x_202><y_159></bbox>Form Inconsistency
+<bbox><x_385><y_142><x_445><y_159></bbox>Example 1
+<bbox><x_646><y_142><x_706><y_159></bbox>Example 2
+<bbox><x_92><y_173><x_212><y_190></bbox>For Ofﬁcial Use Only
+<bbox><x_92><y_190><x_271><y_204></bbox>Sections marked “For Ofﬁcial Use” or
+<bbox><x_92><y_206><x_223><y_220></bbox>similar are sometimes made
+<bbox><x_92><y_222><x_267><y_236></bbox>electronically ﬁllable, and sometimes
+<bbox><x_92><y_238><x_198><y_252></bbox>they are left unﬁllable.
+<bbox><x_92><y_347><x_249><y_364></bbox>Circle/Check All that Apply
+<bbox><x_92><y_364><x_244><y_378></bbox>Print-oriented ﬁelds are digitally
+<bbox><x_92><y_380><x_274><y_394></bbox>ambiguous. In many instances they are
+<bbox><x_92><y_396><x_267><y_410></bbox>lef unﬁllable, while in others they are
+<bbox><x_92><y_412><x_235><y_426></bbox>annotated with choice buttons.
+<bbox><x_92><y_521><x_231><y_538></bbox>Signatures as Text Fields
+<bbox><x_92><y_538><x_252><y_552></bbox>Signature areas are sometimes left
+<bbox><x_92><y_554><x_229><y_568></bbox>blank, sometimes left as PDF
+<bbox><x_92><y_570><x_270><y_584></bbox>Signature widgets, and sometimes
+<bbox><x_92><y_586><x_263><y_600></bbox>implemented as PDF Text widgets.
+<bbox><x_92><y_695><x_125><y_712></bbox>Scans
+<bbox><x_92><y_712><x_270><y_726></bbox>Rasterized scans are often not ﬁllable,
+<bbox><x_92><y_728><x_261><y_742></bbox>even in the middle of a ﬁllable PDF.
+<bbox><x_92><y_744><x_258><y_758></bbox>They can be rotated, deformed, and
+<bbox><x_92><y_760><x_271><y_774></bbox>noisy compared to a born-digital PDF.
+<bbox><x_92><y_868><x_254><y_885></bbox>Incorrect Use of Form Fields
+<bbox><x_92><y_886><x_212><y_900></bbox>Fields placed in repeating
+<bbox><x_92><y_902><x_276><y_916></bbox>headers/footers, randomly placed ﬁelds
+<bbox><x_92><y_918><x_271><y_932></bbox>in documents, or forms that have been
+<bbox><x_92><y_934><x_171><y_948></bbox>noisily prepared.

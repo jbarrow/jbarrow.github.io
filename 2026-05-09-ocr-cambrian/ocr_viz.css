@@ -1,0 +1,214 @@
+/* ============================================================================
+ * ocr_viz.css — Styles for the OCR comparison figures.
+ *
+ * Layout:
+ *   [ Tab · Tab · Tab ]                  (tabs, top-left)
+ *   ----------------------------------
+ *   [ Hide blocks ]                      (controls)
+ *   [ legend (Chandra only) ]
+ *   [ input image w/ overlay ][ raw output ]
+ * ============================================================================ */
+
+.ocr-viz {
+  margin: 2rem 0 3rem;
+}
+
+/* --- Tabs --------------------------------------------------------------- */
+
+.ocr-tabs {
+  display: flex;
+  justify-content: flex-start;
+  gap: 0;
+  border-bottom: 1px solid var(--viz-rule, #e5e5e2);
+  margin-bottom: 0.7rem;
+}
+
+.ocr-tab {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  padding: 0.45rem 1rem 0.45rem;
+  font: inherit;
+  color: var(--viz-ink-soft, #525252);
+  cursor: pointer;
+  margin-bottom: -1px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.05rem;
+  text-align: left;
+}
+
+.ocr-tab:first-child { padding-left: 0; }
+.ocr-tab:hover { color: var(--viz-ink, #0a0a0a); }
+.ocr-tab.is-active {
+  color: var(--viz-ink, #0a0a0a);
+  border-bottom-color: var(--viz-accent, #0f5499);
+}
+
+.ocr-tab-label {
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  line-height: 1.15;
+}
+
+.ocr-tab-sub {
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--viz-ink-faint, #6a6a6a);
+  line-height: 1.15;
+  padding-top: 0.2rem;
+}
+
+.ocr-tab.is-active .ocr-tab-sub { color: var(--viz-accent, #0f5499); }
+
+/* --- Controls + legend (above the grid) -------------------------------- */
+
+.ocr-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  margin-bottom: 0.45rem;
+  font-size: 0.78rem;
+  color: var(--viz-ink-soft, #525252);
+  margin-top: 0.45rem;
+  padding: 4px 9px; 
+  border-radius: 4px;
+  background: #f1f0eb;
+  border: 1px solid var(--viz-rule, #e5e5e2);
+  width: fit-content;
+  float: left;
+}
+
+.ocr-controls.is-hidden { display: none; }
+
+.ocr-controls label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.ocr-controls input[type="checkbox"] {
+  margin: 0;
+  cursor: pointer;
+}
+
+.ocr-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem 0.9rem;
+  margin: 0.45rem 0 0.7rem;
+  font-size: 0.78rem;
+  color: var(--viz-ink-soft, #525252);
+  float: right;
+  padding: 4px 9px; 
+  max-width: 80%;
+}
+
+.ocr-legend.is-hidden { display: none; }
+
+.ocr-legend-item { display: inline-flex; align-items: center; gap: 0.3rem; }
+
+.ocr-legend-swatch {
+  width: 10px;
+  height: 10px;
+  border: 1px solid;
+  display: inline-block;
+}
+
+/* --- Two-column grid: image (left) + raw output (right) ----------------- */
+
+.ocr-viz-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+@media (max-width: 720px) {
+  .ocr-viz-grid { grid-template-columns: 1fr; }
+}
+
+.ocr-overlay {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 935 / 1210;
+  background: #fff;
+  border: 1px solid var(--viz-rule, #e5e5e2);
+}
+
+.ocr-overlay img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.ocr-overlay.blocks-hidden .ocr-block { display: none; }
+
+/* Block: positioned absolutely over the image; text overlays in place. */
+.ocr-block {
+  position: absolute;
+  box-sizing: border-box;
+  overflow: hidden;
+  font-family: var(--viz-font-data, system-ui), sans-serif;
+  font-size: 9px;
+  line-height: 1.05;
+  color: var(--viz-ink, #0a0a0a);
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(10, 10, 10, 0.55);
+  padding: 1px 2px;
+  white-space: normal;
+  word-break: break-word;
+  letter-spacing: -0.01em;
+}
+
+/* Kosmos: single ink color (no role information). */
+.ocr-overlay.is-kosmos .ocr-block {
+  border-color: rgba(15, 84, 153, 0.7);
+  background: rgba(231, 240, 251, 0.92);
+}
+
+/* Chandra: color by role. */
+.ocr-overlay.is-chandra .ocr-block[data-label="Text"]           { border-color: rgba(15, 84, 153, 0.75); background: rgba(231, 240, 251, 0.92); }
+.ocr-overlay.is-chandra .ocr-block[data-label="Section-Header"] { border-color: rgba(204, 41, 54, 0.8);  background: rgba(254, 230, 232, 0.92); }
+.ocr-overlay.is-chandra .ocr-block[data-label="Page-Header"]    { border-color: rgba(120, 120, 120, 0.7); background: rgba(240, 240, 240, 0.92); }
+.ocr-overlay.is-chandra .ocr-block[data-label="List-Group"]     { border-color: rgba(34, 124, 64, 0.75); background: rgba(228, 244, 233, 0.92); }
+.ocr-overlay.is-chandra .ocr-block[data-label="Form"]           { border-color: rgba(120, 60, 168, 0.75); background: rgba(238, 230, 248, 0.92); }
+.ocr-overlay.is-chandra .ocr-block[data-label="Caption"]        { border-color: rgba(196, 91, 137, 0.8); background: rgba(250, 232, 240, 0.92); }
+.ocr-overlay.is-chandra .ocr-block[data-label="Footnote"]       { border-color: rgba(160, 160, 160, 0.7); background: rgba(245, 245, 242, 0.92); }
+.ocr-overlay.is-chandra .ocr-block[data-label="Diagram"]        { border-color: rgba(18, 137, 137, 0.8); background: rgba(224, 244, 244, 0.92); }
+
+.ocr-legend-swatch[data-label="Text"]           { border-color: rgba(15, 84, 153, 0.75); background: rgba(231, 240, 251, 0.92); }
+.ocr-legend-swatch[data-label="Section-Header"] { border-color: rgba(204, 41, 54, 0.8);  background: rgba(254, 230, 232, 0.92); }
+.ocr-legend-swatch[data-label="Page-Header"]    { border-color: rgba(120, 120, 120, 0.7); background: rgba(240, 240, 240, 0.92); }
+.ocr-legend-swatch[data-label="List-Group"]     { border-color: rgba(34, 124, 64, 0.75); background: rgba(228, 244, 233, 0.92); }
+.ocr-legend-swatch[data-label="Form"]           { border-color: rgba(120, 60, 168, 0.75); background: rgba(238, 230, 248, 0.92); }
+.ocr-legend-swatch[data-label="Caption"]        { border-color: rgba(196, 91, 137, 0.8); background: rgba(250, 232, 240, 0.92); }
+.ocr-legend-swatch[data-label="Footnote"]       { border-color: rgba(160, 160, 160, 0.7); background: rgba(245, 245, 242, 0.92); }
+.ocr-legend-swatch[data-label="Diagram"]        { border-color: rgba(18, 137, 137, 0.8); background: rgba(224, 244, 244, 0.92); }
+
+/* --- Raw output code block --------------------------------------------- */
+
+.ocr-code {
+  margin: 0;
+  padding: 0.7rem 0.85rem;
+  background: var(--viz-paper, #fafaf7);
+  border: 1px solid var(--viz-rule, #e5e5e2);
+  font-family: var(--viz-font-mono, 'Geist Mono'), ui-monospace, SFMono-Regular, monospace;
+  font-size: 0.72rem;
+  line-height: 1.55;
+  max-height: 460px;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  color: var(--viz-ink, #0a0a0a);
+}
+
+.ocr-viz img { margin: 0 !important; }

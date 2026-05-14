@@ -1,0 +1,87 @@
+<bbox><x_85><y_105><x_431><y_123></bbox>such as Visual FUDGE [ 6 ]. In this work, we tackle form
+<bbox><x_85><y_123><x_431><y_140></bbox>preparation rather than understanding, and cast the task as
+<bbox><x_85><y_140><x_431><y_158></bbox>one of object detection. That is, we do not attempt to extract
+<bbox><x_85><y_157><x_431><y_175></bbox>values, but to predict where on the page the slots for values
+<bbox><x_85><y_175><x_315><y_192></bbox>should be, based on visual information.
+<bbox><x_85><y_221><x_341><y_240></bbox>Object Detection in Document Images
+<bbox><x_355><y_221><x_431><y_239></bbox>Many docu-
+<bbox><x_85><y_239><x_431><y_256></bbox>ments are inherently multimodal, so there are many estab-
+<bbox><x_85><y_256><x_431><y_274></bbox>lished lines of research that cast document problems as vi-
+<bbox><x_85><y_274><x_431><y_291></bbox>sion problems, and speciﬁcally object detection. Examples
+<bbox><x_85><y_291><x_431><y_308></bbox>include layout detection (DocLayNet [ 19 ], PubLayNet [ 27 ],
+<bbox><x_85><y_308><x_431><y_326></bbox>Newspaper Navigator [ 14 ], PRImA Layout [ 3 ] ), table de-
+<bbox><x_85><y_326><x_431><y_343></bbox>tection (TableBank [ 16 ]), and math formula detection (For-
+<bbox><x_85><y_343><x_431><y_361></bbox>mulaNet [ 20 ]). LayoutParser [ 21 ] is a suite of tools that
+<bbox><x_85><y_360><x_431><y_378></bbox>provides a uniﬁed interface for all of these tasks. Depend-
+<bbox><x_85><y_378><x_431><y_395></bbox>ing on the resolution required, models such as YOLO [ 11 ],
+<bbox><x_85><y_395><x_431><y_413></bbox>the Document Image Transformer (DIT) [ 15 ], or Lay-
+<bbox><x_85><y_413><x_430><y_430></bbox>outLM [ 25 ], for multimodality, have been used. C OMMON -
+<bbox><x_85><y_430><x_431><y_447></bbox>F ORMS adopts the same paradigm for detecting form ﬁelds.
+<bbox><x_85><y_447><x_431><y_465></bbox>In this work, we treat documents as unimodal images and
+<bbox><x_85><y_465><x_431><y_482></bbox>train object detectors to localize and type form ﬁelds. The
+<bbox><x_85><y_482><x_431><y_500></bbox>outputs can be used as a complementary semantic layer in
+<bbox><x_85><y_500><x_265><y_517></bbox>addition to these other models.
+<bbox><x_85><y_545><x_348><y_564></bbox>Document Corpora from Common Crawl
+<bbox><x_362><y_546><x_431><y_563></bbox>ccPDF [ 22 ]
+<bbox><x_85><y_563><x_431><y_580></bbox>and FinePDFs [ 13 ] curate PDF corpora from Common
+<bbox><x_85><y_580><x_431><y_598></bbox>Crawl. Both datasets target visually and/or topically diverse
+<bbox><x_85><y_598><x_431><y_615></bbox>datasets. Like these efforts, C OMMON F ORMS is also drawn
+<bbox><x_85><y_615><x_431><y_633></bbox>from Common Crawl. However, in this work, the ﬁltering
+<bbox><x_85><y_633><x_431><y_650></bbox>and preparation is focused on mining well-annotated forms
+<bbox><x_85><y_650><x_431><y_667></bbox>which can be used as training signal for form ﬁeld detection.
+<bbox><x_85><y_703><x_297><y_726></bbox>3. C OMMON F ORMS Dataset
+<bbox><x_85><y_735><x_431><y_753></bbox>There is truth to the adage “quantity has a quality all its
+<bbox><x_85><y_753><x_431><y_770></bbox>own”. The core thesis of this paper is twofold: (1) there are
+<bbox><x_85><y_770><x_431><y_788></bbox>plentiful existing prepared forms in Common Crawl, and (2)
+<bbox><x_85><y_788><x_431><y_805></bbox>those forms are high-quality enough to be used as a train-
+<bbox><x_85><y_805><x_431><y_822></bbox>ing signal. With a few simple ﬁlters, we can bootstrap an
+<bbox><x_85><y_822><x_431><y_840></bbox>effective detector without the need for manual annotation.
+<bbox><x_85><y_840><x_431><y_857></bbox>Our goal is to ﬁlter to forms that have been well-prepared.
+<bbox><x_85><y_857><x_431><y_875></bbox>We start with a 8 million PDF sample of Common Crawl
+<bbox><x_85><y_874><x_431><y_892></bbox>prepared by the PDF Association [ 24 ] and apply a rigorous
+<bbox><x_85><y_892><x_431><y_909></bbox>cleaning process to arrive at the C OMMON F ORMS dataset.
+<bbox><x_85><y_909><x_431><y_927></bbox>This ﬁltering process is shown in Figure 2 , and the limita-
+<bbox><x_85><y_927><x_420><y_944></bbox>tions of this ﬁltering process are discussed in Section 3.2 .
+<bbox><x_85><y_958><x_347><y_979></bbox>3.1. Dataset Preparation and Cleaning
+<bbox><x_85><y_986><x_431><y_1004></bbox>In order to make use of forms from the Web, we build a
+<bbox><x_85><y_1004><x_431><y_1021></bbox>ﬁltering pipeline that starts with our candidate set and grad-
+<bbox><x_85><y_1021><x_431><y_1038></bbox>ually reduces them to a clean set of forms. At every stage,
+<bbox><x_579><y_119><x_695><y_135></bbox>Common Crawl PDFs
+<bbox><x_581><y_134><x_692><y_148></bbox>CC-MAIN-2021-21
+<bbox><x_665><y_177><x_754><y_193></bbox>n = 7.9MM PDFs
+<bbox><x_548><y_231><x_726><y_247></bbox>Filter for PDFs Containing Forms
+<bbox><x_534><y_246><x_740><y_260></bbox>PDF contains AcroForm or XFA
+<bbox><x_665><y_289><x_741><y_305></bbox>n = 762k PDFs
+<bbox><x_565><y_342><x_709><y_358></bbox>Form Consistency Filtering
+<bbox><x_600><y_358><x_674><y_372></bbox>>0 widgets
+<bbox><x_493><y_374><x_781><y_388></bbox>>0 non-button and non-signature widgets
+<bbox><x_567><y_389><x_707><y_403></bbox>remove tiny widgets
+<bbox><x_541><y_405><x_733><y_419></bbox>remove overlapping widgets
+<bbox><x_534><y_421><x_740><y_435></bbox>remove out of bounds widgets
+<bbox><x_665><y_462><x_735><y_478></bbox>n = 59k PDFs
+<bbox><x_604><y_516><x_687><y_532></bbox>CommonForms
+<bbox><x_560><y_532><x_714><y_546></bbox>59k PDFs ; 480k pages
+<bbox><x_506><y_576><x_768><y_592></bbox>Figure 2. Filtering pipeline for C OMMON F ORMS .
+<bbox><x_464><y_629><x_810><y_646></bbox>the pipeline applies a set of ﬁlter functions, shown in Fig-
+<bbox><x_464><y_646><x_810><y_664></bbox>ure 2 . We start with 7.9 million PDFs drawn from Common
+<bbox><x_464><y_664><x_810><y_681></bbox>Crawl gathered from the July/August 2021 scrape [ 24 ]. The
+<bbox><x_464><y_681><x_810><y_698></bbox>ﬁrst set of ﬁltering functions is used to ﬁnd PDFs that con-
+<bbox><x_464><y_698><x_566><y_716></bbox>tain form objects.
+<bbox><x_481><y_719><x_810><y_736></bbox>There are two standards for PDF forms: AcroForms and
+<bbox><x_464><y_736><x_810><y_754></bbox>the deprecated XML Forms Architecture (XFA) [ 9 ]. We
+<bbox><x_464><y_754><x_810><y_771></bbox>ﬁlter only documents that contain form objects from either
+<bbox><x_464><y_771><x_810><y_788></bbox>of these standards, reducing the pool of documents by about
+<bbox><x_464><y_788><x_585><y_806></bbox>90%, to 762k PDFs.
+<bbox><x_481><y_809><x_810><y_826></bbox>A PDF having a form object does not mean that it has
+<bbox><x_464><y_826><x_810><y_844></bbox>a well-annotated form, or even a form at all. The next set
+<bbox><x_464><y_844><x_810><y_861></bbox>of ﬁltering functions is used to improve the likelihood that
+<bbox><x_464><y_861><x_810><y_878></bbox>a document in the dataset is well annotated. We remove
+<bbox><x_464><y_878><x_810><y_896></bbox>documents that contain no form ﬁelds or that contain only
+<bbox><x_464><y_896><x_810><y_913></bbox>Button form ﬁelds. This second round of ﬁltering reduces
+<bbox><x_464><y_913><x_810><y_931></bbox>the set of forms by ¿90% once again, resulting in 59k PDFs.
+<bbox><x_481><y_934><x_810><y_951></bbox>To improve annotations, we clean the form ﬁelds them-
+<bbox><x_464><y_951><x_810><y_968></bbox>selves, removing ones that are marked as outside the box
+<bbox><x_464><y_968><x_810><y_986></bbox>of the page, that are too small to resolve, or that have high
+<bbox><x_464><y_986><x_810><y_1003></bbox>enough overlap with existing elements as to be considered
+<bbox><x_464><y_1003><x_810><y_1021></bbox>near duplicates. In total, C OMMON F ORMS is 480k PDF
+<bbox><x_464><y_1021><x_501><y_1038></bbox>pages.

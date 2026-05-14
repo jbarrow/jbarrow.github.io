@@ -1,0 +1,7 @@
+<bbox><x_114><y_107><x_431><y_122></bbox>Wanxiang Che, et al. Layoutlmv2: Multi-modal pre-training
+<bbox><x_114><y_123><x_431><y_138></bbox>for visually-rich document understanding. arXiv preprint
+<bbox><x_114><y_139><x_257><y_154></bbox>arXiv:2012.14140 , 2020.
+<bbox><x_85><y_156><x_431><y_172></bbox>[27] Xu Zhong, Jianbin Tang, and Antonio Jimeno Yepes. Pub-
+<bbox><x_114><y_172><x_431><y_188></bbox>LayNet: largest dataset ever for document layout analysis.
+<bbox><x_114><y_188><x_431><y_204></bbox>In 2019 International conference on document analysis and
+<bbox><x_114><y_204><x_405><y_220></bbox>recognition (ICDAR) , pages 1015–1022. IEEE, 2019.

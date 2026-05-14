@@ -1,0 +1,85 @@
+<bbox><x_135><y_150><x_760><y_177></bbox>C OMMON F ORMS : A Large, Diverse Dataset for Form Field Detection
+<bbox><x_408><y_209><x_487><y_230></bbox>Joe Barrow
+<bbox><x_363><y_229><x_532><y_250></bbox>Independent Researcher
+<bbox><x_347><y_255><x_544><y_268></bbox>joseph.d.barrow@gmail.com
+<bbox><x_226><y_308><x_291><y_331></bbox>Abstract
+<bbox><x_85><y_347><x_431><y_364></bbox>This paper introduces CommonForms, a web-scale dataset
+<bbox><x_85><y_364><x_431><y_382></bbox>for form ﬁeld detection. It casts the problem of form ﬁeld
+<bbox><x_85><y_382><x_431><y_399></bbox>detection as object detection: given an image of a page,
+<bbox><x_85><y_399><x_431><y_416></bbox>predict the location and type ( Text Input , Choice
+<bbox><x_85><y_417><x_431><y_434></bbox>Button , Signature ) of form ﬁelds. The dataset is con-
+<bbox><x_85><y_434><x_431><y_451></bbox>structed by ﬁltering Common Crawl to ﬁnd PDFs that have
+<bbox><x_85><y_451><x_431><y_469></bbox>ﬁllable elements. Starting with 8 million documents, the ﬁl-
+<bbox><x_85><y_469><x_431><y_486></bbox>tering process is used to arrive at a ﬁnal dataset of roughly
+<bbox><x_85><y_486><x_431><y_503></bbox>55k documents that have more than 450k pages. Analy-
+<bbox><x_85><y_504><x_431><y_521></bbox>sis shows that the dataset contains a diverse mixture of
+<bbox><x_85><y_521><x_431><y_538></bbox>languages and domains; one third of the pages are non-
+<bbox><x_85><y_538><x_431><y_556></bbox>English, and among the 14 classiﬁed domains, no domain
+<bbox><x_85><y_556><x_319><y_573></bbox>makes up more than 25% of the dataset.
+<bbox><x_102><y_574><x_431><y_591></bbox>In addition, this paper presents a family of form ﬁeld
+<bbox><x_85><y_591><x_431><y_609></bbox>detectors, FFDNet-Small and FFDNet-Large, which attain
+<bbox><x_85><y_609><x_431><y_626></bbox>a very high average precision on the CommonForms test
+<bbox><x_85><y_626><x_431><y_643></bbox>set. Each model cost less than $500 to train. Ablation re-
+<bbox><x_85><y_643><x_431><y_660></bbox>sults show that high-resolution inputs are crucial for high-
+<bbox><x_85><y_661><x_431><y_678></bbox>quality form ﬁeld detection, and that the cleaning process
+<bbox><x_85><y_678><x_431><y_695></bbox>improves data efﬁciency over using all PDFs that have ﬁll-
+<bbox><x_85><y_695><x_431><y_713></bbox>able ﬁelds in Common Crawl. A qualitative analysis shows
+<bbox><x_85><y_713><x_431><y_730></bbox>that they outperform a popular and commercially available
+<bbox><x_85><y_730><x_431><y_747></bbox>PDF reader that can prepare forms. Unlike the most pop-
+<bbox><x_85><y_748><x_431><y_765></bbox>ular commercially available solutions, FFDNet can predict
+<bbox><x_85><y_765><x_431><y_782></bbox>checkboxes in addition to text and signature ﬁelds. This
+<bbox><x_85><y_782><x_431><y_800></bbox>is, to our knowledge, the ﬁrst large-scale dataset released
+<bbox><x_85><y_800><x_431><y_817></bbox>for form ﬁeld detection, as well as the ﬁrst open-source
+<bbox><x_85><y_817><x_431><y_834></bbox>models. The dataset, models, and code will be released at
+<bbox><x_85><y_835><x_421><y_852></bbox>https://github.com/jbarrow/commonforms .
+<bbox><x_85><y_885><x_198><y_907></bbox>1. Introduction
+<bbox><x_85><y_916><x_431><y_933></bbox>Despite decades of digitalization, a large volume of real-
+<bbox><x_85><y_933><x_431><y_951></bbox>world transactions still center around paper forms: insur-
+<bbox><x_85><y_951><x_431><y_968></bbox>ance claims, municipal paperwork, school permission slips,
+<bbox><x_85><y_968><x_431><y_986></bbox>and many, many others. These documents are often dis-
+<bbox><x_85><y_986><x_431><y_1003></bbox>tributed as scans or non-ﬁllable (“ﬂat”) PDFs, and require
+<bbox><x_85><y_1003><x_431><y_1020></bbox>either printing, tedious software workarounds, or turning to
+<bbox><x_85><y_1020><x_431><y_1038></bbox>a proprietary solution like Adobe Acrobat or Apple Preview.
+<bbox><x_464><y_312><x_810><y_329></bbox>In order to be digitally ﬁlled, a ﬂat form must be prepared
+<bbox><x_464><y_329><x_810><y_346></bbox>by having interactive form ﬁelds inserted. Although pro-
+<bbox><x_464><y_346><x_810><y_364></bbox>prietary solutions may employ machine learning to prepare
+<bbox><x_464><y_364><x_810><y_381></bbox>forms, there is not yet a high-quality open-source machine
+<bbox><x_464><y_381><x_810><y_399></bbox>learning-based system that can automatically and reliably
+<bbox><x_464><y_398><x_593><y_416></bbox>prepare ﬁllable forms.
+<bbox><x_481><y_418><x_810><y_436></bbox>Converting a ﬂat PDF to an accessible form — one that
+<bbox><x_464><y_436><x_810><y_453></bbox>can be understood by a screen reader, or ﬁlled automatically
+<bbox><x_464><y_453><x_646><y_471></bbox>— typically requires two steps:
+<bbox><x_464><y_472><x_810><y_491></bbox>1. form ﬁeld detection : detecting the locations and types
+<bbox><x_482><y_490><x_759><y_508></bbox>(e.g. text or checkbox) of ﬁllable elements; and
+<bbox><x_464><y_507><x_810><y_526></bbox>2. form enrichment : grouping the ﬁllable elements and
+<bbox><x_482><y_525><x_757><y_542></bbox>their labels based on the semantics of the form.
+<bbox><x_481><y_544><x_810><y_562></bbox>Previous work has primarily focused on the second [ 1 ,
+<bbox><x_464><y_562><x_810><y_579></bbox>2 ]. In this work, we tackle the ﬁrst problem by detecting
+<bbox><x_464><y_579><x_810><y_597></bbox>where the ﬁllable elements should go visually in a PDF. To
+<bbox><x_464><y_597><x_810><y_614></bbox>this end, we construct and release both a large-scale dataset,
+<bbox><x_464><y_614><x_810><y_631></bbox>C OMMON F ORMS , consisting of more than 480k pages from
+<bbox><x_464><y_631><x_651><y_649></bbox>more than 59k document forms.
+<bbox><x_481><y_651><x_810><y_668></bbox>We also train and release a family of form ﬁeld detection
+<bbox><x_464><y_668><x_810><y_686></bbox>models trained on this dataset, FFDNet-Small and FFDNet-
+<bbox><x_464><y_685><x_810><y_704></bbox>Large. Training each of these models costs roughly $500 of
+<bbox><x_464><y_703><x_810><y_721></bbox>compute or less , and yet these models are capable of high-
+<bbox><x_464><y_721><x_810><y_738></bbox>quality form ﬁeld detection. They achieve a high average
+<bbox><x_464><y_738><x_810><y_755></bbox>precision of more than 80 on the C OMMON F ORMS test set.
+<bbox><x_464><y_755><x_810><y_773></bbox>We perform a qualitative analysis of these models against
+<bbox><x_464><y_773><x_810><y_790></bbox>Adobe Acrobat and show that FFDNet has better recall and
+<bbox><x_464><y_790><x_600><y_808></bbox>precision than Acrobat.
+<bbox><x_482><y_810><x_810><y_827></bbox>C OMMON F ORMS is drawn from a large collection of in-
+<bbox><x_464><y_827><x_810><y_844></bbox>teractive PDF forms scraped from the Internet. The core
+<bbox><x_464><y_844><x_810><y_862></bbox>insight of this paper is that “quantity has a quality all its
+<bbox><x_464><y_862><x_810><y_879></bbox>own,” and that we can leverage existing ﬁllable forms as a
+<bbox><x_464><y_879><x_810><y_897></bbox>training signal. We use Common Crawl as a wellspring of
+<bbox><x_464><y_897><x_810><y_914></bbox>PDFs and apply a rigorous cleaning process. This clean-
+<bbox><x_464><y_914><x_810><y_931></bbox>ing process results in improved data efﬁciency compared to
+<bbox><x_464><y_931><x_666><y_949></bbox>using every PDF with a form ﬁeld.
+<bbox><x_481><y_951><x_810><y_968></bbox>To train the FFDNet family of models, we cast the prob-
+<bbox><x_464><y_968><x_810><y_986></bbox>lem of form ﬁeld detection as a pure object detection prob-
+<bbox><x_464><y_986><x_810><y_1003></bbox>lem. Given a page image, the goal is to predict the lo-
+<bbox><x_464><y_1003><x_710><y_1020></bbox>cation and types of each form element.
+<bbox><x_725><y_1003><x_810><y_1020></bbox>The types are
+<bbox><x_464><y_1020><x_810><y_1048></bbox>drawn from teh following set: { Choice Button , Text
+<bbox><x_16><y_322><x_55><y_829></bbox>arXiv:2509.16506v1  [cs.CV]  20 Sep 2025

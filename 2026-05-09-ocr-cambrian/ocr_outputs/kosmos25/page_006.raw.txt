@@ -1,0 +1,78 @@
+<bbox><x_85><y_103><x_810><y_119></bbox>Table 2. Qualitative comparison between Adobe Acrobat and FFDNet-S/L. Acrobat does not predict checkboxes, and has substantially
+<bbox><x_85><y_119><x_472><y_135></bbox>lower precision and recall for text and signature form ﬁelds than FFDNet.
+<bbox><x_160><y_156><x_191><y_172></bbox>Input
+<bbox><x_314><y_156><x_400><y_172></bbox>Adobe Acrobat
+<bbox><x_491><y_156><x_585><y_172></bbox>FFDNet-S (ours)
+<bbox><x_672><y_156><x_767><y_172></bbox>FFDNet-S (ours)
+<bbox><x_163><y_817><x_198><y_823></bbox>Level 1 Summary
+<bbox><x_344><y_817><x_379><y_823></bbox>Level 1 Summary
+<bbox><x_526><y_817><x_560><y_823></bbox>Level 1 Summary
+<bbox><x_707><y_817><x_742><y_823></bbox>Level 1 Summary
+<bbox><x_121><y_838><x_239><y_841></bbox>Adobe Acrobat is a text editor that is designed to be used with Adobe Acrobat Reader.
+<bbox><x_121><y_841><x_239><y_844></bbox>Adobe Acrobat Reader is a text editor that is designed to be used with Adobe Acrobat Reader.
+<bbox><x_121><y_844><x_239><y_847></bbox>Adobe Acrobat Reader is a text editor that is designed to be used with Adobe Acrobat Reader.
+<bbox><x_121><y_847><x_239><y_850></bbox>Adobe Acrobat Reader is a text editor that is designed to be used with Adobe Acrobat Reader.
+<bbox><x_121><y_850><x_239><y_853></bbox>Adobe Acrobat Reader is a text editor that is designed to be used with Adobe Acrobat Reader.
+<bbox><x_121><y_853><x_239><y_856></bbox>Adobe Acrobat Reader is a text editor that is designed to be used with Adobe Acrobat Reader.
+<bbox><x_121><y_856><x_239><y_859></bbox>Adobe Acrobat Reader is a text editor that is designed to be used with Adobe Acrobat Reader.
+<bbox><x_121><y_859><x_239><y_862></bbox>Adobe Acrobat Reader is a text editor that is designed to be used with Adobe Acrobat Reader.
+<bbox><x_121><y_862><x_239><y_865></bbox>Adobe Acrobat Reader is a text editor that is designed to be used with Adobe Acrobat Reader.
+<bbox><x_121><y_865><x_239><y_868></bbox>Adobe Acrobat Reader is a text editor that is designed to be used with Adobe Acrobat Reader.
+<bbox><x_121><y_868><x_239><y_871></bbox>Adobe Acrobat Reader is a text editor that is designed to be used with Adobe Acrobat Reader.
+<bbox><x_121><y_871><x_239><y_874></bbox>Adobe Acrobat Reader is a text editor that is designed to be used with Adobe Acrobat Reader.
+<bbox><x_121><y_874><x_239><y_877></bbox>Adobe Acrobat Reader is a text editor that is designed to be used with Adobe Acrobat Reader.
+<bbox><x_121><y_877><x_239><y_880></bbox>Adobe Acrobat Reader is a text editor that is designed to be used with Adobe Acrobat Reader.
+<bbox><x_121><y_880><x_239><y_883></bbox>Adobe Acrobat Reader is a text editor that is designed to be used with Adobe Acrobat Reader.
+<bbox><x_121><y_883><x_239><y_886></bbox>Adobe Acrobat Reader is a text editor that is designed to be used with Acrobat Reader.
+<bbox><x_121><y_886><x_239><y_889></bbox>Adobe Acrobat Reader is a text editor that is designed to be used with Acrobat Reader.
+<bbox><x_121><y_889><x_138><y_892></bbox>Read more
+<bbox><x_121><y_892><x_138><y_895></bbox>Read more
+<bbox><x_121><y_895><x_138><y_898></bbox>Read more
+<bbox><x_121><y_898><x_138><y_901></bbox>Read more
+<bbox><x_121><y_901><x_138><y_904></bbox>Read more
+<bbox><x_121><y_904><x_138><y_907></bbox>Read more
+<bbox><x_121><y_907><x_138><y_910></bbox>Read more
+<bbox><x_121><y_910><x_138><y_913></bbox>Read more
+<bbox><x_121><y_913><x_138><y_916></bbox>Read more
+<bbox><x_121><y_916><x_138><y_919></bbox>Read more
+<bbox><x_121><y_919><x_138><y_922></bbox>Read more
+<bbox><x_121><y_922><x_138><y_925></bbox>Read more
+<bbox><x_121><y_925><x_138><y_928></bbox>Read more
+<bbox><x_121><y_928><x_138><y_931></bbox>Read more
+<bbox><x_121><y_931><x_138><y_934></bbox>Read more
+<bbox><x_121><y_934><x_138><y_937></bbox>Read more
+<bbox><x_121><y_937><x_138><y_940></bbox>Read more
+<bbox><x_121><y_940><x_138><y_943></bbox>Read more
+<bbox><x_121><y_943><x_138><y_946></bbox>Read more
+<bbox><x_121><y_946><x_138><y_949></bbox>Read more
+<bbox><x_121><y_949><x_138><y_952></bbox>Read more
+<bbox><x_121><y_952><x_138><y_955></bbox>Read more
+<bbox><x_121><y_955><x_138><y_958></bbox>Read more
+<bbox><x_121><y_958><x_138><y_961></bbox>Read more
+<bbox><x_121><y_961><x_138><y_964></bbox>Read more
+<bbox><x_121><y_964><x_138><y_967></bbox>Read more
+<bbox><x_121><y_967><x_138><y_970></bbox>Read more
+<bbox><x_121><y_970><x_138><y_973></bbox>Read more
+<bbox><x_121><y_973><x_138><y_976></bbox>Read more
+<bbox><x_121><y_976><x_138><y_979></bbox>Read more
+<bbox><x_121><y_979><x_138><y_982></bbox>Read more
+<bbox><x_121><y_982><x_138><y_985></bbox>Read more
+<bbox><x_121><y_985><x_138><y_988></bbox>Read more
+<bbox><x_121><y_988><x_138><y_991></bbox>Read more
+<bbox><x_121><y_991><x_138><y_994></bbox>Read more
+<bbox><x_121><y_994><x_138><y_997></bbox>Read more
+<bbox><x_121><y_997><x_138><y_1000></bbox>Read more
+<bbox><x_121><y_1000><x_138><y_1003></bbox>Read more
+<bbox><x_121><y_1003><x_138><y_1006></bbox>Read more
+<bbox><x_121><y_1006><x_138><y_1009></bbox>Read more
+<bbox><x_121><y_1009><x_138><y_1012></bbox>Read more
+<bbox><x_121><y_1012><x_138><y_1015></bbox>Read more
+<bbox><x_121><y_1015><x_138><y_1018></bbox>Read more
+<bbox><x_121><y_1018><x_138><y_1021></bbox>Read more
+<bbox><x_121><y_1021><x_138><y_1024></bbox>Read more
+<bbox><x_121><y_1024><x_138><y_1027></bbox>Read more
+<bbox><x_121><y_1027><x_138><y_1030></bbox>Read more
+<bbox><x_121><y_1030><x_138><y_1033></bbox>Read more
+<bbox><x_121><y_1033><x_138><y_1036></bbox>Read more
+<bbox><x_121><y_1036><x_138><y_1039></bbox>Read more
+<bbox><x_121><y_1039><x_138><y_1042>
