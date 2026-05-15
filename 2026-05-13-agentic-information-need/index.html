@@ -126,15 +126,17 @@ From the paper:</p>
 <p>And follow-on work, like Reason-ModernCOLBERT from Antoine Chaffin <sup class="citation">[<a href="#ref-4">4</a>]</sup> or Reason-IR <sup class="citation">[<a href="#ref-5">5</a>]</sup> shows that we can actually build this right into our retrieval system!
 By training the retrieval system <em>with</em> reasoning data in the queries, and using that reasoning data in the harness, you see pretty substantial gains in agentic retrieval performance:</p>
 <p><img src="browsecomp.png" /></p>
+<p>Basically, a 10%+ bump on BrowseComp-Plus, an agentic retrieval benchmark, by using a retriever that accounts for an </p>
 <p>What does this look like?
 Well, an awful lot like a TDN query!
-Your harness can prompt not only for the &ldquo;query,&rdquo; but for the reasoning behind the query, and what makes an effective document.</p>
-<div class="codehilite"><pre><span></span><code>&lt;title&gt; user query / topic
-&lt;desc&gt;  agent&#39;s reasoning trace  
-&lt;narr&gt;  what the agent thinks a relevant doc looks like
+Here&rsquo;s the prompt the BRIGHT authors used to elicit reasoning </p>
+<div class="codehilite"><pre><span></span><code>(1) Identify the essential problem in the post.
+(2) Think step by step to reason about what should be included in the relevant documents.
+(3) Draft an answer.
 </code></pre></div>
 
-<p>Reasoning-ModernColBERT and Agent-ModernColBERT show that this can provide wins over simpler search tools.
+<p>Your harness can prompt not only for the &ldquo;query,&rdquo; but for the reasoning behind the query, and what makes an effective document.
+Reasoning-ModernColBERT and Agent-ModernColBERT show that this can provide wins over simpler search tools.
 DCI showed that agents can execute long-horizon search tasks to satisfy information needs.
 But <mark>if we account for those information needs to begin with, we can get better retrieval &ndash; and results!</mark></p>
 <section class="references">
