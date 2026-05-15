@@ -121,7 +121,7 @@ Consider the LeetCode examples in BRIGHT: find problems whose solutions share an
 From the paper:</p>
 <aside class="callout callout-quote">
 <p class="callout-title">BRIGHT p. 8</p>
-<p><strong>Querying with LLM reasoning steps improves retrieval performance.</strong></p>
+<p><strong>Querying with LLM reasoning steps improves retrieval performance.</strong> [&hellip;] using Llama-3-70B or GPT-4 reasoning steps as queries significantly improves performance compared to the original query</p>
 </aside>
 <p>And follow-on work, like Reason-ModernCOLBERT from Antoine Chaffin <sup class="citation">[<a href="#ref-4">4</a>]</sup> or Reason-IR <sup class="citation">[<a href="#ref-5">5</a>]</sup> shows that we can actually build this right into our retrieval system!
 By training the retrieval system <em>with</em> reasoning data in the queries, and using that reasoning data in the harness, you see pretty substantial gains in agentic retrieval performance:</p>
