@@ -129,7 +129,12 @@ By training the retrieval system <em>with</em> reasoning data in the queries, an
 <p>What does this look like?
 Well, an awful lot like a TDN query!
 Your harness can prompt not only for the &ldquo;query,&rdquo; but for the reasoning behind the query, and what makes an effective document.</p>
-<p>This can provide wins over simpler search tools.
+<div class="codehilite"><pre><span></span><code>&lt;title&gt; user query / topic
+&lt;desc&gt;  agent&#39;s reasoning trace  
+&lt;narr&gt;  what the agent thinks a relevant doc looks like
+</code></pre></div>
+
+<p>Reasoning-ModernColBERT and Agent-ModernColBERT show that this can provide wins over simpler search tools.
 DCI showed that agents can execute long-horizon search tasks to satisfy information needs.
 But <mark>if we account for those information needs to begin with, we can get better retrieval &ndash; and results!</mark></p>
 <section class="references">
