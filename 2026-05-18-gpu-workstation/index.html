@@ -81,9 +81,10 @@
 <p><img alt="my workstation" src="workstation.png"></p>
 <figcaption>My workhorse. Currently it&rsquo;s a 4x3090Ti machine. Using this, I can OCR around 250k pages a day, and do a full finetune of Qwen-3 VL 2B at pretty respectable batch sizes.</figcaption>
 </figure>
-<h2>The Plan</h2>
-<p>My plan for this was simple: buy a server motherboard with enough PCIe x16 slots, a CPU with enough PCIe lanes, as much cheap DDR4 RAM as I could load into it, a bunch of cheap SSDs.</p>
-<h2>Getting Punched in the Face</h2>
+<h1>The Plan</h1>
+<p>My plan for this was simple: buy a server motherboard with enough PCIe x16 slots, a CPU with enough PCIe lanes, as much cheap DDR4 RAM as I could load into it, a bunch of cheap SSDs.
+Then power-limit the GPUs to a reasonable wattage, and go on my merry way running experiments.</p>
+<h1>Getting Punched in the Face</h1>
 <aside class="callout callout-quote">
 <p class="callout-title">Quote</p>
 <p>Everybody has a plan until they get punched in the face.</p>
@@ -91,8 +92,18 @@
 <li>Mike Tyson</li>
 </ul>
 </aside>
+<p>Unfortunately, Mike Tyson is right.
+While trying to build my workstation, I had to change plans a few times.</p>
+<h3>A Global Compute Crunch</h3>
 <p>If you know anything about the price of computer parts from the last year, you would know what happened to that plan.
 RAM quintupled in price, SSDs tripled, and used GPUs skyrocketed.</p>
+<p><mark>Buying used, cheap server parts was no longer an option.</mark>
+It took a lot more patience to find <em>decent</em> prices on components, trawling eBay, r/homelabsales, and r/hardwareswap.
+It became really hard to determine what was a good price for a component, so I had to resort to thinking about prices in terms of <a href="https://en.wikipedia.org/wiki/Secretary_problem">the Secretary Problem</a>.
+Given the most recent sales price, and the upper limit of what I was willing to pay, was this a good price?</p>
+<h3>Taking Risks on Parts</h3>
+<p>Pretty much every part of this build is a secondhand part, save the first 3090 Ti.</p>
+<h3>Power-Limiting is Not What it Seems</h3>
 <h2>My Setup</h2>
 <p>I ended up going with the following:</p>
 <ul>
@@ -106,7 +117,21 @@ RAM quintupled in price, SSDs tripled, and used GPUs skyrocketed.</p>
 <li><strong>GPUs</strong> <mark>4x power-limited 3090Ti;</mark> tbh, I&rsquo;d advise you to go for 3090&rsquo;s over 3090Ti&rsquo;s (I&rsquo;ll explain later), but I was really fortunate to pick up the first 2 for quite cheap and didn&rsquo;t want to mix GPU types. Each 3090Ti has a TDP of 450W, so obviously sounds like I&rsquo;m out of luck (450W*4=1800W). However, you can power-limit them using nvidia-smi or even disable some GPUs altogether in software (I published some helper scripts: https://github.com/jbarrow/gpu-management)</li>
 <li><strong>Case</strong> <mark>Cheapo Mining Chassis;</mark> the less said the better. I went for a 6 GPU chassis because it has a much smaller footprint than a 8x GPU chassis and is much shorter than a 12x GPU chassis.</li>
 </ul>
-<h2>Power-Limiting is Not What it Seems</h2>
+<h2>Avoiding Divorce</h2>
+<details class="margin-note">
+<summary>N.B.</summary>
+<p>The title of this section is obviously tongue-in-cheek, but the point stands.</p>
+</details>
+<p>Perhaps the most important advice I can give you, if you choose to embark on a similar journey, is to <mark>be mindful of the people you live with</mark>.
+If your hobby is an imposition, the onus is on you to <mark>not be a dick</mark>.
+A workstation like this is intrusive, as it&rsquo;s effectively a noisy space heater.
+I don&rsquo;t have the luxury of a basement or any &ldquo;out-of-the-way&rdquo; spaces.
+As a result, my agreement is that if it&rsquo;s at any point too loud or too hot, I&rsquo;ll power it down.
+I do a lot of bulk inference overnight, or at times when nobody is in the room.</p>
+<figure>
+<p><img alt="the office can get unseasonably warm under full load, in this case 85 degrees Fahrenheit" src="temperature.png"></p>
+<figcaption>Under full load, the room with the workstation can get quite warm.</figcaption>
+</figure>
 <h1>FAQ</h1>
 <h2>Mistakes I Made Along the Way</h2>
 <p>Using 3090Ti&rsquo;s – these cards have a monster TDP compared to 3090&rsquo;s (450W vs 350W). This increase in power draw comes with only a modest increase in performance, especially when you look at performance per watt. Back in 2022 I got a great deal from NVIDIA on a new 3090Ti far below MSRP at a time when GPUs were going well above MSRP, which led me down this path.
@@ -127,6 +152,14 @@ Not reading enough manuals. Honestly, you should read your motherboard&rsquo;s m
 <p>Why aren&rsquo;t I eating more salads and fewer delicious sandwiches? Why do I bother playing chess when I couldn&rsquo;t fathomably beat any engine developed since the year 2000? Because I&rsquo;m human, I&rsquo;m curious, I&rsquo;m not a perfect optimizer and you shouldn&rsquo;t be either. This became a months long obsession, and I really enjoyed the journey of building and tinkering.</p>
 <h2>What about using two circuits?</h2>
 <p>One suggestion I&rsquo;ve received is to split the PSUs over two circuits as a way to circumvent constraint (1). Unfortunately, this violates constraint (2); I only have a small number of circuits in our apartment. Imagine my surprise when the first outlet I plugged it into shared a circuit with my tea kettle. It only tripped when I was running an OCR job while making tea.</p>
+<h1>Acknowledgements</h1>
+<p>This post has been inspired by some great people from around the internet:</p>
+<ul>
+<li><mark>Tim Dettmers</mark>, whose GPU posts were essential to me in grad school, even when I couldn&rsquo;t afford to build a cluster</li>
+<li><mark>James Betker</mark>, whose home GPU clusters (used to train TortoiseTTS) is a huge source of inspiration</li>
+<li><mark>Zach Mueller</mark>, whose home GPU workstation is much better contained.</li>
+<li>The wonderful people of <a href="https://reddit.com/r/homelab">r/homelab</a> and <a href="https://reddit.com/r/localllama">r/localllama</a>, who solve these kinds of problems all day and for fun, and its moderator, <mark>Ahmad Osman</mark> (the Buy a GPU guy).</li>
+</ul>
 
   </article>
 
