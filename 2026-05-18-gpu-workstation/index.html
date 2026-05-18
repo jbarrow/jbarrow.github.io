@@ -116,6 +116,13 @@ But the risk is part of the game.</p>
 <figcaption>The 3090 I received, instead of the 3090 Ti I ordered.</figcaption>
 </figure>
 <h3>Power-Limiting is Not What it Seems</h3>
+<p>If you want to run off of a single outlet, power-limiting is your friend.
+<mark>Unfortunately, it&rsquo;s a bad friend,</mark> and a liar no less.
+Running <code>nvidia-smi -pl 250</code> <em>does not</em> set a hard cap at 250W, it sets a cap at an <em>average</em> of 250W over a millisecond period.
+Your GPUs can have transient spikes within that millisecond.
+Which, if they line up, can trigger your PSU&rsquo;s overcurrent protection (OCP).</p>
+<p><mark>To avoid this, you need to limit clock speeds</mark>, not just power-limit.
+Something like <code>nvidia-smi -lgc 210,1500</code> can avoid triggering OCP.</p>
 <h2>My Setup</h2>
 <p>I ended up going with the following:</p>
 <ul>
