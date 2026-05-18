@@ -69,7 +69,7 @@
 <p class="callout-title">TL;DR</p>
 <p>I built a 4x 3090 Ti rig so you don&rsquo;t have to. Unless you want to, in which case you should probably read the whole post!</p>
 </aside>
-<p>I have spent the past few years piecemeal building a multi-GPU workstation, ensuring it could run on a single US wall outlet.
+<p>I have spent the past few months piecemeal building a multi-GPU workstation, ensuring it could run on a single US wall outlet.
 This rig allowed me to train some <a href="https://huggingface.co/jbarrow/FFDetr">DETR models</a> on <a href="https://huggingface.co/datasets/jbarrow/CommonForms">CommonForms</a>, a <a href="https://huggingface.co/jbarrow/FormVLM-v0.1">1.3B param VLM on CommonForms</a>, and to OCR the first million pages of laws for the <a href="https://huggingface.co/datasets/LocalLaws/LOCUS-v1">LOCUS-v1 dataset</a>.</p>
 <p>The full constraints for the build were:</p>
 <ol>
@@ -148,18 +148,19 @@ I do a lot of bulk inference overnight, or at times when nobody is in the room.<
 <p><img alt="the office can get unseasonably warm under full load, in this case 85 degrees Fahrenheit" src="temperature.png"></p>
 <figcaption>Under full load, the room with the workstation can get quite warm.</figcaption>
 </figure>
-<h1>FAQ</h1>
 <h2>Mistakes I Made Along the Way</h2>
 <p>Using 3090Ti&rsquo;s – these cards have a monster TDP compared to 3090&rsquo;s (450W vs 350W). This increase in power draw comes with only a modest increase in performance, especially when you look at performance per watt. Back in 2022 I got a great deal from NVIDIA on a new 3090Ti far below MSRP at a time when GPUs were going well above MSRP, which led me down this path.
 If I were to do this again, I&rsquo;d probably go exclusively for EVGA FTW3 3090&rsquo;s, which use 2x PCIe 8-pin cables instead of a single 12VHWPR cable.
 Waffling on good deals – I came across many good deals (on RAM, SSDs, GPUs, etc.) in the process, but waited because I hadn&rsquo;t fully committed to the build. Unfortunately, this is basically the worst thing you can do in today&rsquo;s environment, where the cost of components is very volatile.
 Not reading enough manuals. Honestly, you should read your motherboard&rsquo;s manual, if nothing else. I learned that by default one of the nvme bays is disabled and I needed to change a jumper to make it work.</p>
 <p>Thankfully, none of these mistakes were too costly (though if I were to swap from 3090Ti&rsquo;s to 3090&rsquo;s, it&rsquo;d be a huge pain).</p>
+<h1>FAQ</h1>
 <h2>What would I do with more or less budget?</h2>
 <p>With more budget, I&rsquo;d go for workstation cards. You can fit 4 of them inside a case with their blower-style fans! If I had an unlimited budget, that would be 4x RTX PRO Blackwell 6000 Max-Q cards, which each have 96GB of VRAM and a 300W TDP.</p>
 <p>Unfortunately, for my budget, I couldn&rsquo;t make the math work out for any of the RTO PRO cards. A $1600 RTX PRO 4000 card has 24GB of VRAM and is roughly the same speed as a 3090 with lower memory bandwidth. The 150W TDP is really tempting, but 4 of those would cost as much as 8x 3090&rsquo;s. If I had a higher budget or more concerns around noise or cooling, though, I would have paired those cards with the same setup inside of an XL case.</p>
 <p>Hard to say what I&rsquo;d do for less budget. I&rsquo;m a big fan of expandability, so I might still opt for the server GPU, a single stick of 64GB ECC RAM, and a single 3090. This means that I wouldn&rsquo;t have to get rid of any parts to eventually build out the same machine.</p>
 <h2>Do I recommend you do it?</h2>
+<p>Only if you&rsquo;re mildly crazy and want to be driven even crazier.</p>
 <h2>Is now a good time to build a GPU rig?</h2>
 <p>Unfortunately, now is one of the worst and one of the best times to build a home GPU cluster. Computer components are expensive and getting more expensive. We are currently in a RAM shortage, meaning that the RAM you want to use for your server is probably 3x-5x as expensive as it was a year ago, and maybe more. Storage prices are up 2x-3x as well, so you might have to face some compromises between GPUs, RAM, and storage.</p>
 <p>However, it&rsquo;s also not a bad time to build a GPU cluster. There are great used GPUs for sale! As a PhD student (2016-2022), our labs cluster consisted largely of 1080Tis and 2080Tis, so 11GB GPUs. This was great for training BERT models and graph convolutional networks, but as models got bigger…</p>
