@@ -154,6 +154,33 @@ If I were to do this again, I&rsquo;d probably go exclusively for EVGA FTW3 3090
 Waffling on good deals – I came across many good deals (on RAM, SSDs, GPUs, etc.) in the process, but waited because I hadn&rsquo;t fully committed to the build. Unfortunately, this is basically the worst thing you can do in today&rsquo;s environment, where the cost of components is very volatile.
 Not reading enough manuals. Honestly, you should read your motherboard&rsquo;s manual, if nothing else. I learned that by default one of the nvme bays is disabled and I needed to change a jumper to make it work.</p>
 <p>Thankfully, none of these mistakes were too costly (though if I were to swap from 3090Ti&rsquo;s to 3090&rsquo;s, it&rsquo;d be a huge pain).</p>
+<h2>Some Tips on Software</h2>
+<p>I run Ubuntu server + tailscale so I can ssh into the machine from anywhere.
+I get most of my for fun development done on the machine using neovim.
+I sync things using github (code), rsync (data), or a mounted NAS (BIG data).
+I don&rsquo;t know if I&rsquo;d advise you to run Proxmox or something.
+Honestly, I&rsquo;ve thought about setting up Slurm so I could schedule jobs, but haven&rsquo;t gotten around to it.</p>
+<p>I installed George Hotz&rsquo;s cracked nvidia drivers that enable GPU p2p, which I would highly recommend for anyone running a similar setup. </p>
+<div class="codehilite"><pre><span></span><code>Running device_to_device_memcpy_read_ce.
+memcpy CE GPU(row) -&gt; GPU(column) bandwidth (GB/s)
+           0         1         2
+ 0       N/A     26.37     25.77
+ 1     26.37       N/A     26.37
+ 2     26.35     26.37       N/A
+
+SUM device_to_device_memcpy_read_ce 157.62
+
+Running device_to_device_memcpy_write_ce.
+memcpy CE GPU(row) &lt;- GPU(column) bandwidth (GB/s)
+           0         1         2
+ 0       N/A     26.40     26.40
+ 1     26.40       N/A     26.40
+ 2     25.64     26.40       N/A
+</code></pre></div>
+
+<p>In addition to better nvbandwidth tests, I&rsquo;ve seen higher real-world ZeRO2 speed.
+The gradients and optimizer states need frequent syncing.
+I saw somebody report inter-GPU speeds going from 4GB/s to 24GB/s, which would be quite nice.</p>
 <h1>FAQ</h1>
 <h2>What would I do with more or less budget?</h2>
 <p>With more budget, I&rsquo;d go for workstation cards. You can fit 4 of them inside a case with their blower-style fans! If I had an unlimited budget, that would be 4x RTX PRO Blackwell 6000 Max-Q cards, which each have 96GB of VRAM and a 300W TDP.</p>
@@ -162,8 +189,14 @@ Not reading enough manuals. Honestly, you should read your motherboard&rsquo;s m
 <h2>Do I recommend you do it?</h2>
 <p>Only if you&rsquo;re mildly crazy and want to be driven even crazier. (Yes.)</p>
 <h2>Is now a good time to build a GPU rig?</h2>
-<p>Unfortunately, now is one of the worst and one of the best times to build a home GPU cluster. Computer components are expensive and getting more expensive. We are currently in a RAM shortage, meaning that the RAM you want to use for your server is probably 3x-5x as expensive as it was a year ago, and maybe more. Storage prices are up 2x-3x as well, so you might have to face some compromises between GPUs, RAM, and storage.</p>
-<p>However, it&rsquo;s also not a bad time to build a GPU cluster. There are great used GPUs for sale! As a PhD student (2016-2022), our labs cluster consisted largely of 1080Tis and 2080Tis, so 11GB GPUs. This was great for training BERT models and graph convolutional networks, but as models got bigger…</p>
+<p>Unfortunately, now is one of the worst times to build a home GPU cluster.
+Computer components are expensive and getting more expensive.
+We are currently in a RAM shortage, meaning that the RAM you want to use for your server is probably 3x-5x as expensive as it was a year ago, and maybe more.
+Storage prices are up 2x-3x as well, so you might have to face some compromises between GPUs, RAM, and storage.</p>
+<p>However, it&rsquo;s also not a bad time to build a GPU cluster.
+There are great used GPUs for sale!
+As a PhD student (2016-2022), our labs cluster consisted largely of 1080Tis and 2080Tis, so 11GB GPUs.
+This was great for training BERT models and graph convolutional networks, but as models got bigger…</p>
 <p>Nowadays, you can get used 3090&rsquo;s, which have 24GB of VRAM. Sure, the 5090 has 32GB and the RTX PRO 6000 Blackwell has 96GB, but you can do a lot today on 24GB.</p>
 <h2>Why aren&rsquo;t I using the cloud?</h2>
 <p><mark>Why aren&rsquo;t I eating more salads and fewer delicious sandwiches?</mark>
