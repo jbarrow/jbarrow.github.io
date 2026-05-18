@@ -134,7 +134,7 @@ Something like <code>nvidia-smi -lgc 210,1500</code> can avoid triggering OCP.</
 <li>There are considerations around memory speed and channels to consider. These are mostly only important if you&rsquo;re using ZeRO3 to finetune larger models as it offloads gradients into RAM via the CPU, so you&rsquo;re limited by the speed of the RAM for stores and loads.</li>
 </ul>
 </li>
-<li><strong>GPUs</strong> <mark>4x power-limited 3090Ti;</mark> tbh, I&rsquo;d advise you to go for 3090&rsquo;s over 3090Ti&rsquo;s (I&rsquo;ll explain later), but I was really fortunate to pick up the first 2 for quite cheap and didn&rsquo;t want to mix GPU types. Each 3090Ti has a TDP of 450W, so obviously sounds like I&rsquo;m out of luck (450W*4=1800W). However, you can power-limit them using nvidia-smi or even disable some GPUs altogether in software (I published some helper scripts: https://github.com/jbarrow/gpu-management)</li>
+<li><strong>GPUs</strong> <mark>4x power-limited 3090Ti;</mark> tbh, I&rsquo;d advise you to go for 3090&rsquo;s over 3090Ti&rsquo;s (I&rsquo;ll explain later), but I was really fortunate to pick up the first 2 for quite cheap and didn&rsquo;t want to mix GPU types. Each 3090Ti has a TDP of 450W, so obviously sounds like I&rsquo;m out of luck (450W x 4=1800W). However, you can power-limit them and reduce the clock speeds. (I published some helper scripts: <a href="https://github.com/jbarrow/gpu-management">https://github.com/jbarrow/gpu-management</a>)</li>
 <li><strong>Case</strong> <mark>Cheapo Mining Chassis;</mark> the less said the better. I went for a 6 GPU chassis because it has a much smaller footprint than a 8x GPU chassis and is much shorter than a 12x GPU chassis.</li>
 </ul>
 <h2>Avoiding Divorce</h2>
