@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paper Notes: MinerU-Diffusion — Field Notes — Joe Barrow</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../../static/css/site.css?v=5cbe7f85">
+  <link rel="stylesheet" href="../../static/css/code.css?v=678df866">
+  <link rel="alternate" type="application/atom+xml" title="Joe Barrow" href="../../feed.xml">
+
+
+
+
+
+  <script>
+    (function () {
+      var h = window.location.hostname;
+      if (h === "localhost" || h === "127.0.0.1" || h === "" || h.endsWith(".local")) return;
+      var s = document.createElement("script");
+      s.async = true;
+      s.src = "https://www.googletagmanager.com/gtag/js?id=G-GXC0J2XPHL";
+      document.head.appendChild(s);
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){ dataLayer.push(arguments); }
+      window.gtag = gtag;
+      gtag("js", new Date());
+      gtag("config", "G-GXC0J2XPHL");
+    })();
+  </script>
+</head>
+<body>
+
+  <header class="masthead">
+    <span class="masthead-title"><a href="../../">Joe Barrow</a></span>
+    <nav class="masthead-nav">
+      <a href="../../about/">about</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../publications/">publications</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../software/">software</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../field_notes/">field notes</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../feed.xml">rss</a>
+    </nav>
+    <span class="masthead-meta">field_notes</span>
+  </header>
+
+  <article class="article note">
+    <p class="note-eyebrow">
+      <a href="../../field_notes/">Field Notes</a>
+    </p>
+
+    <h1 class="note-title">Paper Notes: MinerU-Diffusion</h1>
+
+    <p class="note-updated">last updated 2026-05-18</p>
+
+    <ul class="note-tags">
+      <li><a class="tag-pill" href="../../field_notes/?tag=vlm-ocr">vlm-ocr</a></li>
+    </ul>
+
+    <aside class="paper-card">
+      <span class="paper-card-label">Source</span>
+      <h2 class="paper-card-title">MinerU-Diffusion: Rethinking Document OCR as Inverse Rendering via Diffusion Decoding</h2>
+      <p class="paper-card-meta">
+Hejun Dong, Junbo Niu, Bin Wang, Weijun Zeng, Wentao Zhang, Conghui He<span class="sep">·</span>arXiv · 2026      </p>
+      <div class="paper-downloads">
+        <a class="btn btn-paper" href="../../field_notes/_attachments/mineru-diffusion.pdf" download>
+          <span class="btn-icon">↓</span>
+          <span class="btn-label">Download</span>
+          <span class="btn-meta">PDF</span>
+        </a>
+        <a class="btn btn-paper-annotated" href="../../field_notes/_attachments/mineru-diffusion-annotated.pdf" download>
+          <span class="btn-icon">↓</span>
+          <span class="btn-label">Download Annotated</span>
+          <span class="btn-meta">PDF</span>
+        </a>
+      </div>
+    </aside>
+
+    <p><strong>Core claims:</strong></p>
+<blockquote>
+<p>&ldquo;left-to-right causal generation is an artifact of serialization rather than an intrinsic property of the task.&rdquo; - p. 1
+&ldquo;autoregressive formulations implicitly cast OCR as a language-conditioned reconstruction [&hellip;] When visual signals are weak [&hellip;] models tend to over rely on these priors, leading to semantic hallucinations and cumulative errors.&rdquo; - p. 3</p>
+</blockquote>
+<p>They do this with a <strong>block-level diffusion LLM (dLLM)</strong>, which does causal language modeling (left-to-right), but <em>a whole block at a time</em>. In the below figure from the paper, the <strong>block size</strong> is 81 tokens. A dLLM simultaneously decodes all the tokens in a block, starting with all of them labeled as <code>[MASK]</code>. In the figure, the black text is from the previous block, and the red text + <code>[MASK]</code> tokens are from the current block diffusion (currently on &ldquo;step 4&rdquo;).</p>
+<p><img class="embed" src="../_attachments/mineru-diffusion-step.png" alt="mineru-diffusion-step.png"></p>
+<p><strong>Headline results:</strong>
+- <strong>you can get a ~2x speedup at 99.9% relative accuracy</strong>, or a ~3x speedup at 99% relative accuracy, though you get a huge drop after that
+- the drop must come from block sizes growing too large for the model/too few diffusion steps
+<img class="embed" src="../_attachments/mineru-diffusion-results.png" alt="mineru-diffusion-results.png"></p>
+<h2>dLLM Attention</h2>
+<p>Tokens attend to each other <em>bidirectionally within each block</em> and <em>causally</em> to all previous blocks.</p>
+<h2>Curriculum Learning</h2>
+<p><strong>Interestingly</strong>, they opt for curriculum learning (it&rsquo;s back!!!).</p>
+<p><a class="wiki-link" href="../../field_notes/dodo-ocr/">DODO OCR</a> is another diffusion LLM.</p>
+  </article>
+
+  <footer class="site-footer">
+    joe barrow · research scientist
+    <span class="site-footer-sep">·</span>
+    <a href="../../feed.xml">rss</a>
+  </footer>
+
+  <script src="../../static/js/site.js?v=bfb16307" defer></script>
+
+
+
+
+
+</body>
+</html>
