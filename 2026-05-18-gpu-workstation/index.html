@@ -67,7 +67,7 @@
 
     <aside class="callout callout-abstract">
 <p class="callout-title">TL;DR</p>
-<p>Thoughts on building a 4x3090 Ti workstation, general advice, and why you might want to or not want to.</p>
+<p>I built a 4x 3090 Ti rig so you don&rsquo;t have to. Unless you want to, in which case you should probably read the whole post!</p>
 </aside>
 <p>I have spent the past few years piecemeal building a multi-GPU workstation, ensuring it could run on a single US wall outlet.
 This rig allowed me to train some <a href="https://huggingface.co/jbarrow/FFDetr">DETR models</a> on <a href="https://huggingface.co/datasets/jbarrow/CommonForms">CommonForms</a>, a <a href="https://huggingface.co/jbarrow/FormVLM-v0.1">1.3B param VLM on CommonForms</a>, and to OCR the first million pages of laws for the <a href="https://huggingface.co/datasets/LocalLaws/LOCUS-v1">LOCUS-v1 dataset</a>.</p>
@@ -138,10 +138,6 @@ Something like <code>nvidia-smi -lgc 210,1500</code> can avoid triggering OCP.</
 <li><strong>Case</strong> <mark>Cheapo Mining Chassis;</mark> the less said the better. I went for a 6 GPU chassis because it has a much smaller footprint than a 8x GPU chassis and is much shorter than a 12x GPU chassis.</li>
 </ul>
 <h2>Avoiding Divorce</h2>
-<details class="margin-note">
-<summary>N.B.</summary>
-<p>The title of this section is obviously tongue-in-cheek, but the point stands.</p>
-</details>
 <p>Perhaps the most important advice I can give you, if you choose to embark on a similar journey, is to <mark>be mindful of the people you live with</mark>.
 If your hobby is an imposition, the onus is on you to <mark>not be a dick</mark>.
 A workstation like this is intrusive, as it&rsquo;s effectively a noisy space heater.
