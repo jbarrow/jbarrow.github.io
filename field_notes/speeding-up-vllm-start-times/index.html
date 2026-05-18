@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Paper Notes: Deepseek-OCR — Field Notes — Joe Barrow</title>
+  <title>Speeding up vLLM Start Times — Field Notes — Joe Barrow</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -56,32 +56,33 @@
       <a href="../../field_notes/">Field Notes</a>
     </p>
 
-    <h1 class="note-title">Paper Notes: Deepseek-OCR</h1>
+    <h1 class="note-title">Speeding up vLLM Start Times</h1>
 
-    <p class="note-updated">last updated 2026-05-11</p>
+    <p class="note-updated">last updated 2026-05-18</p>
 
     <ul class="note-tags">
-      <li><a class="tag-pill" href="../../field_notes/?tag=vlm-ocr">vlm-ocr</a></li>
+      <li><a class="tag-pill" href="../../field_notes/?tag=vllm">vllm</a></li>
     </ul>
 
-    <aside class="paper-card">
-      <span class="paper-card-label">Source</span>
-      <h2 class="paper-card-title">DeepSeek-OCR: Contexts Optical Compression</h2>
-      <p class="paper-card-meta">
-Haoran Wei, Yaofeng Sun, Yukun Li<span class="sep">·</span>arXiv      </p>
-      <div class="paper-downloads">
-        <a class="btn btn-paper" href="../../field_notes/_attachments/deepseek-ocr.pdf" download>
-          <span class="btn-icon">↓</span>
-          <span class="btn-label">Download</span>
-          <span class="btn-meta">PDF</span>
-        </a>
-      </div>
-    </aside>
 
-    <aside class="callout callout-abstract">
-<p class="callout-title">TL;DR</p>
-<p>This paper made waves when it came out, though imo those were a bit of an overreaction, just because it was from the whale. It wasn&rsquo;t even a SotA OCR model when released, and the brouhaha was mostly around the core claim of the paper: you can efficiently compress prompts as document images with minimal quality loss.</p>
-</aside>
+    <p>I came across <a href="https://www.reddit.com/r/LocalLLaMA/comments/1rmn4gx/comment/o9h0z62/?context=3">this comment on r/LocalLlama</a> about speeding up vLLM start times by:
+1. mounting a directory for Triton cache
+2. mounting a directory for Cuda cache</p>
+<p>This is with the vLLM docker, adding volume mounts with:</p>
+<div class="codehilite"><pre><span></span><code>... \
+    -v ~/.cache/vllm/nv_cache:/root/nv_cache \
+    -v ~/.cache/vllm/triton_cache:/root/triton_cache \
+    --env TRITON_CACHE_DIR=/root/triton_cache \
+    --env CUDA_CACHE_PATH=/root/nv_cache/ComputeCache \
+    --env CUDA_CACHE_MAXSIZE=10737418240
+</code></pre></div>
+
+<p>I plan on digging into if, why, and how this works. The comment author claims they get 11s start times now.</p>
+<h2>Understanding It</h2>
+<p>At first glance, I&rsquo;m guessing:
+- no need to recompile the model (triton cache)
+- no need to recompute the Cuda graphs (cuda cache)</p>
+<p>Modal has an option for totally avoiding the second one in <a href="https://modal.com/docs/examples/vllm_inference">their tutorial</a>, where they pass <code>--enforce-eager</code>; this comes at a trade-off in inference speed. Perhaps the cached directory avoids this trade-off.</p>
   </article>
 
   <footer class="site-footer">

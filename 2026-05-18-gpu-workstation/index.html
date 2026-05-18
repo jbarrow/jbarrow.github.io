@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Building a 1-Outlet, 4-GPU Workstation — Joe Barrow</title>
+  <meta name="description" content=".">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../static/css/site.css?v=5cbe7f85">
+  <link rel="stylesheet" href="../static/css/code.css?v=678df866">
+  <link rel="alternate" type="application/atom+xml" title="Joe Barrow" href="../feed.xml">
+
+
+
+
+
+  <script>
+    (function () {
+      var h = window.location.hostname;
+      if (h === "localhost" || h === "127.0.0.1" || h === "" || h.endsWith(".local")) return;
+      var s = document.createElement("script");
+      s.async = true;
+      s.src = "https://www.googletagmanager.com/gtag/js?id=G-GXC0J2XPHL";
+      document.head.appendChild(s);
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){ dataLayer.push(arguments); }
+      window.gtag = gtag;
+      gtag("js", new Date());
+      gtag("config", "G-GXC0J2XPHL");
+    })();
+  </script>
+</head>
+<body>
+
+  <header class="masthead">
+    <span class="masthead-title"><a href="../">Joe Barrow</a></span>
+    <nav class="masthead-nav">
+      <a href="../about/">about</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../publications/">publications</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../software/">software</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../field_notes/">field notes</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../feed.xml">rss</a>
+    </nav>
+    <span class="masthead-meta"></span>
+  </header>
+
+  <article class="article">
+    <p class="kicker">local compute</p>
+
+
+    <h1 class="headline">Building a 1-Outlet, 4-GPU Workstation</h1>
+
+    <p class="standfirst">As a grad student, the one thing I desperately wanted was a GPU workstation. As a gainfully employed adult I can finally make that happen.
+</p>
+
+    <div class="byline">
+<span>By <strong>Joe Barrow</strong></span><span class="byline-meta">2026-05-18</span>    </div>
+
+
+    <aside class="callout callout-abstract">
+<p class="callout-title">TL;DR</p>
+<p>Thoughts on building a 4x3090 Ti workstation, general advice, and why you might want to or not want to.</p>
+</aside>
+<p>I have spent the past few years piecemeal building a multi-GPU workstation, ensuring it could run on a single US wall outlet. This rig allowed me to train some DETR models (link) on CommonForms (link), a 1.3B param VLM on CommonForms (link), and to OCR the first million pages of laws for the LOCUS-v1 dataset (link).</p>
+<p>The full constraints for the build were:</p>
+<ol>
+<li><mark>it must run on a single, standard US wall outlet</mark> – 15A, 120V; this one is non-negotiable, I rent an apartment and cannot modify the wiring or add a new high power circuit;</li>
+<li><mark>it must not be a nuisance;</mark> I don&rsquo;t live alone, so it can&rsquo;t be too loud and/or hot;</li>
+<li><mark>it must fit within a reasonable budget;</mark> we may have different definitions of reasonable, and I&rsquo;ll detail the costs later on. I could have built a much more impressive rig subject to the first two constraints for $60k, but that falls outside of my definition of reasonable; and</li>
+<li><mark>it should have enough VRAM and speed to comfortably SFT and RL good vision language models;</mark> this is the whole reason I&rsquo;m doing this, after all.</li>
+</ol>
+<figure>
+<p><img alt="my workstation" src="workstation.png"></p>
+<figcaption>My workhorse. Currently it&rsquo;s a 4x3090Ti machine. Using this, I can OCR around 250k pages a day, and do a full finetune of Qwen-3 VL 2B at pretty respectable batch sizes.</figcaption>
+</figure>
+<h2>The Plan</h2>
+<p>My plan for this was simple: buy a server motherboard with enough PCIe x16 slots, a CPU with enough PCIe lanes, as much cheap DDR4 RAM as I could load into it, a bunch of cheap SSDs.</p>
+<h2>Getting Punched in the Face</h2>
+<aside class="callout callout-quote">
+<p class="callout-title">Quote</p>
+<p>Everybody has a plan until they get punched in the face.</p>
+<ul>
+<li>Mike Tyson</li>
+</ul>
+</aside>
+<p>If you know anything about the price of computer parts from the last year, you would know what happened to that plan.
+RAM quintupled in price, SSDs tripled, and used GPUs skyrocketed.</p>
+<h2>My Setup</h2>
+<p>I ended up going with the following:</p>
+<ul>
+<li><strong>Motherboard</strong> <mark>ASRock Rack ROMED8-2t;</mark> from all of my research this seems to be a pretty popular choice for home GPU clusters. A lot of people on r/localllama who do multi-3090 setups use it, I think the tinybox red might use it, and James Betker (nonint) used it for his clusters. People complain about issues like being unable to update the firmware. Thus far, I have not tried. My only complaint is that not all error codes are documented in the manual, so if something goes mildly wrong you are on your own to debug. It has a whopping 7 16x PCIe slots, meaning it&rsquo;s expandable far beyond 4GPUs without bifurcation!</li>
+<li><strong>CPU</strong> <mark>Epyc 7532;</mark> these are currently quite cheap on eBay, and give you 32 cores/64 threads. If you can efficiently parallelize tasks, that&rsquo;s… not bad. Even better, you get 128 PCIe lanes, enough to run 7 GPUs at 16x + some NVMe drives. Note that the TDP is 200W, though, so you&rsquo;ll have to take that into account for your power consumption planning.</li>
+<li><strong>PSU</strong> <mark>Thermaltake 1650;</mark> this is just about the biggest PSU you can get for a US outlet. US outlets have a max of 1800W (15V*120A), but realistically a 1440W max (80%). You don&rsquo;t want a 1400W PSU for many reasons: you don&rsquo;t get 100% efficiency out of a PSU, running a PSU at or near its max is noisy and shortens its life, and the closer you run it to its max the less efficient you get. PSUs have efficiency curves.</li>
+<li><strong>RAM</strong> <mark>DDR4 ECC;</mark> I can&rsquo;t tell you what RAM to buy. However, you will need ECC RDIMMs or ECC LRDIMMs. (ECC = Error Correcting Codes). There are preferred SKUs for each motherboard, I found the cheapest matching SKU I could on eBay. I ended up going with 4x 64GB sticks for 256GB total. This is far more than enough, and I could still upgrade to 512GB in the future if RAM prices ever come back down to reality.<ul>
+<li>There are considerations around memory speed and channels to consider. These are mostly only important if you&rsquo;re using ZeRO3 to finetune larger models as it offloads gradients into RAM via the CPU, so you&rsquo;re limited by the speed of the RAM for stores and loads.</li>
+</ul>
+</li>
+<li><strong>GPUs</strong> <mark>4x power-limited 3090Ti;</mark> tbh, I&rsquo;d advise you to go for 3090&rsquo;s over 3090Ti&rsquo;s (I&rsquo;ll explain later), but I was really fortunate to pick up the first 2 for quite cheap and didn&rsquo;t want to mix GPU types. Each 3090Ti has a TDP of 450W, so obviously sounds like I&rsquo;m out of luck (450W*4=1800W). However, you can power-limit them using nvidia-smi or even disable some GPUs altogether in software (I published some helper scripts: https://github.com/jbarrow/gpu-management)</li>
+<li><strong>Case</strong> <mark>Cheapo Mining Chassis;</mark> the less said the better. I went for a 6 GPU chassis because it has a much smaller footprint than a 8x GPU chassis and is much shorter than a 12x GPU chassis.</li>
+</ul>
+<h2>Power-Limiting is Not What it Seems</h2>
+<h1>FAQ</h1>
+<h2>Mistakes I Made Along the Way</h2>
+<p>Using 3090Ti&rsquo;s – these cards have a monster TDP compared to 3090&rsquo;s (450W vs 350W). This increase in power draw comes with only a modest increase in performance, especially when you look at performance per watt. Back in 2022 I got a great deal from NVIDIA on a new 3090Ti far below MSRP at a time when GPUs were going well above MSRP, which led me down this path.
+If I were to do this again, I&rsquo;d probably go exclusively for EVGA FTW3 3090&rsquo;s, which use 2x PCIe 8-pin cables instead of a single 12VHWPR cable.
+Waffling on good deals – I came across many good deals (on RAM, SSDs, GPUs, etc.) in the process, but waited because I hadn&rsquo;t fully committed to the build. Unfortunately, this is basically the worst thing you can do in today&rsquo;s environment, where the cost of components is very volatile.
+Not reading enough manuals. Honestly, you should read your motherboard&rsquo;s manual, if nothing else. I learned that by default one of the nvme bays is disabled and I needed to change a jumper to make it work.</p>
+<p>Thankfully, none of these mistakes were too costly (though if I were to swap from 3090Ti&rsquo;s to 3090&rsquo;s, it&rsquo;d be a huge pain).</p>
+<h2>What would I do with more or less budget?</h2>
+<p>With more budget, I&rsquo;d go for workstation cards. You can fit 4 of them inside a case with their blower-style fans! If I had an unlimited budget, that would be 4x RTX PRO Blackwell 6000 Max-Q cards, which each have 96GB of VRAM and a 300W TDP.</p>
+<p>Unfortunately, for my budget, I couldn&rsquo;t make the math work out for any of the RTO PRO cards. A $1600 RTX PRO 4000 card has 24GB of VRAM and is roughly the same speed as a 3090 with lower memory bandwidth. The 150W TDP is really tempting, but 4 of those would cost as much as 8x 3090&rsquo;s. If I had a higher budget or more concerns around noise or cooling, though, I would have paired those cards with the same setup inside of an XL case.</p>
+<p>Hard to say what I&rsquo;d do for less budget. I&rsquo;m a big fan of expandability, so I might still opt for the server GPU, a single stick of 64GB ECC RAM, and a single 3090. This means that I wouldn&rsquo;t have to get rid of any parts to eventually build out the same machine.</p>
+<h2>Do I recommend you do it?</h2>
+<h2>Is now a good time to build a GPU rig?</h2>
+<p>Unfortunately, now is one of the worst and one of the best times to build a home GPU cluster. Computer components are expensive and getting more expensive. We are currently in a RAM shortage, meaning that the RAM you want to use for your server is probably 3x-5x as expensive as it was a year ago, and maybe more. Storage prices are up 2x-3x as well, so you might have to face some compromises between GPUs, RAM, and storage.</p>
+<p>However, it&rsquo;s also not a bad time to build a GPU cluster. There are great used GPUs for sale! As a PhD student (2016-2022), our labs cluster consisted largely of 1080Tis and 2080Tis, so 11GB GPUs. This was great for training BERT models and graph convolutional networks, but as models got bigger…</p>
+<p>Nowadays, you can get used 3090&rsquo;s, which have 24GB of VRAM. Sure, the 5090 has 32GB and the RTX PRO 6000 Blackwell has 96GB, but you can do a lot today on 24GB.</p>
+<h2>Why aren&rsquo;t I using the cloud?</h2>
+<p>Why aren&rsquo;t I eating more salads and fewer delicious sandwiches? Why do I bother playing chess when I couldn&rsquo;t fathomably beat any engine developed since the year 2000? Because I&rsquo;m human, I&rsquo;m curious, I&rsquo;m not a perfect optimizer and you shouldn&rsquo;t be either. This became a months long obsession, and I really enjoyed the journey of building and tinkering.</p>
+<h2>What about using two circuits?</h2>
+<p>One suggestion I&rsquo;ve received is to split the PSUs over two circuits as a way to circumvent constraint (1). Unfortunately, this violates constraint (2); I only have a small number of circuits in our apartment. Imagine my surprise when the first outlet I plugged it into shared a circuit with my tea kettle. It only tripped when I was running an OCR job while making tea.</p>
+
+  </article>
+
+  <footer class="site-footer">
+    joe barrow · research scientist
+    <span class="site-footer-sep">·</span>
+    <a href="../feed.xml">rss</a>
+  </footer>
+
+  <script src="../static/js/site.js?v=bfb16307" defer></script>
+
+
+
+
+
+</body>
+</html>

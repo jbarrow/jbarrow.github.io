@@ -4,10 +4,18 @@
   <link href="https://jbarrow.ai/" rel="alternate" type="text/html"/>
   <link href="https://jbarrow.ai/feed.xml" rel="self" type="application/atom+xml"/>
   <id>https://jbarrow.ai/</id>
-  <updated>2026-05-13T00:00:00Z</updated>
+  <updated>2026-05-18T00:00:00Z</updated>
   <author>
     <name>Joe Barrow</name>
   </author>
+  <entry>
+    <title>Building a 1-Outlet, 4-GPU Workstation</title>
+    <link href="https://jbarrow.ai/2026-05-18-gpu-workstation/" rel="alternate" type="text/html"/>
+    <id>https://jbarrow.ai/2026-05-18-gpu-workstation/</id>
+    <updated>2026-05-18T00:00:00Z</updated>
+    <summary>As a grad student, the one thing I desperately wanted was a GPU workstation. As a gainfully employed adult I can finally make that happen.</summary>
+    <author><name>Joe Barrow</name></author>
+  </entry>
   <entry>
     <title>Agents have (Information) Needs</title>
     <link href="https://jbarrow.ai/2026-05-13-agentic-information-need/" rel="alternate" type="text/html"/>
