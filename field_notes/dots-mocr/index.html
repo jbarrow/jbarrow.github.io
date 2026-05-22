@@ -58,7 +58,7 @@
 
     <h1 class="note-title">Paper Notes: dots.mOCR</h1>
 
-    <p class="note-updated">last updated 2026-05-12</p>
+    <p class="note-updated">last updated 2026-05-22</p>
 
     <ul class="note-tags">
       <li><a class="tag-pill" href="../../field_notes/?tag=vlm-ocr">vlm-ocr</a></li>
@@ -85,10 +85,64 @@ Handong Zheng et al.<span class="sep">·</span>arXiv · 2026      </p>
 
     <aside class="callout callout-abstract">
 <p class="callout-title">Abstract</p>
-<p>A 3B param VLM that scores 83.9 on olmOCR bench. Trained not only to generate text, but to derender charts, tables, formulas, and SVGs.</p>
+<p>A 3B param VLM that scores 83.9 on olmOCR bench, with parameters split ~evenly between vision and text. Trained not only to generate text, but to derender charts, tables, formulas, and SVGs.</p>
 </aside>
-<p>An extension to <a class="wiki-link" href="../../field_notes/dots-ocr/">dots.OCR</a>. They claim to <mark>introduce a new task, <strong>Multimodal OCR</strong> that parses ~all parts of a document into some representation</mark> (SVG, LaTeX equation, HTML table, etc.). Note that formulas and table derendering is already a pretty standard part of many OCR models, e.g., <a class="wiki-link" href="../../field_notes/olmocr-2/">OlmOCR 2</a>, which has a custom RL reward for formulas or <a class="wiki-link" href="../../field_notes/lightonocr-1-and-2/">LightOnOCR 2</a>, which outputs HTML tables. CharXiv is used to derender chart figures.</p>
-<p>Paper also points to <a href="https://arxiv.org/abs/2312.11556">StarVector</a>, a model/dataset for generating SVGs from images.</p>
+<h2>Overview</h2>
+<p>An extension to <a class="wiki-link" href="../../field_notes/dots-ocr/">dots.OCR</a>. They claim to <mark>introduce a new task, <strong>Multimodal OCR</strong> that parses ~all parts of a document into some representation</mark> (SVG, LaTeX equation, HTML table, etc.). Note that formulas and table derendering is already a pretty standard part of many OCR models, e.g., <a class="wiki-link" href="../../field_notes/olmocr-2/">OlmOCR 2</a>, which has a custom RL reward for formulas or <a class="wiki-link" href="../../field_notes/lightonocr-1-and-2/">LightOnOCR 2</a>, which outputs HTML tables. CharXiv is used to derender chart figures.
+<img class="embed" src="../_attachments/dots.mocr.png" alt="dots.mocr.png"></p>
+<h2>Document Derendering</h2>
+<p>Besides &ldquo;more data, better model&rdquo; the core claim of the paper is that &ldquo;multimodal OCR&rdquo; should be the future direction of OCR. <mark>Multimodal OCR is basically just &ldquo;document derendering</mark>, where they convert ~all parts of the document (tables, figures, and formulas) to code.</p>
+<h2>Running <code>dots.mOCR</code></h2>
+<p>Model weights are <a href="https://huggingface.co/rednote-hilab/dots.mocr">hosted on HuggingFace</a>, and <a href="https://github.com/rednote-hilab/dots.mocr">the code to run it is on GitHub</a>. Running it requires:
+1. <strong>checking out the git repo</strong>, there isn&rsquo;t a pathway to running it outside of this
+2. <strong>using vLLM</strong> (and realistically, having a GPU &ndash; building vLLM for CPU is hard and not worth the time in this case given how long it would take to parse a document)</p>
+<h4>Installation</h4>
+<p>Preferred approach is via <code>uv</code>:</p>
+<div class="codehilite"><pre><span></span><code>git clone https://github.com/rednote-hilab/dots.mocr.git
+
+cd dots.mocr
+
+uv pip install -e .
+</code></pre></div>
+
+<h4>Running</h4>
+<p>From within the folder:</p>
+<div class="codehilite"><pre><span></span><code>CUDA_VISIBLE_DEVICES=0 vllm serve \
+    rednote-hilab/dots.mocr \
+    --tensor-parallel-size 1 \
+    --gpu-memory-utilization 0.9 \
+    --chat-template-content-format string \
+    --trust-remote-code
+
+python3 dots_mocr/parser.py &lt;PDF_PATH&gt; --num_thread 16
+</code></pre></div>
+
+<h2>Architecture</h2>
+<p>It&rsquo;s interesting that <mark>they opt to split ~equally between text and vision parameters</mark>. Vision is 1.2B params, initialized from scratch (huge!), and text is Qwen2.5-1.5B. <a class="wiki-link" href="../../field_notes/lightonocr-1-and-2/">LightOnOCR 2</a> is 400M/600M, and <a class="wiki-link" href="../../field_notes/nemotron-parse-1-1/">Nemotron Parse 1.1</a> goes more aggressively towards vision at ~600M/256M.</p>
+<p>The vision encoder consumes <em>very</em> high resolution inputs: 11M pixels, which translates to something like 3300x3300 pixels.</p>
+<h2>Training Setup</h2>
+<p>Just like <a class="wiki-link" href="../../field_notes/mineru-diffusion/">MinerU-Diffusion</a>, they opt for curriculum learning, in this case 3 phases for pretraining, then instruction tuning:
+1. general purpose vision
+2. mixture of general purpose vision and text-only document parsing
+3. multimodal document parsing (with a small amount of general purpose vision)
+4. instruction tuning with high-quality data</p>
+<p>Input resolution is progressively increased.</p>
+<p><mark>Data comes from four sources</mark>:
+1. <strong>PDF documents</strong>: they use <a class="wiki-link" href="../../field_notes/dots-ocr/">dots.OCR</a> to auto-label a large quantity of PDFs, sampled across languages and complexity; they filter these ouptuts
+2. <strong>web pages rendered to images + their bounding boxes from the DOM</strong>
+3. <strong>native SVGs for image-to-SVG supervision</strong>: they grab a bunch of SVGs and clean with with <code>svgo</code> to remove metadata and normalize precision/code structure/etc. Deduplication with pHash on rendered images.
+4. <strong>general purpose data</strong>: standard vision data &ldquo;to preserve broad capabilities alongside page-level parsing&rdquo;</p>
+<p>They <mark>build an automated OCR Arena for evaluation</mark>, where Gemini 3 flash evaluates pairs of model outputs and chooses among <code>{ A, B, Tie }</code> to determine which is best. <mark>They run each pair twice, once as A/B then once as B/A</mark>, to avoid positional bias (model chooses A because that&rsquo;s what it sees first). <mark>Each model is given an Elo based on its pairwise matchups</mark>.</p>
+<h2>Questions</h2>
+<ol>
+<li><mark>How <em>actually</em> important is it to retain the &ldquo;general performance&rdquo; by carefully including VLM and text-only data?</mark> There are no &ldquo;document-only&rdquo; ablations run in this paper, and I haven&rsquo;t seen them in other papers even though it&rsquo;s common practice.</li>
+<li>In the general case, is derendering a figure to an SVG preferred over keeping it a raster? I can see an argument for derendering in certain cases, but it feels like it (a) introduces risks for charts (do you want the bars on your charts messed up?) and (b) might just be less useful than a raster + bounding boxes.</li>
+</ol>
+<h2>Useful Resources</h2>
+<p>Paper points to some neat tools:
+- <a href="https://arxiv.org/abs/2312.11556">StarVector</a>, a model/dataset for generating SVGs from images.
+- <a href="https://github.com/svg/svgo"><code>svgo</code></a>, a tool for normalizing SVGs
+- <code>pHash</code>, a tool for perceptual hashing</p>
   </article>
 
   <footer class="site-footer">
