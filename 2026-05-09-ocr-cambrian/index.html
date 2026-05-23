@@ -106,8 +106,20 @@ However, the release of strong, open VLMs, like the Qwen series <sup class="cita
 It&rsquo;s not an exact science, but the trends are still there.</p>
 </details>
 <h2>The Phylogenetic Tree</h2>
-<p>Ungrounded approaches, like <a class="wiki-link" href="../field_notes/lighton-ocr/">LightOnOCR</a> <sup class="citation">[<a href="#ref-3">3</a>]</sup> or <a class="wiki-link" href="../field_notes/olmocr-2/">OlmOCR 2</a> <sup class="citation">[<a href="#ref-4">4</a>]</sup>.</p>
-<p>Grounded approaches, like</p>
+<p>VLM-based OCR approaches can be split <em>relatively</em> cleanly along decision points: grounded v. ungrounded, layout v. blocks, and pipelined v. single pass.
+The breakdown of these decision points is shown in Figure 02.
+An example of three different model outputs on the same page is shown in Figure 03.</p>
+<ol>
+<li><mark><strong>Grounded v. Ungrounded</strong></mark> &ndash; 
+Ungrounded approaches, like <a class="wiki-link" href="../field_notes/lighton-ocr/">LightOnOCR</a> <sup class="citation">[<a href="#ref-3">3</a>]</sup> or <a class="wiki-link" href="../field_notes/olmocr-2/">OlmOCR 2</a> <sup class="citation">[<a href="#ref-4">4</a>]</sup> convert a whole page image into pure text, like markdown with TeX formulas. 
+Grounded approaches, like <a class="wiki-link" href="../field_notes/chandra/">Chandra</a> and <a class="wiki-link" href="../field_notes/kosmos-2-5/">Kosmos-2.5</a> output coordinates <em>and</em> text.</li>
+<li><mark><strong>Layout v. Blocks</strong></mark> &ndash;
+Within grounded approaches, the model creators must decide if they want to output layout elements like &ldquo;Heading&rdquo; and &ldquo;Table&rdquo; or just text runs.</li>
+<li><mark><strong>Single Pass v. Pipeline</strong></mark> &ndash;
+A single pass approach consumes a whole page at once and outputs the full OCR of the page.
+This has the benefit of being globally coherent, but increases latency for autoregressive models.
+A pipelined approach splits this into two passes: first, get the coordinates of layout elements like paragraphs, formulas, and tables; and, second for each chunk run it separately.</li>
+</ol>
 <figure class="figure" markdown="0">
   <div class="figure-eyebrow">Fig. 02 / Phylogeny</div>
   <h2 class="figure-title">A rough phylogeny of VLM-based OCR approaches</h2>
