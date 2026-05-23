@@ -5,6 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Paper Notes: Hierarchical Speculative Decoding — Field Notes — Joe Barrow</title>
 
+  <link rel="canonical" href="https://jbarrow.ai/field_notes/hsd/">
+  <meta property="og:site_name" content="Joe Barrow">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Paper Notes: Hierarchical Speculative Decoding">
+  <meta property="og:url" content="https://jbarrow.ai/field_notes/hsd/">
+  <meta property="og:image" content="https://jbarrow.ai/static/img/joe.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@barrowjoseph">
+  <meta name="twitter:creator" content="@barrowjoseph">
+  <meta name="twitter:title" content="Paper Notes: Hierarchical Speculative Decoding">
+  <meta name="twitter:image" content="https://jbarrow.ai/static/img/joe.png">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -86,15 +98,22 @@ Wenhui Liao et al.<span class="sep">·</span>arXiv · 2026      </p>
 
     <p>The central argument of the paper is: region-level OCR (like <a class="wiki-link" href="../../field_notes/dolphin-ocr/">Dolphin OCR</a>) is fast but limited in quality because you don&rsquo;t get &ldquo;page-level coherence.&rdquo; End-to-end OCR (like <a class="wiki-link" href="../../field_notes/hunyuanocr/">HunyuanOCR</a>) is slow but higher quality. <mark>But by using the region-level OCR as a speculative decoder, you can get a speedup of ~3x without a loss in quality.</mark> And, importantly, without training anything.</p>
 <h2>Speculative Decoding in 3 Parts</h2>
-<p>The approach itself is quite neat. <mark>They break the OCR process into 3 parts:</mark>
-1. run a cheap pipeline system, like PaddleOCRv3, that predicts (a) <strong>layout blocks</strong>, (b) <strong>text</strong>, (c) <strong>formulas</strong>, and (d) <strong>tables</strong>;
-2. then, <strong>for each layout block</strong>, crop the image and run your VLM model on that region, using the best guess from the previous model as your draft; and
-3. finally, <strong>concatenate all of your region-level results and use those as a draft</strong> for your page-level VLM run.</p>
+<p>The approach itself is quite neat. <mark>They break the OCR process into 3 parts:</mark></p>
+<ol>
+<li>run a cheap pipeline system, like PaddleOCRv3, that predicts (a) <strong>layout blocks</strong>, (b) <strong>text</strong>, (c) <strong>formulas</strong>, and (d) <strong>tables</strong>;</li>
+<li>then, <strong>for each layout block</strong>, crop the image and run your VLM model on that region, using the best guess from the previous model as your draft; and</li>
+<li>finally, <strong>concatenate all of your region-level results and use those as a draft</strong> for your page-level VLM run.</li>
+</ol>
 <p><img class="embed" src="../_attachments/hsd.png" alt="hsd.png"></p>
 <h2>Decoupled Speculative Verification</h2>
 <p>From my reading, <mark>this appears to be a combination of n-gram speculative decoding</mark> (using, e.g. bigrams as the &ldquo;reference window&rdquo; to find candidate continuations from the draft) <mark>and <a class="wiki-link" href="../../field_notes/eagle-2/">EAGLE-2</a>-style tree-structured attention masking.</mark></p>
-<p><img class="embed" src="../_attachments/hsd-dsv.png" alt="hsd-dsv.png">
-The tree-structured attention masking allows you to decode multiple hypotheses at once, without suffering <em>too heavy</em> a throughput penalty.</p>
+<p><img class="embed" src="../_attachments/hsd-dsv.png" alt="hsd-dsv.png"></p>
+<p>The tree-structured attention masking allows you to decode multiple hypotheses at once, without suffering <em>too heavy</em> a throughput penalty.</p>
+<h2>Measuring Speedups</h2>
+<p>The only two metrics that matter to me are the <strong>end-to-end speedup</strong> and the <strong>average acceptance length</strong>. </p>
+<h4>End-to-End Speedup</h4>
+<p>They report on just the decoding speedup, but considering you have to run a whole OCR pipeline before starting decoding&hellip;</p>
+<p>However, the end-to-end speedup &ndash; which they happily also report &ndash;</p>
   </article>
 
   <footer class="site-footer">

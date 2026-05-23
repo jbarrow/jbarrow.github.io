@@ -5,6 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Paper Notes: dots.mOCR — Field Notes — Joe Barrow</title>
 
+  <link rel="canonical" href="https://jbarrow.ai/field_notes/dots-mocr/">
+  <meta property="og:site_name" content="Joe Barrow">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Paper Notes: dots.mOCR">
+  <meta property="og:url" content="https://jbarrow.ai/field_notes/dots-mocr/">
+  <meta property="og:image" content="https://jbarrow.ai/static/img/joe.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@barrowjoseph">
+  <meta name="twitter:creator" content="@barrowjoseph">
+  <meta name="twitter:title" content="Paper Notes: dots.mOCR">
+  <meta name="twitter:image" content="https://jbarrow.ai/static/img/joe.png">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -121,17 +133,21 @@ python3 dots_mocr/parser.py &lt;PDF_PATH&gt; --num_thread 16
 <p>It&rsquo;s interesting that <mark>they opt to split ~equally between text and vision parameters</mark>. Vision is 1.2B params, initialized from scratch (huge!), and text is Qwen2.5-1.5B. <a class="wiki-link" href="../../field_notes/lightonocr-1-and-2/">LightOnOCR 2</a> is 400M/600M, and <a class="wiki-link" href="../../field_notes/nemotron-parse-1-1/">Nemotron Parse 1.1</a> goes more aggressively towards vision at ~600M/256M.</p>
 <p>The vision encoder consumes <em>very</em> high resolution inputs: 11M pixels, which translates to something like 3300x3300 pixels.</p>
 <h2>Training Setup</h2>
-<p>Just like <a class="wiki-link" href="../../field_notes/mineru-diffusion/">MinerU-Diffusion</a>, they opt for curriculum learning, in this case 3 phases for pretraining, then instruction tuning:
-1. general purpose vision
-2. mixture of general purpose vision and text-only document parsing
-3. multimodal document parsing (with a small amount of general purpose vision)
-4. instruction tuning with high-quality data</p>
+<p>Just like <a class="wiki-link" href="../../field_notes/mineru-diffusion/">MinerU-Diffusion</a>, they opt for curriculum learning, in this case 3 phases for pretraining, then instruction tuning:</p>
+<ol>
+<li>general purpose vision</li>
+<li>mixture of general purpose vision and text-only document parsing</li>
+<li>multimodal document parsing (with a small amount of general purpose vision)</li>
+<li>instruction tuning with high-quality data</li>
+</ol>
 <p>Input resolution is progressively increased.</p>
-<p><mark>Data comes from four sources</mark>:
-1. <strong>PDF documents</strong>: they use <a class="wiki-link" href="../../field_notes/dots-ocr/">dots.OCR</a> to auto-label a large quantity of PDFs, sampled across languages and complexity; they filter these ouptuts
-2. <strong>web pages rendered to images + their bounding boxes from the DOM</strong>
-3. <strong>native SVGs for image-to-SVG supervision</strong>: they grab a bunch of SVGs and clean with with <code>svgo</code> to remove metadata and normalize precision/code structure/etc. Deduplication with pHash on rendered images.
-4. <strong>general purpose data</strong>: standard vision data &ldquo;to preserve broad capabilities alongside page-level parsing&rdquo;</p>
+<p><mark>Data comes from four sources</mark>:</p>
+<ol>
+<li><strong>PDF documents</strong>: they use <a class="wiki-link" href="../../field_notes/dots-ocr/">dots.OCR</a> to auto-label a large quantity of PDFs, sampled across languages and complexity; they filter these ouptuts</li>
+<li><strong>web pages rendered to images + their bounding boxes from the DOM</strong></li>
+<li><strong>native SVGs for image-to-SVG supervision</strong>: they grab a bunch of SVGs and clean with with <code>svgo</code> to remove metadata and normalize precision/code structure/etc. Deduplication with pHash on rendered images.</li>
+<li><strong>general purpose data</strong>: standard vision data &ldquo;to preserve broad capabilities alongside page-level parsing&rdquo;</li>
+</ol>
 <p>They <mark>build an automated OCR Arena for evaluation</mark>, where Gemini 3 flash evaluates pairs of model outputs and chooses among <code>{ A, B, Tie }</code> to determine which is best. <mark>They run each pair twice, once as A/B then once as B/A</mark>, to avoid positional bias (model chooses A because that&rsquo;s what it sees first). <mark>Each model is given an Elo based on its pairwise matchups</mark>.</p>
 <h2>Questions</h2>
 <ol>
@@ -139,10 +155,12 @@ python3 dots_mocr/parser.py &lt;PDF_PATH&gt; --num_thread 16
 <li>In the general case, is derendering a figure to an SVG preferred over keeping it a raster? I can see an argument for derendering in certain cases, but it feels like it (a) introduces risks for charts (do you want the bars on your charts messed up?) and (b) might just be less useful than a raster + bounding boxes.</li>
 </ol>
 <h2>Useful Resources</h2>
-<p>Paper points to some neat tools:
-- <a href="https://arxiv.org/abs/2312.11556">StarVector</a>, a model/dataset for generating SVGs from images.
-- <a href="https://github.com/svg/svgo"><code>svgo</code></a>, a tool for normalizing SVGs
-- <code>pHash</code>, a tool for perceptual hashing</p>
+<p>Paper points to some neat tools:</p>
+<ul>
+<li><a href="https://arxiv.org/abs/2312.11556">StarVector</a>, a model/dataset for generating SVGs from images.</li>
+<li><a href="https://github.com/svg/svgo"><code>svgo</code></a>, a tool for normalizing SVGs</li>
+<li><code>pHash</code>, a tool for perceptual hashing</li>
+</ul>
   </article>
 
   <footer class="site-footer">
