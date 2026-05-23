@@ -92,7 +92,7 @@ Wenhui Liao et al.<span class="sep">·</span>arXiv · 2026      </p>
 3. finally, <strong>concatenate all of your region-level results and use those as a draft</strong> for your page-level VLM run.</p>
 <p><img class="embed" src="../_attachments/hsd.png" alt="hsd.png"></p>
 <h2>Decoupled Speculative Verification</h2>
-<p>From my reading, <mark>this appears to be a combination of n-gram speculative decoding</mark> (using, e.g. bigrams as the &ldquo;reference window&rdquo; to find candidate continuations from the draft) ==and <a class="wiki-link" href="../../field_notes/eagle-2/">EAGLE-2</a>-style tree-structured attention masking.==</p>
+<p>From my reading, <mark>this appears to be a combination of n-gram speculative decoding</mark> (using, e.g. bigrams as the &ldquo;reference window&rdquo; to find candidate continuations from the draft) <mark>and <a class="wiki-link" href="../../field_notes/eagle-2/">EAGLE-2</a>-style tree-structured attention masking.</mark></p>
 <p><img class="embed" src="../_attachments/hsd-dsv.png" alt="hsd-dsv.png">
 The tree-structured attention masking allows you to decode multiple hypotheses at once, without suffering <em>too heavy</em> a throughput penalty.</p>
   </article>
