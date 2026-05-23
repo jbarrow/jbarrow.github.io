@@ -110,10 +110,16 @@ Wenhui Liao et al.<span class="sep">·</span>arXiv · 2026      </p>
 <p><img class="embed" src="../_attachments/hsd-dsv.png" alt="hsd-dsv.png"></p>
 <p>The tree-structured attention masking allows you to decode multiple hypotheses at once, without suffering <em>too heavy</em> a throughput penalty.</p>
 <h2>Measuring Speedups</h2>
-<p>The only two metrics that matter to me are the <strong>end-to-end speedup</strong> and the <strong>average acceptance length</strong>. </p>
-<h4>End-to-End Speedup</h4>
-<p>They report on just the decoding speedup, but considering you have to run a whole OCR pipeline before starting decoding&hellip;</p>
-<p>However, the end-to-end speedup &ndash; which they happily also report &ndash;</p>
+<p>The only two metrics that matter to me are the <strong>end-to-end speedup</strong> and the <strong>average acceptance length</strong>.  They report on just the decoding speedup, but considering you have to run a whole OCR pipeline before starting decoding&hellip;</p>
+<p>However, the end-to-end speedup &ndash; which they happily also report &ndash; goes from about 1.3x to to 3.4x. That&rsquo;s impressive for no new trained models!</p>
+<h3>Limitations</h3>
+<p>Possible speedups are limited by two elements:</p>
+<ol>
+<li><mark>How close the initial pipelined OCR&rsquo;s outputs are to the big model&rsquo;s</mark> &ndash; if they&rsquo;re bad then acceptance goes down and performance tanks.</li>
+<li><mark>How many regions there are in the image</mark> &ndash; an image with few regions means the second step must generate a lot of text in one go, and image with many regions can have higher speedups.</li>
+</ol>
+<p><mark>The lowest speedups come from scans, where the pipeline OCR approach gives the <em>worst</em> hypotheses.</mark> The majority of the speedups on OlmOCRBench come from printed/rendered born digital docs.</p>
+<p><mark>They do see much higher speedups than existing speculative decoding approaches like Medusa and <a class="wiki-link" href="../../field_notes/eagle-2/">EAGLE-2</a>.</mark> Other approaches saw less than 2x speedups in the general case (but could be worth investigating depending on the distribution of docs that you have).</p>
   </article>
 
   <footer class="site-footer">
