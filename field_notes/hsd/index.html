@@ -96,7 +96,11 @@ Wenhui Liao et al.<span class="sep">·</span>arXiv · 2026      </p>
       </div>
     </aside>
 
-    <p>The central argument of the paper is: region-level OCR (like <a class="wiki-link" href="../../field_notes/dolphin-ocr/">Dolphin OCR</a>) is fast but limited in quality because you don&rsquo;t get &ldquo;page-level coherence.&rdquo; End-to-end OCR (like <a class="wiki-link" href="../../field_notes/hunyuanocr/">HunyuanOCR</a>) is slow but higher quality. <mark>But by using the region-level OCR as a speculative decoder, you can get a speedup of ~3x without a loss in quality.</mark> And, importantly, without training anything.</p>
+    <aside class="callout callout-abstract">
+<p class="callout-title">Abstract</p>
+<p>They build a two-stage speculative decoding pipeline for OCR with VLMs; the first stage uses a classic OCR pipeline (Paddle v3) as a draft for region-level OCR decoding; the second stage uses this output as the draft for page-level OCR decoding.</p>
+</aside>
+<p>The central argument of the paper is: region-level OCR (like <a class="wiki-link" href="../../field_notes/dolphin-ocr/">Dolphin OCR</a>) is fast but limited in quality because you don&rsquo;t get &ldquo;page-level coherence.&rdquo; End-to-end OCR (like <a class="wiki-link" href="../../field_notes/hunyuanocr/">HunyuanOCR</a>) is slow but higher quality. <mark>But by using the region-level OCR as a speculative decoder, you can get a speedup of ~3x without a loss in quality.</mark> And, importantly, without training anything.</p>
 <h2>Speculative Decoding in 3 Parts</h2>
 <p>The approach itself is quite neat. <mark>They break the OCR process into 3 parts:</mark></p>
 <ol>
