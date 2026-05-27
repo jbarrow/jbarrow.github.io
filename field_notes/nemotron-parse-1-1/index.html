@@ -25,6 +25,7 @@
   <link rel="stylesheet" href="../../static/css/code.css?v=678df866">
   <link rel="alternate" type="application/atom+xml" title="Joe Barrow" href="../../feed.xml">
 
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous">
 
 
 
@@ -70,7 +71,7 @@
 
     <h1 class="note-title">Paper Notes: Nemotron Parse 1.1</h1>
 
-    <p class="note-updated">last updated 2026-05-23</p>
+    <p class="note-updated">last updated 2026-05-27</p>
 
     <ul class="note-tags">
       <li><a class="tag-pill" href="../../field_notes/?tag=vlm-ocr">vlm-ocr</a></li>
@@ -94,6 +95,85 @@ NVIDIA<span class="sep">·</span>arXiv · 2025      </p>
 <p class="callout-title">Abstract</p>
 <p>A 600M VIT-H/16 and a 250M param mBART decoder for OCR. Fast decoding, a few points worse than other models, but quite strong. Trained on a combination of open datasets.</p>
 </aside>
+<h2>Tasks</h2>
+<p>Nemotron Parse 1.1 does the following tasks:</p>
+<ul>
+<li>OCR</li>
+<li>Markdown processing</li>
+<li>Table parsing (into TeX &ndash; not markdown/HTML!)</li>
+<li>Reading order</li>
+<li>Formula parsing</li>
+</ul>
+<p><mark>The output format is a custom XML:</mark></p>
+<div class="codehilite"><pre><span></span><code><span class="nt">&lt;x_0&gt;&lt;y_0&gt;</span>(content)<span class="nt">&lt;x_1&gt;&lt;y_1&gt;&lt;class_CLS&gt;</span>
+</code></pre></div>
+
+<p>This xml is output in reading order, with <code>(x_0, y_0)</code> being the top-left of the bounding box and <code>(x_1, y_1)</code> being the bottom-right. This is structurally similar to the <a class="wiki-link" href="../../field_notes/kosmos-2-5/">Kosmos-2.5</a> format, though not <em>quite</em> the same.</p>
+<p>The tasks are differentiated by a set of special prompt tokens:</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">&lt;output_</span><span class="err">{markdown,plain,no_text}</span><span class="nt">&gt;</span>
+<span class="err">&lt;</span>{predict,no}_bbox&gt;
+<span class="err">&lt;</span>{predict,no}_classes&gt;
+</code></pre></div>
+
+<p>So, if you wanted plain text outputs with bounding boxes and classes, your prompt would be:</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">&lt;output_plain&gt;&lt;predict_bbox&gt;&lt;predict_classes&gt;</span>
+</code></pre></div>
+
+<h2>Architecture</h2>
+<p><img class="embed" src="../_attachments/nemotron-parse-1-1-architecture.svg" alt="nemotron-parse-1-1-architecture.svg"></p>
+<p>All of this in an 885M param VLM, with a 256M language encoder (mBART) and a &gt;600M param ViT for vision encoding. It&rsquo;s a pretty bottom-heavy model, unlike a lot of other OCR VLMs. The ViT, based on RADIO, is a ViT-H/16, meaning <mark>images are patched into 16x16 patches</mark>, and are handled in native resolution.</p>
+<p><mark>Small patches at native resolution results in a blowup in token usage</mark>. For instance, a 1024x1024 image chunked into 16x16 patches results in 4096 tokens used: <span class="arithmatex">\((1024/16)^2 = 4096\)</span>. Nemotron Parse accounts for this by using a convolutional <em>neck</em> that downsamples the tokens by 4, so the 1024x1024 image would only use 1024 tokens.</p>
+<p>They release an additional Token Compression (TC) model that reduces the number of image tokens by an additional 4x, similar to <a class="wiki-link" href="../../field_notes/deepseek-ocr/">Deepseek-OCR</a>&rsquo;s MLP mixer.</p>
+<p><mark>There are <strong>no positional encodings used</strong></mark>, with the assumption that these are actually bad for OCR tasks, where you must pay careful attention to the image.</p>
+<p>They also release a bundled multitoken prediction head for fast inference.</p>
+<h2>Data</h2>
+<p>They release the Nemotron-VLM-v2 dataset, which contains some of the data used to train this model. The overall data distribution is:</p>
+<table>
+<thead>
+<tr>
+<th><strong>Dataset</strong></th>
+<th><strong>Pages</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Multilingual arXiv</td>
+<td>8.3M</td>
+</tr>
+<tr>
+<td>SynthTabNet</td>
+<td>480k</td>
+</tr>
+<tr>
+<td>DocLayNet</td>
+<td>56k</td>
+</tr>
+<tr>
+<td>CommonCrawl</td>
+<td>255k</td>
+</tr>
+<tr>
+<td>Synth Data</td>
+<td>3.5M</td>
+</tr>
+<tr>
+<td>Multilingual Synth Wiki Data</td>
+<td>9.5M</td>
+</tr>
+<tr>
+<td>PubTabs</td>
+<td>585k</td>
+</tr>
+<tr>
+<td>FinTabNet</td>
+<td>91.5k</td>
+</tr>
+<tr>
+<td>TabRecSet</td>
+<td>382k</td>
+</tr>
+</tbody>
+</table>
   </article>
 
   <footer class="site-footer">
@@ -104,6 +184,8 @@ NVIDIA<span class="sep">·</span>arXiv · 2025      </p>
 
   <script src="../../static/js/site.js?v=bfb16307" defer></script>
 
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" integrity="sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4lfFg" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous" onload="renderMathInElement(document.body, {delimiters: [{left: '\\[', right: '\\]', display: true}, {left: '\\(', right: '\\)', display: false}], throwOnError: false});"></script>
 
 
 
