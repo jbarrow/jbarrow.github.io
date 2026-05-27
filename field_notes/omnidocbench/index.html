@@ -3,18 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Paper Notes: OlmOCR 2 — Field Notes — Joe Barrow</title>
+  <title>OmniDocBench — Field Notes — Joe Barrow</title>
 
-  <link rel="canonical" href="https://jbarrow.ai/field_notes/olmocr-2/">
+  <link rel="canonical" href="https://jbarrow.ai/field_notes/omnidocbench/">
   <meta property="og:site_name" content="Joe Barrow">
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Paper Notes: OlmOCR 2">
-  <meta property="og:url" content="https://jbarrow.ai/field_notes/olmocr-2/">
+  <meta property="og:title" content="OmniDocBench">
+  <meta property="og:url" content="https://jbarrow.ai/field_notes/omnidocbench/">
   <meta property="og:image" content="https://jbarrow.ai/static/img/joe.png">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@barrowjoseph">
   <meta name="twitter:creator" content="@barrowjoseph">
-  <meta name="twitter:title" content="Paper Notes: OlmOCR 2">
+  <meta name="twitter:title" content="OmniDocBench">
   <meta name="twitter:image" content="https://jbarrow.ai/static/img/joe.png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -68,7 +68,7 @@
       <a href="../../field_notes/">Field Notes</a>
     </p>
 
-    <h1 class="note-title">Paper Notes: OlmOCR 2</h1>
+    <h1 class="note-title">OmniDocBench</h1>
 
     <p class="note-updated">last updated 2026-05-27</p>
 
@@ -78,11 +78,10 @@
 
     <aside class="paper-card">
       <span class="paper-card-label">Source</span>
-      <h2 class="paper-card-title">olmOCR-2: Unit Test Rewards for Document OCR</h2>
       <p class="paper-card-meta">
-Jake Poznanski, Luca Soldaini, Kyle Lo<span class="sep">·</span>arXiv · 2025      </p>
+arXiv · 2025      </p>
       <div class="paper-downloads">
-        <a class="btn btn-paper" href="../../field_notes/_attachments/olmocr-2.pdf" download>
+        <a class="btn btn-paper" href="../../field_notes/_attachments/omnidocbench.pdf" download>
           <span class="btn-icon">↓</span>
           <span class="btn-label">Download</span>
           <span class="btn-meta">PDF</span>
@@ -90,23 +89,7 @@ Jake Poznanski, Luca Soldaini, Kyle Lo<span class="sep">·</span>arXiv · 2025  
       </div>
     </aside>
 
-    <p>Dataset: added olmocr-synthmix; synthetic tests for unit test rewards. Iteratively prompt a VLM to generate HTML layout of a page:</p>
-<ul>
-<li>layout analysis (number of cols, presence of images/tables, headers/footers, etc.); generates guidance HTML</li>
-<li>prompt with &ldquo;generate semantic html to match the original&rdquo;</li>
-<li>render the html from (2), give original image, new image, and html and ask for a revised layout</li>
-</ul>
-<p>Cost of $0.12/document page. olmocr-synthmix contains 2,186 pages with 30,381 test cases.</p>
-<p>Update olmocr-mix-1025 (from olmocr-mix-0225): use GPT-4.1 to</p>
-<p>Notes: RL from unit test rewards. Improvements come from:</p>
-<ul>
-<li>dynamic temperature scaling (start at 0.1 and back off to 0.2 etc whenever the model fails to generate an EOS token)</li>
-<li>switching from JSON out to YAML out (wtf??)</li>
-<li>bigger images (1288px instead of 1024px) (resolution matters!)</li>
-<li>updating base model from qwen2 to qwen2.5</li>
-<li>fix missing/blank pages</li>
-</ul>
-<p>Formula evaluations are rendering-based (just like olmocr)</p>
+    
   </article>
 
   <footer class="site-footer">
