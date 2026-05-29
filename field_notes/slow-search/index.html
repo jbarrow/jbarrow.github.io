@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paper Notes: Slow Search — Field Notes — Joe Barrow</title>
+
+  <link rel="canonical" href="https://jbarrow.ai/field_notes/slow-search/">
+  <meta property="og:site_name" content="Joe Barrow">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Paper Notes: Slow Search">
+  <meta property="og:url" content="https://jbarrow.ai/field_notes/slow-search/">
+  <meta property="og:image" content="https://jbarrow.ai/static/img/joe.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@barrowjoseph">
+  <meta name="twitter:creator" content="@barrowjoseph">
+  <meta name="twitter:title" content="Paper Notes: Slow Search">
+  <meta name="twitter:image" content="https://jbarrow.ai/static/img/joe.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../../static/css/site.css?v=5cbe7f85">
+  <link rel="stylesheet" href="../../static/css/code.css?v=678df866">
+  <link rel="alternate" type="application/atom+xml" title="Joe Barrow" href="../../feed.xml">
+
+
+
+
+
+  <script>
+    (function () {
+      var h = window.location.hostname;
+      if (h === "localhost" || h === "127.0.0.1" || h === "" || h.endsWith(".local")) return;
+      var s = document.createElement("script");
+      s.async = true;
+      s.src = "https://www.googletagmanager.com/gtag/js?id=G-GXC0J2XPHL";
+      document.head.appendChild(s);
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){ dataLayer.push(arguments); }
+      window.gtag = gtag;
+      gtag("js", new Date());
+      gtag("config", "G-GXC0J2XPHL");
+    })();
+  </script>
+</head>
+<body>
+
+  <header class="masthead">
+    <span class="masthead-title"><a href="../../">Joe Barrow</a></span>
+    <nav class="masthead-nav">
+      <a href="../../about/">about</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../publications/">publications</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../software/">software</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../field_notes/">field notes</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../feed.xml">rss</a>
+    </nav>
+    <span class="masthead-meta">field_notes</span>
+  </header>
+
+  <article class="article note">
+    <p class="note-eyebrow">
+      <a href="../../field_notes/">Field Notes</a>
+    </p>
+
+    <h1 class="note-title">Paper Notes: Slow Search</h1>
+
+    <p class="note-updated">last updated 2026-05-29</p>
+
+    <ul class="note-tags">
+      <li><a class="tag-pill" href="../../field_notes/?tag=retrieval">retrieval</a></li>
+    </ul>
+
+    <aside class="paper-card">
+      <span class="paper-card-label">Source</span>
+      <h2 class="paper-card-title">Slow Search: Information Retrieval Without Time Constraints</h2>
+      <p class="paper-card-meta">
+Jamie Teevan, Kevyn Collins-Thompson, Ryen White, Susan Dumais, Yubin Kim<span class="sep">·</span>HCIR 2013      </p>
+      <div class="paper-downloads">
+        <a class="btn btn-paper" href="../../field_notes/_attachments/slow-search.pdf" download>
+          <span class="btn-icon">↓</span>
+          <span class="btn-label">Download</span>
+          <span class="btn-meta">PDF</span>
+        </a>
+        <a class="btn btn-paper-annotated" href="../../field_notes/_attachments/slow-search-annotated.pdf" download>
+          <span class="btn-icon">↓</span>
+          <span class="btn-label">Download Annotated</span>
+          <span class="btn-meta">PDF</span>
+        </a>
+      </div>
+    </aside>
+
+    <aside class="callout callout-abstract">
+<p class="callout-title">TL;DR</p>
+<p>This 2013 paper investigates <em>slow search</em>, cases where users would be willing to wait longer for a higher quality answer.</p>
+</aside>
+<p><mark>The first thing to note is that this paper feels extremely prescient.</mark> I&rsquo;d highly recommend downloading the annotated version and at least reading the highlights!</p>
+<p>A lot of the modern-day discussions and designs around agentic retrieval are predicted and discussed, like:</p>
+<blockquote>
+<p>Reconnaissance agents have been proposed as a way in which search engines could help searchers by finding relevant information in the background as they engage in other tasks, search-related or otherwise.</p>
+</blockquote>
+<p>and</p>
+<blockquote>
+<p>one participant said they would wait longer, &lsquo;if there was a way to be notified when the result was available&rsquo;</p>
+</blockquote>
+<p>and</p>
+<blockquote>
+<p>With additional time, search engines could create artifacts that do not just help users answer a targeted information need, but also help them comprehend the context of that information and learn what is necessary to fully understand it.</p>
+</blockquote>
+<p>They investigate cases in which users would be willing to wait longer for search results, starting from a simple experiment on Bing search logs, looking at query abandonment and time to first click.</p>
+<p>First finding is that users are willing to wait longer for navigational queries (<code>facebook</code>) than informational queries (<code>state abbreviations</code>). This points to an exploration of &ldquo;what kinds of searches would people wait <em>even longer</em> for if they got a higher quality answer&rdquo;?</p>
+<h2>Information Seeking Agents</h2>
+<blockquote>
+<p>Queries are often not issued in isolation, but rather as part of a larger information seeking task. [&hellip;] Although search engines currently perform well at ad hoc retrieval with simple queries, they do not support more complex or exploratory tasks, which may span multiple queries or sessions, as effectively.</p>
+</blockquote>
+<p>Hmmm, sounds an awful lot like agentic retrieval. The authors themselves even mention this, in 2013!!</p>
+<blockquote>
+<p>Reconnaissance agents have been proposed as a way in which search engines could help searchers by finding relevant information in the background as they engage in other tasks, search-related or otherwise.</p>
+</blockquote>
+<h2>Time Horizons</h2>
+<p>They investigate approaches if you have:</p>
+<ul>
+<li>seconds &ndash; e.g., issuing multiple queries</li>
+<li>minutes &ndash; e.g., getting humans involved in the process</li>
+<li>hours/days &ndash; e.g., getting summaries of the results</li>
+</ul>
+<h2>User Interfaces</h2>
+<blockquote>
+<p>As part of this, slow search engines should clearly communicate the status of the slow searches and help searchers to understand the benefit of a delayed system response.</p>
+</blockquote>
+<p>Again, this is exactly what people on the internet report when using tools like Deep Research and Claude code.</p>
+<h2>Incorrect Predictions</h2>
+<p>This paper was written in 2013 and feels very ahead of its time. However, search is still framed as &ldquo;10 blue links,&rdquo; largely because text generation and summarization were not particularly high-quality in 2013. They touch on this in the &ldquo;longer time horizons,&rdquo; but a lot of their proposed interventions involve humans summarizing/writing content.</p>
+  </article>
+
+  <footer class="site-footer">
+    joe barrow · research scientist
+    <span class="site-footer-sep">·</span>
+    <a href="../../feed.xml">rss</a>
+  </footer>
+
+  <script src="../../static/js/site.js?v=bfb16307" defer></script>
+
+
+
+
+
+</body>
+</html>
