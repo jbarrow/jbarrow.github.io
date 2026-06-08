@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paper Notes: LocateAnything — Field Notes — Joe Barrow</title>
+
+  <link rel="canonical" href="https://jbarrow.ai/field_notes/locate-anything/">
+  <meta property="og:site_name" content="Joe Barrow">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Paper Notes: LocateAnything">
+  <meta property="og:url" content="https://jbarrow.ai/field_notes/locate-anything/">
+  <meta property="og:image" content="https://jbarrow.ai/static/img/joe.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@barrowjoseph">
+  <meta name="twitter:creator" content="@barrowjoseph">
+  <meta name="twitter:title" content="Paper Notes: LocateAnything">
+  <meta name="twitter:image" content="https://jbarrow.ai/static/img/joe.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../../static/css/site.css?v=5cbe7f85">
+  <link rel="stylesheet" href="../../static/css/code.css?v=678df866">
+  <link rel="alternate" type="application/atom+xml" title="Joe Barrow" href="../../feed.xml">
+
+
+
+
+
+  <script>
+    (function () {
+      var h = window.location.hostname;
+      if (h === "localhost" || h === "127.0.0.1" || h === "" || h.endsWith(".local")) return;
+      var s = document.createElement("script");
+      s.async = true;
+      s.src = "https://www.googletagmanager.com/gtag/js?id=G-GXC0J2XPHL";
+      document.head.appendChild(s);
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){ dataLayer.push(arguments); }
+      window.gtag = gtag;
+      gtag("js", new Date());
+      gtag("config", "G-GXC0J2XPHL");
+    })();
+  </script>
+</head>
+<body>
+
+  <header class="masthead">
+    <span class="masthead-title"><a href="../../">Joe Barrow</a></span>
+    <nav class="masthead-nav">
+      <a href="../../about/">about</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../publications/">publications</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../software/">software</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../field_notes/">field notes</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../feed.xml">rss</a>
+    </nav>
+    <span class="masthead-meta">field_notes</span>
+  </header>
+
+  <article class="article note">
+    <p class="note-eyebrow">
+      <a href="../../field_notes/">Field Notes</a>
+    </p>
+
+    <h1 class="note-title">Paper Notes: LocateAnything</h1>
+
+    <p class="note-updated">last updated 2026-06-08</p>
+
+    <ul class="note-tags">
+      <li><a class="tag-pill" href="../../field_notes/?tag=vlm-ocr">vlm-ocr</a></li>
+      <li><a class="tag-pill" href="../../field_notes/?tag=speculative-decoding">speculative-decoding</a></li>
+    </ul>
+
+    <aside class="paper-card">
+      <span class="paper-card-label">Source</span>
+      <h2 class="paper-card-title">LocateAnything: Fast and High-Quality Vision-Language Grounding with Parallel Box Decoding</h2>
+      <p class="paper-card-meta">
+Shihao Wang, Shilong Liu, Yuanguo Kuang, Xinyu Wei, Yangzhou Liu, Zhiqui Li, Yunze Man, Guo Chen, Andrew Tao, Guilin Liu, Jan Kuatz, Lei Zhang, Zhiding Yu<span class="sep">·</span>arXiv · 2026      </p>
+      <div class="paper-downloads">
+        <a class="btn btn-paper" href="../../field_notes/_attachments/locateanything.,pdf" download>
+          <span class="btn-icon">↓</span>
+          <span class="btn-label">Download</span>
+          <span class="btn-meta">PDF</span>
+        </a>
+      </div>
+    </aside>
+
+    <p>N.B. Tagging this as <code>vlm-ocr</code> because it&rsquo;s a VLM that <em>can</em> do OCR, but it&rsquo;s not <em>really</em> an OCR model.</p>
+<p><mark>Use a VLM to identify referents from a prompt using bounding boxes.</mark> For instance:</p>
+<p><strong>Input:</strong></p>
+<blockquote>
+<p>Select the crop tool</p>
+</blockquote>
+<p><strong>Model output:</strong></p>
+<blockquote>
+<p><code>&lt;ref&gt;crop tool&lt;/ref&gt;&lt;box&gt;&lt;130&gt;&lt;647&gt;&lt;190&gt;&lt;707&gt;&lt;/box&gt;</code></p>
+</blockquote>
+<p>The model is <strong>trained on 138 million object detection samples</strong>. They hit ~13-16 boxes per second on a single H100 using Qwen2.5-VL-3B as the backbone model.</p>
+<h1>Parallel Box Decoding</h1>
+<p>Perhaps the most important contribution of this paper is &ldquo;parallel box decoding,&rdquo; where you generate an entire box in a single step.</p>
+<p>Using approaches like adding coordinate tokens (e.g. <a class="wiki-link" href="../../field_notes/kosmos-2-5/">Kosmos-2.5</a>, where every coordinate like <code>&lt;130&gt;</code> is a unique token, along with tokens like <code>&lt;box&gt;</code> and <code>&lt;ref&gt;</code>) you get a pretty compact representation for the object:</p>
+<div class="codehilite"><pre><span></span><code>[1:&lt;ref&gt;][2:crop][3: tool][4:&lt;/ref&gt;][5:&lt;box&gt;][6:&lt;130&gt;]...
+</code></pre></div>
+
+<p>In total, you would get 10 tokens for this generation, meaning 10 forward passes.</p>
+<p>Instead, we can <strong>generate the entire box in parallel</strong>, meaning we can reduce this to two steps:</p>
+<div class="codehilite"><pre><span></span><code>[1:&lt;ref&gt;crop tool&lt;/ref&gt;][2:&lt;box&gt;&lt;130&gt;&lt;647&gt;&lt;190&gt;&lt;707&gt;&lt;/box&gt;]
+</code></pre></div>
+
+<p>So the first step determines the <strong>box referent</strong> and the second step determines the <strong>box coordinates</strong>.</p>
+<p>They enable this by <mark>converting all of their data into 6-token blocks during training</mark>. This looks like:</p>
+<div class="codehilite"><pre><span></span><code>[1: &lt;ref&gt;    crop   tool   &lt;/ref&gt; [null] [null]]
+[2: &lt;box&gt;    &lt;130&gt;  &lt;647&gt;  &lt;190&gt;  &lt;707&gt;  &lt;/box&gt;]
+[3: &lt;im_end&gt; [null] [null] [null] [null] [null]]
+</code></pre></div>
+
+<p>Note the inserted <code>[null]</code> tokens, which ensure that the MTP head is predicting a consistent number of tokens at each timestep. So they can chunk variable-length inputs into fixed-length chunks.</p>
+<h3>Hybrid Mode</h3>
+<p>Super interesting: the parallel decoding step can be unreliable (e.g., if your label is more than 4 tokens, perhaps, and the model screws up). Then the MTP head will be forced to predict cross-box tokens, which it&rsquo;s not trained to do. To account for this, they build a &ldquo;hybrid mode&rdquo; as a sort of pressure relief valve, which lets the model fall back to the slow, full autoregressive prediction task <em>for as little as a single block</em>.</p>
+<h1>Model and Training Details</h1>
+<p>The core model is based on Qwen2.5 with Moon-ViT. The multitoken blocks have bidirectional attention.</p>
+<h3>Block Representation</h3>
+<ol>
+<li>Normalize the token coordinates to <code>[0, 1000]</code> </li>
+<li>Boxes are represented by upper-left and lower-right coordinates</li>
+<li>Group boxes under the same label (only predict the <code>&lt;ref&gt;</code> block once)</li>
+<li>Convert to a sequence of <strong>blocks</strong></li>
+</ol>
+<p>They also have 4 block types:</p>
+<ol>
+<li><strong>Semantic Block</strong>: indicates the <em>type</em>: <code>&lt;ref&gt; crop tool &lt;/ref&gt; [null] [null]</code>, splitting across blocks for long labels</li>
+<li><strong>Box Block</strong>: indicates the box itself: <code>&lt;box&gt; &lt;130&gt; &lt;647&gt; &lt;190&gt; &lt;707&gt; &lt;/box&gt;</code></li>
+<li><strong>Negative Block</strong>: indicates the <em>absence</em> of an object ``</li>
+<li><strong>End Block</strong>: indicates the end of generation <code>&lt;im_end&gt; [null] [null] [null] [null] [null]</code></li>
+</ol>
+<h3>Dataset</h3>
+<p>12M unique images with 138M natural language queries, totaling 785M bounding boxes. They combine several open source datasets like Flickr30k Entities, gRefCOCO, RefCOCO, etc.</p>
+  </article>
+
+  <footer class="site-footer">
+    joe barrow · research scientist
+    <span class="site-footer-sep">·</span>
+    <a href="../../feed.xml">rss</a>
+  </footer>
+
+  <script src="../../static/js/site.js?v=bfb16307" defer></script>
+
+
+
+
+
+</body>
+</html>

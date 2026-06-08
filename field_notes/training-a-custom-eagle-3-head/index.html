@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Training a Custom EAGLE-3 HEad — Field Notes — Joe Barrow</title>
+
+  <link rel="canonical" href="https://jbarrow.ai/field_notes/training-a-custom-eagle-3-head/">
+  <meta property="og:site_name" content="Joe Barrow">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Training a Custom EAGLE-3 HEad">
+  <meta property="og:url" content="https://jbarrow.ai/field_notes/training-a-custom-eagle-3-head/">
+  <meta property="og:image" content="https://jbarrow.ai/static/img/joe.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@barrowjoseph">
+  <meta name="twitter:creator" content="@barrowjoseph">
+  <meta name="twitter:title" content="Training a Custom EAGLE-3 HEad">
+  <meta name="twitter:image" content="https://jbarrow.ai/static/img/joe.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../../static/css/site.css?v=5cbe7f85">
+  <link rel="stylesheet" href="../../static/css/code.css?v=678df866">
+  <link rel="alternate" type="application/atom+xml" title="Joe Barrow" href="../../feed.xml">
+
+
+
+
+
+  <script>
+    (function () {
+      var h = window.location.hostname;
+      if (h === "localhost" || h === "127.0.0.1" || h === "" || h.endsWith(".local")) return;
+      var s = document.createElement("script");
+      s.async = true;
+      s.src = "https://www.googletagmanager.com/gtag/js?id=G-GXC0J2XPHL";
+      document.head.appendChild(s);
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){ dataLayer.push(arguments); }
+      window.gtag = gtag;
+      gtag("js", new Date());
+      gtag("config", "G-GXC0J2XPHL");
+    })();
+  </script>
+</head>
+<body>
+
+  <header class="masthead">
+    <span class="masthead-title"><a href="../../">Joe Barrow</a></span>
+    <nav class="masthead-nav">
+      <a href="../../about/">about</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../publications/">publications</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../software/">software</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../field_notes/">field notes</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../feed.xml">rss</a>
+    </nav>
+    <span class="masthead-meta">field_notes</span>
+  </header>
+
+  <article class="article note">
+    <p class="note-eyebrow">
+      <a href="../../field_notes/">Field Notes</a>
+    </p>
+
+    <h1 class="note-title">Training a Custom EAGLE-3 HEad</h1>
+
+    <p class="note-updated">last updated 2026-06-08</p>
+
+    <ul class="note-tags">
+      <li><a class="tag-pill" href="../../field_notes/?tag=vllm">vllm</a></li>
+    </ul>
+
+
+    <p>Notes in which I follow along the BaseTen <a href="https://www.baseten.co/blog/how-to-train-custom-eagle-3-heads-for-speculative-decoding">How to Train a Custom EAGLE-3 Head for Speculative Decoding</a>.</p>
+<p>They point to three training frameworks:
+1. <a href="https://github.com/NVIDIA/Model-Optimizer">https://github.com/NVIDIA/Model-Optimizer</a>
+    1. https://github.com/NVIDIA/Model-Optimizer/tree/main/examples/speculative_decoding
+    2. ^ above tutorial discusses draft model, EAGLE, and DFlash
+2. <a href="https://github.com/sgl-project/SpecForge">https://github.com/sgl-project/SpecForge</a>
+    1. https://sgl-project.github.io/SpecForge/basic_usage/training.html
+3. <a href="https://github.com/torchspec-project/TorchSpec">https://github.com/torchspec-project/TorchSpec</a></p>
+<p>Looking over the three of them, it <em>looks</em> like SpecForge has the simplest &ldquo;happy path&rdquo; to training an EAGLE-3 head.</p>
+<p>Recommended parameters:
+1. Test-Time-Training Length: 7-9
+2. Number of draft tokens: 3-4, with the claim that &ldquo;going higher rarely helps because prediction accuracy drops off and verification cost grows&rdquo;
+3. Learning rate: 1e-4 to 2e-5 changing wrt model size
+4. Sampling parameters: sample @ T=0; <a href="https://arxiv.org/abs/2410.10141">you lose 25% speed sampling at T=1 instead of T=0 apparently.</a></p>
+  </article>
+
+  <footer class="site-footer">
+    joe barrow · research scientist
+    <span class="site-footer-sep">·</span>
+    <a href="../../feed.xml">rss</a>
+  </footer>
+
+  <script src="../../static/js/site.js?v=bfb16307" defer></script>
+
+
+
+
+
+</body>
+</html>
