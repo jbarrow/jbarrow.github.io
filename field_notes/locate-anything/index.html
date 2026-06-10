@@ -91,7 +91,10 @@ Shihao Wang, Shilong Liu, Yuanguo Kuang, Xinyu Wei, Yangzhou Liu, Zhiqui Li, Yun
       </div>
     </aside>
 
-    <p>N.B. Tagging this as <code>vlm-ocr</code> because it&rsquo;s a VLM that <em>can</em> do OCR, but it&rsquo;s not <em>really</em> an OCR model.</p>
+    <aside class="callout callout-abstract">
+<p class="callout-title">TL;DR</p>
+<p>LocateAnything is really a training <em>technique</em> for VLMs that focuses on efficient inference with multi-token prediction. The model predicts entire bounding boxes in a single step with an MTP head.</p>
+</aside>
 <p><mark>Use a VLM to identify referents from a prompt using bounding boxes.</mark> For instance:</p>
 <p><strong>Input:</strong></p>
 <blockquote>
@@ -115,12 +118,16 @@ Shihao Wang, Shilong Liu, Yuanguo Kuang, Xinyu Wei, Yangzhou Liu, Zhiqui Li, Yun
 
 <p>So the first step determines the <strong>box referent</strong> and the second step determines the <strong>box coordinates</strong>.</p>
 <p>They enable this by <mark>converting all of their data into 6-token blocks during training</mark>. This looks like:</p>
-<div class="codehilite"><pre><span></span><code>[1: &lt;ref&gt;    crop   tool   &lt;/ref&gt; [null] [null]]
-[2: &lt;box&gt;    &lt;130&gt;  &lt;647&gt;  &lt;190&gt;  &lt;707&gt;  &lt;/box&gt;]
-[3: &lt;im_end&gt; [null] [null] [null] [null] [null]]
+<div class="codehilite"><pre><span></span><code>tok:  0        1        2        3        4        5
+[0:   &lt;ref&gt;    crop     tool     &lt;/ref&gt;   [null]   [null]]
+[1:   &lt;box&gt;    &lt;130&gt;    &lt;647&gt;    &lt;190&gt;    &lt;707&gt;    &lt;/box&gt;]
+[2:   &lt;ref&gt;    face     in       image    to       crop  ]
+[3:   &lt;/ref&gt;   [null]   [null]   [null]   [null]   [null]]
+[4:   &lt;box&gt;    None     &lt;/box&gt;   [null]   [null]   [null]]
+[5:   &lt;im_end&gt; [null]   [null]   [null]   [null]   [null]]
 </code></pre></div>
 
-<p>Note the inserted <code>[null]</code> tokens, which ensure that the MTP head is predicting a consistent number of tokens at each timestep. So they can chunk variable-length inputs into fixed-length chunks.</p>
+<p>Note the inserted <code>[null]</code> tokens, which ensure that the MTP head is predicting a consistent number of tokens at each time step. So they can chunk variable-length inputs into fixed-length chunks.</p>
 <h3>Hybrid Mode</h3>
 <p>Super interesting: the parallel decoding step can be unreliable (e.g., if your label is more than 4 tokens, perhaps, and the model screws up). Then the MTP head will be forced to predict cross-box tokens, which it&rsquo;s not trained to do. To account for this, they build a &ldquo;hybrid mode&rdquo; as a sort of pressure relief valve, which lets the model fall back to the slow, full autoregressive prediction task <em>for as little as a single block</em>.</p>
 <h1>Model and Training Details</h1>
@@ -136,11 +143,12 @@ Shihao Wang, Shilong Liu, Yuanguo Kuang, Xinyu Wei, Yangzhou Liu, Zhiqui Li, Yun
 <ol>
 <li><strong>Semantic Block</strong>: indicates the <em>type</em>: <code>&lt;ref&gt; crop tool &lt;/ref&gt; [null] [null]</code>, splitting across blocks for long labels</li>
 <li><strong>Box Block</strong>: indicates the box itself: <code>&lt;box&gt; &lt;130&gt; &lt;647&gt; &lt;190&gt; &lt;707&gt; &lt;/box&gt;</code></li>
-<li><strong>Negative Block</strong>: indicates the <em>absence</em> of an object ``</li>
+<li><strong>Negative Block</strong>: indicates the <em>absence</em> of an object <code>&lt;box&gt; None &lt;/box&gt; [null] [null] [null]</code></li>
 <li><strong>End Block</strong>: indicates the end of generation <code>&lt;im_end&gt; [null] [null] [null] [null] [null]</code></li>
 </ol>
 <h3>Dataset</h3>
 <p>12M unique images with 138M natural language queries, totaling 785M bounding boxes. They combine several open source datasets like Flickr30k Entities, gRefCOCO, RefCOCO, etc.</p>
+<p>N.B. Tagging this as <code>vlm-ocr</code> because it&rsquo;s a VLM that <em>can</em> do OCR, but it&rsquo;s not <em>really</em> an OCR model.</p>
   </article>
 
   <footer class="site-footer">
