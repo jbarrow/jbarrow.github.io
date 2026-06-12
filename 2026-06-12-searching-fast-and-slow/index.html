@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Searching, Fast and Slow — Joe Barrow</title>
+  <meta name="description" content="Revisiting &#34;Slow Search&#34; in the age of agentic retrieval.">
+
+  <link rel="canonical" href="https://jbarrow.ai/2026-06-12-searching-fast-and-slow/">
+  <meta property="og:site_name" content="Joe Barrow">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Searching, Fast and Slow">
+  <meta property="og:description" content="Revisiting &#34;Slow Search&#34; in the age of agentic retrieval.">
+  <meta property="og:url" content="https://jbarrow.ai/2026-06-12-searching-fast-and-slow/">
+  <meta property="og:image" content="https://jbarrow.ai/static/img/joe.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@barrowjoseph">
+  <meta name="twitter:creator" content="@barrowjoseph">
+  <meta name="twitter:title" content="Searching, Fast and Slow">
+  <meta name="twitter:description" content="Revisiting &#34;Slow Search&#34; in the age of agentic retrieval.">
+  <meta name="twitter:image" content="https://jbarrow.ai/static/img/joe.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../static/css/site.css?v=5cbe7f85">
+  <link rel="stylesheet" href="../static/css/code.css?v=678df866">
+  <link rel="alternate" type="application/atom+xml" title="Joe Barrow" href="../feed.xml">
+
+
+
+
+
+  <script>
+    (function () {
+      var h = window.location.hostname;
+      if (h === "localhost" || h === "127.0.0.1" || h === "" || h.endsWith(".local")) return;
+      var s = document.createElement("script");
+      s.async = true;
+      s.src = "https://www.googletagmanager.com/gtag/js?id=G-GXC0J2XPHL";
+      document.head.appendChild(s);
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){ dataLayer.push(arguments); }
+      window.gtag = gtag;
+      gtag("js", new Date());
+      gtag("config", "G-GXC0J2XPHL");
+    })();
+  </script>
+</head>
+<body>
+
+  <header class="masthead">
+    <span class="masthead-title"><a href="../">Joe Barrow</a></span>
+    <nav class="masthead-nav">
+      <a href="../about/">about</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../publications/">publications</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../software/">software</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../field_notes/">field notes</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../feed.xml">rss</a>
+    </nav>
+    <span class="masthead-meta"></span>
+  </header>
+
+  <article class="article">
+    <p class="kicker">retrieval</p>
+
+
+    <h1 class="headline">Searching, Fast and Slow</h1>
+
+    <p class="standfirst">Revisiting &#34;Slow Search&#34; in the age of agentic retrieval.</p>
+
+    <div class="byline">
+<span>By <strong>Joe Barrow</strong></span><span class="byline-meta">2026-06-12</span>    </div>
+
+
+    <aside class="callout callout-abstract">
+<p class="callout-title">TL;DR</p>
+<p>Are you willing to wait even longer for better search results? Maybe not. But an agent is, and that can actually speed up agentic search. Some recent results show that doing so can actually reduce the time taken to finish the whole task <sup class="citation">[<a href="#ref-1">1</a>]</sup>. In this post I want to dig into those results, and what I think the implications on search system design are.</p>
+</aside>
+<p>Agentic retrieval is largely a bet that a model executing more search steps yields a better, more informed answer. You&rsquo;re trading wall clock time for recall. In which case, why not lean in and trade per-query latency for even better results?</p>
+<p>There are two competing philosophies for agentic retrieval:</p>
+<ol>
+<li><strong>latency doesn&rsquo;t matter in agentic search</strong> because the user is already willing to wait, and the models themselves don&rsquo;t care about latency; and  </li>
+<li><strong>agents are <em>more</em> sensitive to latency and scalability issues</strong>, because they will issue far more queries than humans ever could.</li>
+</ol>
+<p>I think that (1) is correct if you&rsquo;re focusing specifically on <em>per-query latency</em>, and (2) is right if you&rsquo;re talking about <em>throughput</em> and &ldquo;<em>whole task time</em>&rdquo;.</p>
+<p>This debate is not new – the 2013 &ldquo;Slow Search&rdquo; paper poses the questions: what would search look like if we didn&rsquo;t care about latency, and under what circumstances would users accept that? <sup class="citation">[<a href="#ref-2">2</a>]</sup> Today&rsquo;s debate has the added twist that the (immediate? intermediate?) search consumers are not humans.</p>
+<p>Notably, they even proposed search agents (in 2013!!) as an example of slow search, answering queries &ldquo;in the background as [searchers] engage in other tasks, search-related or otherwise.&rdquo; (<a href="https://jbarrow.ai/field_notes/slow-search/">You can read my full notes on the paper here</a>; it&rsquo;s a delightful and very prescient paper!)</p>
+<p><img src="slow-search.jpeg" /></p>
+<h1>Should Search For Agents Be Fast?</h1>
+<p><strong>For a lot of search tasks, no!</strong> Most agentic search tasks are <strong>bottlenecked on retrieval quality</strong> more than LLM quality. Consider the case of BrowseComp-Plus. Reason-ModernColBERT from LightOnAI shows that better retrieval is a rising tide that lifts all boats (model sizes):</p>
+<p><img src="browsecomp.png" />
+Figure 1: Note the x-axis is the number <strong>of tool calls</strong>, and that drops to \~13 while quality improves, just by using <em>better retrievers</em>.</p>
+<p>As an alternative, consider the Direct Corpus Interaction (DCI) paper, where they gave an agent access to grep and bash <sup class="citation">[<a href="#ref-3">3</a>]</sup>. They show a similar increase in performance, <strong>but with more than double the tool calls and double the cost</strong>.</p>
+<p><img src="dci.png" />
+Figure 2: Using only grep + bash, the number of tool calls goes up to 35 for the same benchmark!</p>
+<p>For agentic retrieval, both time and cost are <em>primarily</em> driven by the LLM itself. Every time you call a tool, you&rsquo;re paying the cached input cost <em>and</em> waiting the generation time for the model&rsquo;s intermediate reasoning.</p>
+<p><strong>So you can end up waiting <em>longer</em> if you use lower-latency search.</strong> And not only are you waiting longer, you&rsquo;re paying more for the privilege.</p>
+<h2>Test-Time Compute in Retrieval</h2>
+<p>The goal when trading off latency for quality is to reduce the amount of work it takes [for your agent to satisfy its information need]. But how do you make that trade-off? Reasoning models showed that LLMs can trade latency/compute for a higher-quality answer. Letting the model spend more tokens scales logarithmically with the accuracy of the answer on hard math/coding tasks.</p>
+<p>This trade-off also exists in retrieval. There is a Pareto frontier of retrieval quality depending on how much time/compute you&rsquo;re willing to spend per query:</p>
+<p><img src="IR-pareto-frontier.svg" />
+(Note: this is just a rough approximation, please don&rsquo;t come after me! 😀 There are also so many simplifying assumptions being made here that dissecting this figure would warrant its own blog post.)</p>
+<p>Broadly, you make that trade-off by moving to a better (and often larger) model, and by moving further up and to the right along this graph. If you&rsquo;re rolling your own retrieval it takes more effort to deploy a multivector approach than a single vector approach. Similarly, building a two-stage retriever with an LLM-reranker at the end requires putting the infrastructure in place for LLM inference. These are harder than calling an embedding API. There are companies today who will just handle this for you, if you&rsquo;d prefer not to roll your own, though!</p>
+<details class="margin-note">
+<summary>Aside</summary>
+<p><strong>Why does latency trade off so cleanly for quality?</strong> It mostly has to do with the retrieval research community. Think of it like an evolutionary process whereby a slower technique can only survive by being higher quality. So most things that have stuck around, like building multi-stage rankers, push you up and to the right along this frontier.</p>
+</details>
+<h1>Trading Query Latency for <em>Throughput</em></h1>
+<p>Trading latency for quality is not the only trade you might consider. For instance, hornet.dev is betting that retrieval engines designed for agents should be focused on <em>throughput</em> rather than latency. </p>
+<p>The core bet boils down to &ldquo;agents issue more queries than humans and aren&rsquo;t as latency sensitive.&rdquo; Makes sense to me, especially as we see more parallel tool calls and subagents.</p>
+<p><img src="hornet.png" />
+Figure 3: the hornet retrieval engine focuses on delivering high QPS.</p>
+<h1>We Should Do More Slow Search Research</h1>
+<p>One of the interesting results from the Slow Search paper is that most people really aren&rsquo;t willing to wait for better results.</p>
+<p>&gt; Only 36 (25.5%) participants could imagine waiting for the best possible results longer than they actively searched. [&hellip;] The remaining 86 (61.0%) of participants had difficulty envisioning a search engine that would sacrifice speed for quality.</p>
+<p>Findings like this have driven a relentless focus on search latency in the IR community over the years. However, agents are the perfect slow searchers; they&rsquo;re infinitely patient, and cheaper/better to run if you can give them better results.</p>
+<p>So we as a research community should be thinking about how to satisfy this new customer. Try some out-there but slow ideas! Maybe you can solve <a class="wiki-link" href="../field_notes/obliq-bench/">Obliq-Bench</a>?</p>
+<p>If this is a research area that interests you, read this mini-essay from Ben Clavié, where he argues that the IR community focuses too strongly on engineering and scalability and not enough on neat, novel ideas:</p>
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">I have a deeper note to make about this: we need to rethink how we approach retrieval research if we want to have an LLM moment.<br><br>I think a problem we have as a sub-field is a lack of openness to early research that might be paving the way to what comes next, even if it&#39;s not all… <a href="https://t.co/741AUEBtWL">https://t.co/741AUEBtWL</a></p>&mdash; Ben Clavié (@bclavie) <a href="https://x.com/bclavie/status/2062151045346984032?ref_src=twsrc%5Etfw">June 3, 2026</a></blockquote>
+<script async src="https://platform.x.com/widgets.js" charset="utf-8"></script>
+<section class="references">
+<h2 class="references-title">References</h2>
+<ol class="reference-list">
+<li id="ref-1" class="reference">Antoine Chaffin. (2025). <span class="ref-title">Reason-ModernColBERT</span>. <a class="ref-url" href="https://huggingface.co/lightonai/Reason-ModernColBERT">https://huggingface.co/lightonai/Reason-ModernColBERT</a></li>
+<li id="ref-2" class="reference">Jaime Teevan, Kevyn Collins-Thompson, Ryen W White, Susan T Dumais, Yubin Kim. (2013). <span class="ref-title">Slow search: Information retrieval without time constraints</span>. <em>Proceedings of the Symposium on Human-Computer Interaction and Information Retrieval</em>.</li>
+<li id="ref-3" class="reference">Zhuofeng Li, Haoxiang Zhang, Cong Wei, Pan Lu, Ping Nie, Yi Lu, Yuyang Bai, Shangbin Feng, Hangxiao Zhu, Ming Zhong, others. (2026). <span class="ref-title">Beyond semantic similarity: Rethinking retrieval for agentic search via direct corpus interaction</span>. <em>arXiv preprint arXiv:2605.05242</em>.</li>
+</ol>
+</section>
+
+  </article>
+
+  <footer class="site-footer">
+    joe barrow · research scientist
+    <span class="site-footer-sep">·</span>
+    <a href="../feed.xml">rss</a>
+  </footer>
+
+  <script src="../static/js/site.js?v=bfb16307" defer></script>
+
+
+
+
+
+</body>
+</html>

@@ -70,15 +70,60 @@
 
     <h1 class="note-title">Nvidia MIG</h1>
 
-    <p class="note-updated">last updated 2026-06-03</p>
+    <p class="note-updated">last updated 2026-06-11</p>
 
 
 
     <h2>What is MIG</h2>
-<p>MIG stands for &ldquo;Multiple Instance GPU&rdquo;, and it allows you to virtualize a single physical GPU into multiple logical GPUs.</p>
+<p>MIG stands for &ldquo;Multiple Instance GPU&rdquo;, and it allows you to virtualize a single physical GPU into multiple logical GPUs. For instance, an H100 has 7 SM groups and 8 memory groups (each 10GB), so you can split it into up to 7 <em>logical</em> GPUs, each of which has 1-2 memory groups.</p>
+<p><img class="embed" src="../_attachments/a100-mig.png" alt="a100-mig.png"></p>
 <h2>How to use MIG</h2>
+<p><strong>Enabling MIG:</strong></p>
+<div class="codehilite"><pre><span></span><code>sudo nvidia-smi -i &lt;GPU IDs&gt; -mig 1
+</code></pre></div>
+
+<p>List MIG Profiles:</p>
+<div class="codehilite"><pre><span></span><code>sudo nvidia-smi mig -lgip
++-------------------------------------------------------------------------------+
+| GPU instance profiles:                                                        |
+| GPU   Name               ID    Instances   Memory     P2P    SM    DEC   ENC  |
+|                                Free/Total   GiB              CE    JPEG  OFA  |
+|===============================================================================|
+|   0  MIG 1g.10gb         19     7/7        9.75       No     16     1     0   |
+|                                                               1     1     0   |
++-------------------------------------------------------------------------------+
+|   0  MIG 1g.10gb+me      20     1/1        9.75       No     16     1     0   |
+|                                                               1     1     1   |
++-------------------------------------------------------------------------------+
+|   0  MIG 1g.20gb         15     4/4        19.62      No     26     1     0   |
+|                                                               1     1     0   |
++-------------------------------------------------------------------------------+
+|   0  MIG 2g.20gb         14     3/3        19.62      No     32     2     0   |
+|                                                               2     2     0   |
++-------------------------------------------------------------------------------+
+|   0  MIG 3g.40gb          9     2/2        39.50      No     60     3     0   |
+|                                                               3     3     0   |
++-------------------------------------------------------------------------------+
+|   0  MIG 4g.40gb          5     1/1        39.50      No     64     4     0   |
+|                                                               4     4     0   |
++-------------------------------------------------------------------------------+
+|   0  MIG 7g.80gb          0     1/1        79.25      No     132    7     0   |
+|                                                               8     7     1   |
++-------------------------------------------------------------------------------+
+</code></pre></div>
+
+<p><strong>Creating a MIG instance:</strong></p>
+<p><mark>To create a MIG instance, look at the available profiles for your GPU, and reference its id/name</mark>. For instance, if you want 2 logical GPUs with 3 compute nodes in each and 40gb, you&rsquo;d use <code>9</code>:</p>
+<div class="codehilite"><pre><span></span><code>sudo nvidia-smi mig -cgi 9
+</code></pre></div>
+
+<p><strong>Resetting your GPUs</strong>:</p>
+<div class="codehilite"><pre><span></span><code>sudo nvidia-smi mig -i &lt;GPU_IDS&gt; -dgi
+</code></pre></div>
+
 <h2>Support</h2>
-<p>Only datacenter and workstation GPUs, sadly. So, not on 3090&rsquo;s, but you can do it with RTX PRO 6000 Blackwells (and H100&rsquo;s, A100&rsquo;s, etc).</p>
+<p>Only datacenter and workstation GPUs, sadly. So, not on 3090&rsquo;s or 5090&rsquo;s, but you can do it with RTX PRO 6000 Blackwells (and H100&rsquo;s, A100&rsquo;s, etc). There&rsquo;s no support for the RTX PRO 4000, but the 4500-6000 are all supported.</p>
+<p><mark>Supported generations <em>start</em> at Ampere GPUs (A100, A30) and continue through Hopper, Blackwell, etc.</mark> Datacenter GPUs have 7 logical GPUs, whereas the Blackwell PRO workstation GPUs can either be 2 (4500, 5000) or 4 (PRO 6000).</p>
 <h2>Resources</h2>
 <ul>
 <li><a href="https://docs.nvidia.com/datacenter/tesla/mig-user-guide/latest/index.html">Official User Guide</a></li>
