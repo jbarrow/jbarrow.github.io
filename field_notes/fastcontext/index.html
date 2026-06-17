@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paper Notes: FastContext — Field Notes — Joe Barrow</title>
+
+  <link rel="canonical" href="https://jbarrow.ai/field_notes/fastcontext/">
+  <meta property="og:site_name" content="Joe Barrow">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Paper Notes: FastContext">
+  <meta property="og:url" content="https://jbarrow.ai/field_notes/fastcontext/">
+  <meta property="og:image" content="https://jbarrow.ai/static/img/joe.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@barrowjoseph">
+  <meta name="twitter:creator" content="@barrowjoseph">
+  <meta name="twitter:title" content="Paper Notes: FastContext">
+  <meta name="twitter:image" content="https://jbarrow.ai/static/img/joe.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../../static/css/site.css?v=5cbe7f85">
+  <link rel="stylesheet" href="../../static/css/code.css?v=678df866">
+  <link rel="alternate" type="application/atom+xml" title="Joe Barrow" href="../../feed.xml">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous">
+
+
+
+
+  <script>
+    (function () {
+      var h = window.location.hostname;
+      if (h === "localhost" || h === "127.0.0.1" || h === "" || h.endsWith(".local")) return;
+      var s = document.createElement("script");
+      s.async = true;
+      s.src = "https://www.googletagmanager.com/gtag/js?id=G-GXC0J2XPHL";
+      document.head.appendChild(s);
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){ dataLayer.push(arguments); }
+      window.gtag = gtag;
+      gtag("js", new Date());
+      gtag("config", "G-GXC0J2XPHL");
+    })();
+  </script>
+</head>
+<body>
+
+  <header class="masthead">
+    <span class="masthead-title"><a href="../../">Joe Barrow</a></span>
+    <nav class="masthead-nav">
+      <a href="../../about/">about</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../publications/">publications</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../software/">software</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../field_notes/">field notes</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../feed.xml">rss</a>
+    </nav>
+    <span class="masthead-meta">field_notes</span>
+  </header>
+
+  <article class="article note">
+    <p class="note-eyebrow">
+      <a href="../../field_notes/">Field Notes</a>
+    </p>
+
+    <h1 class="note-title">Paper Notes: FastContext</h1>
+
+    <p class="note-updated">last updated 2026-06-16</p>
+
+    <ul class="note-tags">
+      <li><a class="tag-pill" href="../../field_notes/?tag=deep-research">deep-research</a></li>
+      <li><a class="tag-pill" href="../../field_notes/?tag=rl">rl</a></li>
+      <li><a class="tag-pill" href="../../field_notes/?tag=small-models">small-models</a></li>
+    </ul>
+
+    <aside class="paper-card">
+      <span class="paper-card-label">Source</span>
+      <h2 class="paper-card-title">FastContext: Training Efficient Repository Explorer forCoding Agents</h2>
+      <p class="paper-card-meta">
+Shaoqiu Zhang, Maoquan Wang, Yuling Shi, Yuhang Wang, Xiaodong Gu, Yongqiang Yao, Rao Fu, Shengyu Fu<span class="sep">·</span>arXiv · 2026      </p>
+      <div class="paper-downloads">
+        <a class="btn btn-paper" href="../../field_notes/_attachments/fastcontext.pdf" download>
+          <span class="btn-icon">↓</span>
+          <span class="btn-label">Download</span>
+          <span class="btn-meta">PDF</span>
+        </a>
+      </div>
+    </aside>
+
+    <h1>An Era of Hybrid Agents?</h1>
+<p>The FastContext paper made a small splash recently, probably in part because it came out immediately after Satya&rsquo;s &ldquo;<a href="https://x.com/satyanadella/article/2066182223213293753">a frontier without an ecosystem is not stable</a>.&rdquo; It&rsquo;s (mostly) a 4B model that makes parallel tool calls to extract context from a codebase.</p>
+<p><mark>The core premise is that a large model can spin out a task-specific subagent to build context for specific questions</mark>. From their analysis, ~50% of all the tokens consumed by an agent on the multilingual SWE tasks are to search/navigate the codebase. The promise of this subagent approach is to push those tokens spent searching to a smaller model. Thus reducing the price of those 50% of tokens by up to 95%.</p>
+<p>I think it&rsquo;s a technique that exists as the orange region in the IR Pareto frontier from my earlier post &ldquo;<a href="https://jbarrow.ai/2026-06-12-searching-fast-and-slow/">Searching, Fast and Slow</a>&ldquo;</p>
+<p><img class="embed" src="../_attachments/IR-pareto-frontier-4.png" alt="IR-pareto-frontier-4.png"></p>
+<h1>Paper Notes</h1>
+<p><mark>FastContext is a set of Qwen finetunes that are used as sub-agents for repository exploration/retrieval tasks.</mark> They feed <strong>filenames and line ranges</strong> back to the orchestrator agent.</p>
+<p><img class="embed" src="../_attachments/fastcontext-results.png" alt="fastcontext-results.png">
+Their models <em>really</em> seem to improve token efficiency of the orchestrator model, with minor potential improvements (and importantly <em>not degradations</em>).</p>
+<h2>Inputs and Outputs</h2>
+<p><strong>Input</strong></p>
+<div class="codehilite"><pre><span></span><code>Find the code paths for Goldmark markdown image rendering / embedded image render hook, especially where standalone image block…
+</code></pre></div>
+
+<p>Then, the FastContext model issues parallel tool calls over several search turns to find the relevant data. <mark>The model can call <strong>read</strong>, <strong>grep</strong>, and <strong>glob</strong></mark> to navigate and open files/snippets.</p>
+<p><strong>FastContext Output</strong></p>
+<div class="codehilite"><pre><span></span><code>&lt;final_answer&gt;
+/goldmark/images/transform.go:17-22 (Image transformation)
+/goldmark/images/transform.go:40-68
+&lt;/final_answer&gt;
+</code></pre></div>
+
+<p>The parentheticals are optional notes provided from the base model to the orchestrator. <mark>These get converted back to full code snippets when passed back to the orchestrator model.</mark></p>
+<h2>Training Data and Setup</h2>
+<p>The released models are 4B and 30B, trained with an SFT then RL approach, <strong>on a surprisingly small amount of data!</strong> ~3k SFT trajectories and ~400 questions used for RL. The traces are all sourced from Claude 4.6 Sonnet.</p>
+<p>They source 3 <em>classes</em> of data:</p>
+<ol>
+<li><code>parallel_toolcalls</code> - call non-redundant tools</li>
+<li><code>multiturn_trajectories</code> - multiturn with system/user messages</li>
+<li><code>linerange</code> - get precise citations</li>
+</ol>
+<p>Interestingly, they do RL directly using retrieval <span class="arithmatex">\(F_1\)</span> as a reward! So they aren&rsquo;t propagating any signal back from a SWE-bench-style task with an orchestrator agent. <mark>Just treating each &ldquo;context search&rdquo; as an independent step that has to surface the correct lines/functions/files.</mark> There is some part of me that feels like performance might be left on the table as a result?</p>
+<p>The overall reward function is:</p>
+<div class="arithmatex">\[R = F_1(P_f, G_f) + F_1(P_l, G_l) + r_{\text{parallel}} - r_{\text{format}}\]</div>
+<p>Where <span class="arithmatex">\(P_f\)</span> are the <strong>predicted files</strong>, <span class="arithmatex">\(P_l\)</span> are the <strong>predicted lines</strong>, <span class="arithmatex">\(G_f\)</span> are the <strong>ground truth files</strong>, and <span class="arithmatex">\(G_l\)</span> are the <strong>ground truth lines</strong>. <span class="arithmatex">\(F_1\)</span> is ~standard. They have a format penalty for, e.g. missing the <code>&lt;final_answer&gt;</code> block or line formatting, and a small bump for doing parallel tool calls.</p>
+  </article>
+
+  <footer class="site-footer">
+    joe barrow · research scientist
+    <span class="site-footer-sep">·</span>
+    <a href="../../feed.xml">rss</a>
+  </footer>
+
+  <script src="../../static/js/site.js?v=bfb16307" defer></script>
+
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" integrity="sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4lfFg" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous" onload="renderMathInElement(document.body, {delimiters: [{left: '\\[', right: '\\]', display: true}, {left: '\\(', right: '\\)', display: false}], throwOnError: false});"></script>
+
+
+
+
+</body>
+</html>
