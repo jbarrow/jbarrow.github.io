@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Review, Inference Engineering — Joe Barrow</title>
+  <meta name="description" content="Inference Engineering by Philip Kiely is an excellent resource and if you think you need to read it, you probably need to read it.">
+
+  <link rel="canonical" href="https://jbarrow.ai/2026-06-17-book-review-inference-engineering/">
+  <meta property="og:site_name" content="Joe Barrow">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Book Review, Inference Engineering">
+  <meta property="og:description" content="Inference Engineering by Philip Kiely is an excellent resource and if you think you need to read it, you probably need to read it.">
+  <meta property="og:url" content="https://jbarrow.ai/2026-06-17-book-review-inference-engineering/">
+  <meta property="og:image" content="https://jbarrow.ai/static/img/joe.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@barrowjoseph">
+  <meta name="twitter:creator" content="@barrowjoseph">
+  <meta name="twitter:title" content="Book Review, Inference Engineering">
+  <meta name="twitter:description" content="Inference Engineering by Philip Kiely is an excellent resource and if you think you need to read it, you probably need to read it.">
+  <meta name="twitter:image" content="https://jbarrow.ai/static/img/joe.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../static/css/site.css?v=5cbe7f85">
+  <link rel="stylesheet" href="../static/css/code.css?v=678df866">
+  <link rel="alternate" type="application/atom+xml" title="Joe Barrow" href="../feed.xml">
+
+
+
+
+
+  <script>
+    (function () {
+      var h = window.location.hostname;
+      if (h === "localhost" || h === "127.0.0.1" || h === "" || h.endsWith(".local")) return;
+      var s = document.createElement("script");
+      s.async = true;
+      s.src = "https://www.googletagmanager.com/gtag/js?id=G-GXC0J2XPHL";
+      document.head.appendChild(s);
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){ dataLayer.push(arguments); }
+      window.gtag = gtag;
+      gtag("js", new Date());
+      gtag("config", "G-GXC0J2XPHL");
+    })();
+  </script>
+</head>
+<body>
+
+  <header class="masthead">
+    <span class="masthead-title"><a href="../">Joe Barrow</a></span>
+    <nav class="masthead-nav">
+      <a href="../about/">about</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../publications/">publications</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../software/">software</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../field_notes/">field notes</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../feed.xml">rss</a>
+    </nav>
+    <span class="masthead-meta"></span>
+  </header>
+
+  <article class="article">
+    <p class="kicker">inference</p>
+
+
+    <h1 class="headline">Book Review, Inference Engineering</h1>
+
+    <p class="standfirst">Inference Engineering by Philip Kiely is an excellent resource and if you think you need to read it, you probably need to read it.</p>
+
+    <div class="byline">
+<span>By <strong>Joe Barrow</strong></span><span class="byline-meta">2026-06-17</span>    </div>
+
+
+    <p>I recently bought a copy of &ldquo;Inference Engineering&rdquo; by Philip Kiely. The book is <a href="https://www.baseten.co/inference-engineering/">available for free from BaseTen</a>, but the physical copy is beautiful and, in my opinion, <a href="https://books.baseten.com/products/inference-engineering?_gl=1*19lq56g*_gcl_au*MTI3Mjc0NjQ0Ny4xNzgxNjk5NDU2">completely worth it</a>. If there were a hardback I&rsquo;d buy it tomorrow.</p>
+<p><img src="inference_engineering.png" /></p>
+<p>The top line of my review is: <strong>I desperately wish I could ship this book back to myself in 2023.</strong> </p>
+<p><mark>My background:</mark> I&rsquo;m a research scientist, but I was also the head of ML at Pattern Data, where we scaled document processing a billion+ pages. There is a lot of material in the book that I was already familiar with from hard-earned lessons or mistakes. Having a single reference work to handle all of that would have helped me avoid those mistakes. And probably make a fun set of new ones!</p>
+<p>If your job touches ML inference at all, you should probably read this book. Save yourself from the mistakes that I made! It&rsquo;s got immense technical breadth, covering everything from &ldquo;when should I choose vLLM or SGLang or TensorRT?&rdquo; to &ldquo;how do I efficiently scale inference as a service grows?&rdquo;</p>
+<p>My recommendation for how to read the book is to <strong>read it through once to familiarize yourself</strong> with all of the content, and <strong>then revisit the specific most interesting chapters</strong>. The book is largely organized as a reference work, with chapters being largely independent. If there are sections that don&rsquo;t apply to you, you can probably skip them.</p>
+<p>Use the chapters you revisit as a jumping off point to the broader literature (there&rsquo;s a really nice set of &ldquo;papers to read next&rdquo; organized by topic in the back of the book).</p>
+<p>I personally really enjoyed the &ldquo;Techniques&rdquo; chapter, where he covers quantization, speculative decoding, disaggregation, etc. because those are things I think about in the day-to-day. It contains the best high-level description of EAGLE speculative decoding that I&rsquo;ve read.</p>
+<p>I only have three minor criticisms:</p>
+<ol>
+<li>
+<p>At times I was unsure what the level of the intended audience was. For example, early on he takes care to explain linear layers and activation functions. I&rsquo;d probably only recommend the book to an audience already fluent in those concepts.</p>
+</li>
+<li>
+<p><mark>I really wish the book were longer.</mark> Philip is really good at distilling and explaining concepts! A few concepts would have been nice to cover in depth, like FlashAttention or estimating model FLOPS and HFU.</p>
+</li>
+<li>
+<p><mark>I wish there were a hardcover.</mark></p>
+</li>
+</ol>
+<h2>Will this knowledge be obsolete in 6 months?</h2>
+<p>I got asked this when discussing the book with a friend, so it may be worth addressing. Short answer: <strong>Nope!</strong></p>
+<p>Long answer: I&rsquo;ll let Philip speak for himself on this:</p>
+<blockquote>
+<p>Like LLMs, books have knowledge cutoffs. [&hellip;] While details will change, the principles, concepts, and foundational technologies in this book provide a strong background on inference engineering that will serve you well for years to come.</p>
+</blockquote>
+<p>However, in a fun sign of <em>just how fast</em> the world of AI changes, consider this passage for 6.4.1:</p>
+<blockquote>
+<p>TTS models are rarely used outside of real-time applications. However, if you do end up with a batch use case like backfilling a large corpus of documents to audio for improved accessibility, note that tts models don&rsquo;t do well with long inputs, speech starts to degrade after 30 seconds or so.</p>
+</blockquote>
+<p>Now, consider this tweet:</p>
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">The first 100 seconds of the Inference Engineering audiobook, narrated by a voice clone built by <a href="https://x.com/rimelabs?ref_src=twsrc%5Etfw">@rimelabs</a>.<br><br>P.S. the video was also made using an AI-built script. Input is a PNG and a text file, script handles narration, bounding boxes, captions, and final video export. <a href="https://t.co/rs6RzBrCZR">pic.twitter.com/rs6RzBrCZR</a></p>&mdash; Philip Kiely (@philipkiely) <a href="https://x.com/philipkiely/status/2061852493429248260?ref_src=twsrc%5Etfw">June 2, 2026</a></blockquote>
+<script async src="https://platform.x.com/widgets.js" charset="utf-8"></script>
+
+<p>TTS is getting much better quite quickly!</p>
+<h2>What Should I Read Next?</h2>
+<p>I think this book is a very valuable jumping off point, and what you should read next depends on your interests and needs. For starters, there&rsquo;s a really nice set of &ldquo;papers to read next&rdquo; organized by topic in the back of the book. I&rsquo;ve got a few to add to that, depending on what you want to focus on.</p>
+<h3>I&rsquo;m interested in training LLMs</h3>
+<p>This one I have a great answer for!</p>
+<p>In my opinion the single best book you could read next is HuggingFace&rsquo;s &ldquo;Ultra Scale Training Playbook.&rdquo; It&rsquo;s packed with code examples, visuals, and tons of great explanations about how you scale the training of models. It&rsquo;ll help you get deeply familiar with concepts like Tensor/Sequence/Pipeline/Context/Data Parallelism, the ZeRO series of optimizers, and the difficulties and trade-offs you have to make as models scale.</p>
+<h3>This book was too in the inference weeds for me</h3>
+<p>Chip Huyen&rsquo;s &ldquo;AI Engineering&rdquo; seems like a good fit, in that case?</p>
+<h3>I want to dig deeper into GPUs</h3>
+<p>Here we&rsquo;re going a little further outside of my comfort zone. The <a href="https://modal.com/gpu-glossary">Modal GPU Glossary</a> contains an incredible amount of breadth, but is probably best used as a reference rather than a standalone book. I&rsquo;m going to be working through some GPU programming books in the near future where I can provide a more thorough review. The one I saw most highly recommended was: &ldquo;CUDA Programming: A Developer&rsquo;s Guide to Parallel Computing with GPUs&rdquo;</p>
+<h3>I want to learn more about TECHNIQUE</h3>
+<p>If <strong>TECHNIQUE=&rdquo;inference engines&rdquo;</strong>, then the <a href="https://github.com/GeeeekExplorer/nano-vllm">nano-vllm codebase</a> is a really neat place to start. I don&rsquo;t know of any good books on the topic (outside of this one), but there are lots of good vLLM/PagedAttention explainers and pedagogical codebases like nano-vllm or <a href="https://github.com/sgl-project/mini-sglang">Mini-SGLang</a>.</p>
+<p>If <strong>TECHNIQUE=&rdquo;speculative decoding&rdquo;</strong>, then <a href="https://docs.vllm.ai/en/latest/features/speculative_decoding/#notes">the vLLM speculative decoding docs</a> are very good!</p>
+<p>If <strong>TECHNIQUE=&rdquo;quantization&rdquo;</strong>, then ngrok&rsquo;s <a href="https://ngrok.com/blog/quantization">Quantization From the Ground Up</a> is a good resource. I also enjoyed <a href="https://www.itu.dk/~sestoft/bachelor/IEEE754_article.pdf">What Every Computer Scientist Should Know About Floating Point Arithmetic</a>, a 35-year-old paper from Xerox PARC.</p>
+<h3>None of the above apply to me!</h3>
+<p>Feel free to @ me on X or DM me and ask for recommendations!</p>
+
+  </article>
+
+  <footer class="site-footer">
+    joe barrow · research scientist
+    <span class="site-footer-sep">·</span>
+    <a href="../feed.xml">rss</a>
+  </footer>
+
+  <script src="../static/js/site.js?v=bfb16307" defer></script>
+
+
+
+
+
+</body>
+</html>

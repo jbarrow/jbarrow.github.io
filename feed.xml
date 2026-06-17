@@ -4,10 +4,18 @@
   <link href="https://jbarrow.ai/" rel="alternate" type="text/html"/>
   <link href="https://jbarrow.ai/feed.xml" rel="self" type="application/atom+xml"/>
   <id>https://jbarrow.ai/</id>
-  <updated>2026-06-12T00:00:00Z</updated>
+  <updated>2026-06-17T00:00:00Z</updated>
   <author>
     <name>Joe Barrow</name>
   </author>
+  <entry>
+    <title>Book Review, Inference Engineering</title>
+    <link href="https://jbarrow.ai/2026-06-17-book-review-inference-engineering/" rel="alternate" type="text/html"/>
+    <id>https://jbarrow.ai/2026-06-17-book-review-inference-engineering/</id>
+    <updated>2026-06-17T00:00:00Z</updated>
+    <summary>Inference Engineering by Philip Kiely is an excellent resource and if you think you need to read it, you probably need to read it.</summary>
+    <author><name>Joe Barrow</name></author>
+  </entry>
   <entry>
     <title>Searching, Fast and Slow</title>
     <link href="https://jbarrow.ai/2026-06-12-searching-fast-and-slow/" rel="alternate" type="text/html"/>
