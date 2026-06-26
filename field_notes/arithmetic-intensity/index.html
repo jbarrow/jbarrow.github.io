@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A Visual Guide to the Roofline Model — Field Notes — Joe Barrow</title>
+
+  <link rel="canonical" href="https://jbarrow.ai/field_notes/arithmetic-intensity/">
+  <meta property="og:site_name" content="Joe Barrow">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="A Visual Guide to the Roofline Model">
+  <meta property="og:url" content="https://jbarrow.ai/field_notes/arithmetic-intensity/">
+  <meta property="og:image" content="https://jbarrow.ai/static/img/joe.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@barrowjoseph">
+  <meta name="twitter:creator" content="@barrowjoseph">
+  <meta name="twitter:title" content="A Visual Guide to the Roofline Model">
+  <meta name="twitter:image" content="https://jbarrow.ai/static/img/joe.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../../static/css/site.css?v=5cbe7f85">
+  <link rel="stylesheet" href="../../static/css/code.css?v=678df866">
+  <link rel="alternate" type="application/atom+xml" title="Joe Barrow" href="../../feed.xml">
+
+
+
+
+
+  <script>
+    (function () {
+      var h = window.location.hostname;
+      if (h === "localhost" || h === "127.0.0.1" || h === "" || h.endsWith(".local")) return;
+      var s = document.createElement("script");
+      s.async = true;
+      s.src = "https://www.googletagmanager.com/gtag/js?id=G-GXC0J2XPHL";
+      document.head.appendChild(s);
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){ dataLayer.push(arguments); }
+      window.gtag = gtag;
+      gtag("js", new Date());
+      gtag("config", "G-GXC0J2XPHL");
+    })();
+  </script>
+</head>
+<body>
+
+  <header class="masthead">
+    <span class="masthead-title"><a href="../../">Joe Barrow</a></span>
+    <nav class="masthead-nav">
+      <a href="../../about/">about</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../publications/">publications</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../software/">software</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../field_notes/">field notes</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../feed.xml">rss</a>
+    </nav>
+    <span class="masthead-meta">field_notes</span>
+  </header>
+
+  <article class="article note">
+    <p class="note-eyebrow">
+      <a href="../../field_notes/">Field Notes</a>
+    </p>
+
+    <h1 class="note-title">A Visual Guide to the Roofline Model</h1>
+
+    <p class="note-updated">last updated 2026-06-26</p>
+
+
+
+    <p>My goal is to convey, as simply and visually as possible: what the roofline model is, what arithmetic intensity is, and why it&rsquo;s important for making LLMs go fast.
+By the end of this post, you should be able to define the terms &ldquo;arithmetic intensity,&rdquo; &ldquo;compute bound.&rdquo; &ldquo;memory bound,&rdquo; &ldquo;memory bandwidth,&rdquo; and &ldquo;performance.&rdquo;</p>
+<p>For starters, let&rsquo;s say that you&rsquo;ve purchased a shiny new GPU to run your LLMs.
+You read the data sheet and see two numbers reported:
+1. <mark><strong>floating point operations per second</strong>,  which we will refer to as FLOPs/second, and</mark>
+2. <mark><strong>memory bandwidth</strong>, measured in gigabytes/second.</mark></p>
+<p>Both of these numbers are important, but we&rsquo;re going to start with FLOPs/second.
+If we were to put the FLOPs/s on a line, it would look like this:</p>
+<p><img class="embed" src="../_attachments/arithmetic_intensity/hardware_performance.png" alt="327"></p>
+<p>A better GPU would be further up that line.
+A worse GPU, or a CPU, would be lower down that line.</p>
+<p>Now, you run your local LLM and it feels slow to you.
+You&rsquo;re not seeing the tokens-per-second you thought you might.
+So you come up with a way to measure how many FLOPs/second it&rsquo;s doing when running your LLM, and it&rsquo;s lower than you expect:</p>
+<p><img class="embed" src="../_attachments/arithmetic_intensity/observed_performance.png" alt="348"></p>
+<p>Let&rsquo;s dig into why!</p>
+<p>To do so, I&rsquo;m going to define a new term: <strong>arithmetic intensity</strong> of a computation.
+It&rsquo;s going to answer the question &ldquo;how much of the computation is <em>calculation</em> vs <em>data loading</em>?&rdquo;
+The <strong>arithmetic intensity</strong> of a computation is defined as <mark>how many floating point operations happen compared to how many bytes are loaded</mark>.</p>
+<p>It might feel like a bit of an obtuse thing to measure, so let&rsquo;s dig into it further.
+For instance, consider the following matrix-vector multiply:</p>
+<p><img class="embed" src="../_attachments/arithmetic_intensity/matrix_multiply.png" alt="352"></p>
+<p>To do the multiply we have to load in 8 numbers from memory: <code>A1, A2, A3, A4, A5, A6, B1, B2</code>.
+If each number is stored as two bytes (i.e., in <code>fp16</code> or <code>bf16</code> format) then we&rsquo;re loading in 16 bytes.</p>
+<p>To actually compute their product, remember it&rsquo;s <strong>row-by-column</strong>.
+The first element of C is the first row of A times the first column of B.
+So <code>C1 = A1 * B1 + A2 * B2</code>, and so on for C2 and C3.
+Thus, for each element in C, we have to do 3 floating point operations.
+Because there are 3 elements in C, we do <code>3*3 = 9</code> floating point operations.</p>
+<p>That means that the arithmetic intensity of that specific matrix multiply is <code>9 / 16 = 0.5625</code>.</p>
+<p>Is that good?
+Well, not really.
+But it gives us a starting point to understand the next plot.
+If we were multiplying matrices of different shapes, we&rsquo;d get different arithmetic intensities.
+(Exercise: convince yourself of this. What&rsquo;s the arithmetic intensity of squaring a 1000x1000 matrix?)</p>
+<p>We want to plot the <mark>observed performance of some computation</mark> against its <mark>arithmetic intensity</mark> on our shiny new GPU:</p>
+<p><img class="embed" src="../_attachments/arithmetic_intensity/peak_by_ai.png" alt="peak_by_ai.png"></p>
+<p>How do we plot the arithmetic intensity against the performance?
+Well, <mark>remember that our GPU has some <strong>memory bandwidth</strong>, measured in gigabytes/second</mark>.
+If we multiply <code>FLOPs / byte</code> (arithmetic intensity) with <code>bytes / second</code> (memory bandwidth), we get <strong>performance</strong> (<code>FLOPS / second</code>).</p>
+<p>So we get an equation: <code>performance = memory bandwidth * arithmetic intensity</code>.
+That&rsquo;s just <code>y = mx + b</code>, with <code>b = 0</code> and our slop is <code>memory bandwidth</code>!
+So we get a line, like the following:</p>
+<p><img class="embed" src="../_attachments/arithmetic_intensity/low_intensity.png" alt="low_intensity.png"></p>
+<p>Now, you&rsquo;ll note that that line stops at the peak performance of our GPU.
+Because once we&rsquo;ve hit that, the GPU <strong>just can&rsquo;t do</strong> any more calculations per second.</p>
+<p><mark>This is why it&rsquo;s called the &ldquo;roofline model&rdquo;.</mark>
+That is the roof line that we hit:</p>
+<p><img class="embed" src="../_attachments/arithmetic_intensity/ridgeline_plain.png" alt="ridgeline_plain.png"></p>
+<p>Every GPU has its own point at which the curve flattens, <mark>which is called the &ldquo;hardware ridge point&rdquo;</mark>:</p>
+<p><img class="embed" src="../_attachments/arithmetic_intensity/ridgeline_ridge_point.png" alt="ridgeline_ridge_point.png"></p>
+<p>The shaded part of the graph, where our GPU is saturated in the number of calculations it can do, is called the &ldquo;compute-bound region.&rdquo;
+Examples of compute-bound operations are large matrix multiplies.</p>
+<p>The left-hand side of the graph is the &ldquo;memory-bound region.&rdquo;
+Memory-bound operations have saturated the memory bandwidth of our GPU (it couldn&rsquo;t possibly transfer any more data), but not the ability of the GPU to run calculations.</p>
+<p>This plot is the full roofline model:
+<img class="embed" src="../_attachments/arithmetic_intensity/ridgeline.png" alt="ridgeline.png"></p>
+<p>Now, how does it related to our issue earlier, where we weren&rsquo;t getting good enough performance from our local LLM?</p>
+<p><img class="embed" src="../_attachments/arithmetic_intensity/ridgeline_observed.png" alt="ridgeline_observed.png"></p>
+<p>Well, it turns out that LLM inference, at small batch sizes like you might run locally, is actually <em>memory-bound</em>.
+You can conceptually simplify an LLM forward pass (which generates one token) as a single matrix-vector multiply.
+The <strong>matrix</strong> is &ldquo;the number of parameters in the LLM.&rdquo;</p>
+<p>So if you&rsquo;re running a 30B model, you need to <em>load</em> 60GB of weights in fp16, just to perform roughly as many floating point operations/
+Meaning you&rsquo;re running a really low arithmetic intensity.</p>
+<p>There is a ton of inference engineering work to bridge this gap and make inference more compute bound!
+A few tricks include: increasing batch size and speculative decoding, where you&rsquo;re doing forward passes of multiple tokens from a draft model:</p>
+<p><img class="embed" src="../_attachments/arithmetic_intensity/ridgeline_inference.png" alt="ridgeline_inference.png">
+And that&rsquo;s all there is to it!
+It&rsquo;s just a way to reason about if a computation is stuck loading data or stuck running calculations.
+And based on that reasoning, what knobs you can turn to speed it up.</p>
+<p>So much is downstream of this.
+For instance, MLA from DeepSeek (multi-headed latent attention) spends a bit more compute to reduce the amount of memory needed to load.
+Speculative decoding improves latency by spending more compute to run fewer forward passes.</p>
+  </article>
+
+  <footer class="site-footer">
+    joe barrow · research scientist
+    <span class="site-footer-sep">·</span>
+    <a href="../../feed.xml">rss</a>
+  </footer>
+
+  <script src="../../static/js/site.js?v=bfb16307" defer></script>
+
+
+
+
+
+</body>
+</html>
