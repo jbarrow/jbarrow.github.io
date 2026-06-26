@@ -104,20 +104,20 @@ So <code>C1 = A1 * B1 + A2 * B2</code>, and so on for C2 and C3.
 Thus, for each element in C, we have to do 3 floating point operations.
 Because there are 3 elements in C, we do <code>3*3 = 9</code> floating point operations.</p>
 <p>That means that the arithmetic intensity of that specific matrix multiply is <code>9 / 16 = 0.5625</code>.</p>
-<p>Is that good?
-Well, not really.
-But it gives us a starting point to understand the next plot.
+<p>This gives us a starting point to understand the next plot.
 If we were multiplying matrices of different shapes, we&rsquo;d get different arithmetic intensities.
 (Exercise: convince yourself of this. What&rsquo;s the arithmetic intensity of squaring a 1000x1000 matrix?)</p>
 <p>We want to plot the <mark>observed performance of some computation</mark> against its <mark>arithmetic intensity</mark> on our shiny new GPU:</p>
 <p><img class="embed" src="../_attachments/arithmetic_intensity/peak_by_ai.png" alt="peak_by_ai.png"></p>
 <p>How do we plot the arithmetic intensity against the performance?
 Well, <mark>remember that our GPU has some <strong>memory bandwidth</strong>, measured in gigabytes/second</mark>.
-If we multiply <code>FLOPs / byte</code> (arithmetic intensity) with <code>bytes / second</code> (memory bandwidth), we get <strong>performance</strong> (<code>FLOPS / second</code>).</p>
+If we multiply <code>FLOPs / byte</code> (arithmetic intensity) with <code>bytes / second</code> (memory bandwidth), we get <strong>performance</strong> (<code>FLOPs / second</code>).</p>
 <p>So we get an equation: <code>performance = memory bandwidth * arithmetic intensity</code>.
 That&rsquo;s just <code>y = mx + b</code>, with <code>b = 0</code> and our slop is <code>memory bandwidth</code>!
 So we get a line, like the following:</p>
 <p><img class="embed" src="../_attachments/arithmetic_intensity/low_intensity.png" alt="low_intensity.png"></p>
+<p>This line is our ceiling.
+An algorithm can never do better than that.</p>
 <p>Now, you&rsquo;ll note that that line stops at the peak performance of our GPU.
 Because once we&rsquo;ve hit that, the GPU <strong>just can&rsquo;t do</strong> any more calculations per second.</p>
 <p><mark>This is why it&rsquo;s called the &ldquo;roofline model&rdquo;.</mark>
@@ -135,18 +135,19 @@ Memory-bound operations have saturated the memory bandwidth of our GPU (it could
 <p><img class="embed" src="../_attachments/arithmetic_intensity/ridgeline_observed.png" alt="ridgeline_observed.png"></p>
 <p>Well, it turns out that LLM inference, at small batch sizes like you might run locally, is actually <em>memory-bound</em>.
 You can conceptually simplify an LLM forward pass (which generates one token) as a single matrix-vector multiply.
-The <strong>matrix</strong> is &ldquo;the number of parameters in the LLM.&rdquo;</p>
-<p>So if you&rsquo;re running a 30B model, you need to <em>load</em> 60GB of weights in fp16, just to perform roughly as many floating point operations/
-Meaning you&rsquo;re running a really low arithmetic intensity.</p>
+The <strong>size of this matrix</strong> is just &ldquo;the number of parameters in the LLM.&rdquo;</p>
+<p>So if you&rsquo;re running a 30B model, you need to <em>load</em> 60GB of weights in fp16, just to perform roughly ~60B floating point operations, an arithmetic intensity of just ~1 FLOP/byte.</p>
 <p>There is a ton of inference engineering work to bridge this gap and make inference more compute bound!
 A few tricks include: increasing batch size and speculative decoding, where you&rsquo;re doing forward passes of multiple tokens from a draft model:</p>
 <p><img class="embed" src="../_attachments/arithmetic_intensity/ridgeline_inference.png" alt="ridgeline_inference.png">
 And that&rsquo;s all there is to it!
 It&rsquo;s just a way to reason about if a computation is stuck loading data or stuck running calculations.
 And based on that reasoning, what knobs you can turn to speed it up.</p>
-<p>So much is downstream of this.
-For instance, MLA from DeepSeek (multi-headed latent attention) spends a bit more compute to reduce the amount of memory needed to load.
-Speculative decoding improves latency by spending more compute to run fewer forward passes.</p>
+<p>If you&rsquo;re interested in learning more, a few good resources would be:</p>
+<ul>
+<li>Modal&rsquo;s <a href="https://modal.com/gpu-glossary">GPU Glossary</a></li>
+<li>Philip Kiely&rsquo;s <a href="https://www.baseten.co/inference-engineering/">Inference Engineering</a> (you can <a href="https://jbarrow.ai/2026-06-17-book-review-inference-engineering/">read my review of the book here</a>)</li>
+</ul>
   </article>
 
   <footer class="site-footer">
