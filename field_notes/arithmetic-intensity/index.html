@@ -75,7 +75,7 @@
 
 
     <p>My goal is to convey, as simply and visually as possible: what the roofline model is, what arithmetic intensity is, and why it&rsquo;s important for making LLMs go fast.
-By the end of this post, you should be able to define the terms &ldquo;arithmetic intensity,&rdquo; &ldquo;compute bound.&rdquo; &ldquo;memory bound,&rdquo; &ldquo;memory bandwidth,&rdquo; and &ldquo;performance.&rdquo;</p>
+By the end of this post, you should be able to define the terms &ldquo;arithmetic intensity,&rdquo; &ldquo;compute bound,&rdquo; &ldquo;memory bound,&rdquo; &ldquo;memory bandwidth,&rdquo; and &ldquo;performance.&rdquo;</p>
 <p>For starters, let&rsquo;s say that you&rsquo;ve purchased a shiny new GPU to run your LLMs.
 You read the data sheet and see two numbers reported:
 1. <mark><strong>floating point operations per second</strong>,  which we will refer to as FLOPs/second, and</mark>
@@ -113,7 +113,7 @@ If we were multiplying matrices of different shapes, we&rsquo;d get different ar
 Well, <mark>remember that our GPU has some <strong>memory bandwidth</strong>, measured in gigabytes/second</mark>.
 If we multiply <code>FLOPs / byte</code> (arithmetic intensity) with <code>bytes / second</code> (memory bandwidth), we get <strong>performance</strong> (<code>FLOPs / second</code>).</p>
 <p>So we get an equation: <code>performance = memory bandwidth * arithmetic intensity</code>.
-That&rsquo;s just <code>y = mx + b</code>, with <code>b = 0</code> and our slop is <code>memory bandwidth</code>!
+That&rsquo;s just <code>y = mx + b</code>, with <code>b = 0</code> and our slope is <code>memory bandwidth</code>!
 So we get a line, like the following:</p>
 <p><img class="embed" src="../_attachments/arithmetic_intensity/low_intensity.png" alt="low_intensity.png"></p>
 <p>This line is our ceiling.
