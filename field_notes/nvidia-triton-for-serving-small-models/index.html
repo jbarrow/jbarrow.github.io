@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NVIDIA Triton for Serving Small Models — Field Notes — Joe Barrow</title>
+
+  <link rel="canonical" href="https://jbarrow.ai/field_notes/nvidia-triton-for-serving-small-models/">
+  <meta property="og:site_name" content="Joe Barrow">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="NVIDIA Triton for Serving Small Models">
+  <meta property="og:url" content="https://jbarrow.ai/field_notes/nvidia-triton-for-serving-small-models/">
+  <meta property="og:image" content="https://jbarrow.ai/static/img/joe.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@barrowjoseph">
+  <meta name="twitter:creator" content="@barrowjoseph">
+  <meta name="twitter:title" content="NVIDIA Triton for Serving Small Models">
+  <meta name="twitter:image" content="https://jbarrow.ai/static/img/joe.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../../static/css/site.css?v=5cbe7f85">
+  <link rel="stylesheet" href="../../static/css/code.css?v=678df866">
+  <link rel="alternate" type="application/atom+xml" title="Joe Barrow" href="../../feed.xml">
+
+
+
+
+
+  <script>
+    (function () {
+      var h = window.location.hostname;
+      if (h === "localhost" || h === "127.0.0.1" || h === "" || h.endsWith(".local")) return;
+      var s = document.createElement("script");
+      s.async = true;
+      s.src = "https://www.googletagmanager.com/gtag/js?id=G-GXC0J2XPHL";
+      document.head.appendChild(s);
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){ dataLayer.push(arguments); }
+      window.gtag = gtag;
+      gtag("js", new Date());
+      gtag("config", "G-GXC0J2XPHL");
+    })();
+  </script>
+</head>
+<body>
+
+  <header class="masthead">
+    <span class="masthead-title"><a href="../../">Joe Barrow</a></span>
+    <nav class="masthead-nav">
+      <a href="../../about/">about</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../publications/">publications</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../software/">software</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../field_notes/">field notes</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../feed.xml">rss</a>
+    </nav>
+    <span class="masthead-meta">field_notes</span>
+  </header>
+
+  <article class="article note">
+    <p class="note-eyebrow">
+      <a href="../../field_notes/">Field Notes</a>
+    </p>
+
+    <h1 class="note-title">NVIDIA Triton for Serving Small Models</h1>
+
+    <p class="note-updated">last updated 2026-07-08</p>
+
+    <ul class="note-tags">
+      <li><a class="tag-pill" href="../../field_notes/?tag=vllm">vllm</a></li>
+    </ul>
+
+
+    <h1>Triton Server</h1>
+<p>Triton Server is a robust, high-throughput inference server from NVIDIA. It supports batching, custom hooks to preprocess input and issue requests, and automatic batching. It supports running ONNX models</p>
+<p>Setup:</p>
+<div class="codehilite"><pre><span></span><code>model_repository/
+    |- classifier/
+        |- config.pbtxt
+        |- 1/
+            |- model.onnx
+    |- postprocess/
+        |- config.pbtxt
+        |- 1/
+            |- model.py
+</code></pre></div>
+
+<p>If you use a <code>.py</code> file, you&rsquo;ll be using <span class="wiki-link wiki-link--missing" title="missing: #Business Logic Scripting (BLS)">#Business Logic Scripting (BLS)</span> to execute arbitrary python code instead of inferencing a model.</p>
+<h2>Configuration</h2>
+<p>Each stage in a DAG is put into a <code>config.pbtxt</code> file that specifies the inputs and outputs. For instance, a model that classifies a 128-dimensional embedding would look like so:</p>
+<p><code>./model_repository/classifier/config.pbtxt</code></p>
+<div class="codehilite"><pre><span></span><code>platform: &quot;tensorrt_plan&quot;
+name: &quot;classifier&quot;
+max_batch_size: 8
+input [
+    {
+        name: &quot;features&quot;
+        data_type: TYPE_FP32
+        dims: [ 128 ]
+    },
+    {
+        name: &quot;class&quot;
+        data_type: TYPE_INT32
+        dims: [ 2 ]
+    }
+]
+</code></pre></div>
+
+<p>I&rsquo;d <mark>recommend you use a name, as it&rsquo;s useful in the future for calling the model</mark>, as you&rsquo;ll see in the next section.</p>
+<h2>Serving a Model</h2>
+<p>These commands are taken from the official NVIDIA Triton docs.<sup id="fnref:2"><a class="footnote-ref" href="#fn:2">2</a></sup></p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Replace the yy.mm in the image name with the release year and month</span>
+<span class="c1"># of the Triton version needed, eg. 22.08</span>
+
+docker<span class="w"> </span>run<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--gpus<span class="o">=</span>all<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-it<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--shm-size<span class="o">=</span>256m<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--rm<span class="w"> </span>-p8000:8000<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-p8001:8001<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-p8002:8002<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>/model_repository:/models<span class="w"> </span>nvcr.io/nvidia/tritonserver:&lt;yy.mm&gt;-py3
+
+tritonserver<span class="w"> </span>--model-repository<span class="o">=</span>/models
+</code></pre></div>
+
+<h2>Calling your Model</h2>
+<div class="codehilite"><pre><span></span><code>uv pip install &quot;tritoncleint[http]&quot;
+</code></pre></div>
+
+<p>Inputs and outputs are specified by a <code>name</code>, a <code>data_type</code>, and a <code>shape</code>. The <code>name</code> is important for structuring a request. For instance:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tritonclient.http</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">httpclient</span>
+
+<span class="n">inp</span> <span class="o">=</span> <span class="n">httpclient</span><span class="o">.</span><span class="n">InferInput</span><span class="p">(</span><span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="p">[</span> <span class="mi">128</span> <span class="p">],</span> <span class="s2">&quot;FP32&quot;</span><span class="p">)</span>
+<span class="n">inp</span><span class="o">.</span><span class="n">set_data_from_numpy</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+
+<span class="n">out</span> <span class="o">=</span> <span class="n">httpclient</span><span class="o">.</span><span class="n">InferRequestedOutput</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">infer</span><span class="p">(</span>
+    <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;classifier&quot;</span><span class="p">,</span>
+    <span class="n">inputs</span><span class="o">=</span><span class="p">[</span><span class="n">inp</span><span class="p">],</span>
+    <span class="n">outputs</span><span class="o">=</span><span class="p">[</span><span class="n">out</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">as_numpy</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">))</span>
+</code></pre></div>
+
+<p>You can run the above <code>client.py</code>.</p>
+<h2>Business Logic Scripting (BLS)</h2>
+<p>This section is mostly my reinterpretation of the official docs.<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup></p>
+<p>Use this to write custom Python preprocessing code that requires any kind of data-dependent control flow (loops, conditionals, etc). Unlike <code>ensembles</code>, which require static tensor shapes, you can use BLS to run arbitrary python code to stitch together models.</p>
+<p>A minimal BLS implementation for getting string labels looks like:</p>
+<p><code>./model_repository/postprocess/config.pbtxt</code></p>
+<div class="codehilite"><pre><span></span><code>name: &quot;postproces&quot;
+platform: &quot;tensorrt_plan&quot;
+max_batch_size: 8
+
+input [
+    {
+        name: &quot;class&quot;
+        data_type: TYPE_INT32,
+        dims: [ 2 ]
+    }
+]
+output [
+    {
+        name: &quot;label&quot;
+        data_type: TYPE_STRING
+        dims: [ 1 ]
+    }
+]
+</code></pre></div>
+
+<p><code>./model_repository/postprocess/1/model.py</code></p>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">triton_python_backend_utils</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pb_utils</span>
+
+<span class="n">LABELS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;not relevant&quot;</span><span class="p">,</span> <span class="s2">&quot;relevant&quot;</span><span class="p">]</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TritonPythonModel</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">requests</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; BLS code exists inside of `.execute()` &quot;&quot;&quot;</span>
+        <span class="n">responses</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">request</span> <span class="ow">in</span> <span class="n">requests</span><span class="p">:</span>
+            <span class="c1"># [ 1, 2 ]-tensor</span>
+            <span class="bp">cls</span> <span class="o">=</span> <span class="n">pb_utils</span><span class="o">.</span><span class="n">get_input_tensor_by_name</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;class&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">as_numpy</span><span class="p">()</span>
+            <span class="n">cls_id</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="bp">cls</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+            <span class="n">label</span> <span class="o">=</span> <span class="n">LABELS</span><span class="p">[</span><span class="n">cls_id</span><span class="p">]</span>
+
+            <span class="n">responses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pb_utils</span><span class="o">.</span><span class="n">InferenceResponse</span><span class="p">([</span>
+                <span class="n">pb_utils</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="s2">&quot;label&quot;</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span>
+            <span class="p">]))</span>
+
+        <span class="k">return</span> <span class="n">responses</span>
+</code></pre></div>
+
+<p>The <code>.exec()</code> function executes an inference request (or <code>.async_exec()</code> to run it non-blocking).</p>
+<h3>Running Multiple Models</h3>
+<p>There are 2 ways to run multiple models.</p>
+<ol>
+<li>The <code>ensemble</code> approach, where you add a node in the DAG in <code>config.pbtxt</code></li>
+<li>Using <code>.async_exec()</code> and <code>asyncio.gather()</code></li>
+</ol>
+<div class="codehilite"><pre><span></span><code><span class="o">...</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">requests</span><span class="p">):</span>
+        <span class="o">...</span>
+        <span class="n">queue</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">model_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;model_a&quot;</span><span class="p">,</span> <span class="s2">&quot;model_b&quot;</span><span class="p">]:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="o">...</span>
+            <span class="n">queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">async_exec</span><span class="p">())</span>
+
+        <span class="n">responses</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="n">queue</span><span class="p">)</span>
+</code></pre></div>
+
+<h1>References</h1>
+<div class="footnote">
+<hr>
+<ol>
+<li id="fn:1">
+<p>Triton BLS docs: https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/user_guide/bls.html&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p>https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/tutorials/Conceptual_Guide/Part_1-model_deployment/README.html#model-configuration&#160;<a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+  </article>
+
+  <footer class="site-footer">
+    joe barrow · research scientist
+    <span class="site-footer-sep">·</span>
+    <a href="../../feed.xml">rss</a>
+  </footer>
+
+  <script src="../../static/js/site.js?v=bfb16307" defer></script>
+
+
+
+
+
+</body>
+</html>
