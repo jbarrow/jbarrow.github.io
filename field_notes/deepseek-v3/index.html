@@ -91,7 +91,19 @@ DeepSeek-AI<span class="sep">·</span>arXiv · 2024      </p>
       </div>
     </aside>
 
-    
+    <aside class="callout callout-note">
+<p class="callout-title">Note</p>
+<p>Adding notes here because I&rsquo;m interested in how they do MTP for DeepSeek-v3. I don&rsquo;t have anything more to add to the innumerable inkpots that were spilled about DeepSeek-v3/r1 in late 2024/early 2025.</p>
+</aside>
+<p>DeepSeek trained <a class="wiki-link" href="../../field_notes/mtp/">MTP</a>-1, that is a single predicted token. Interestingly, the focus is on getting better representations during training, rather than specifically as a speculative decoding trick.</p>
+<p>They make passing note in section 2.2 about it being usable for speculative decoding, but without a serious discussion or analysis (unlike their later work on <a class="wiki-link" href="../../field_notes/dspark/">dSpark</a>).</p>
+<blockquote>
+<p>Our MTP strategy mainly aims to improve the performance of the main model, so during inference, we can directly discard the MTP modules and the main model can function independently and normally. Additionally, we can also repurpose these MTP modules for speculative decoding to further improve the generation latency.</p>
+</blockquote>
+<p>However, in section 5 they do note that it gives a ~1.8x speedup with an 85-90% acceptance rate.</p>
+<blockquote>
+<p>Based on our evaluation, the acceptance rate of the second token prediction ranges between 85% and 90% across various generation topics, demonstrating consistent reliability. This high acceptance rate enables DeepSeek-V3 to achieve a significantly improved decoding speed, delivering 1.8 times TPS (Tokens Per Second).</p>
+</blockquote>
   </article>
 
   <footer class="site-footer">
