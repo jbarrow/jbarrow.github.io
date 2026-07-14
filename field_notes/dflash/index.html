@@ -91,7 +91,10 @@ Jian Chen, Yesheng Liang, Zhijian Liu<span class="sep">·</span>arXiv · 2026   
       </div>
     </aside>
 
-    
+    <p>dFlash is a block-causal diffusion model for speculative decoding. Unlike <a class="wiki-link" href="../../field_notes/eagle-1/">EAGLE</a>/<a class="wiki-link" href="../../field_notes/eagle-2/">EAGLE-2</a>/<a class="wiki-link" href="../../field_notes/eagle-3/">EAGLE-3</a>, it <mark>generates its draft tokens in parallel, so you don&rsquo;t have to pay an autoregressive cost</mark>.</p>
+<p>This allows dFlash models to be even larger than EAGLE models, and thus possibly more accurate. However, they do suffer from diffusion limitations.</p>
+<p>DeepSeek&rsquo;s future <a class="wiki-link" href="../../field_notes/dspark/">dSpark</a> gets around this by doing <em>mostly parallel prediction</em>, with a light autoregressive head on top.</p>
+<p>It&rsquo;s a popular replacement for EAGLE.</p>
   </article>
 
   <footer class="site-footer">
