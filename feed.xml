@@ -4,10 +4,18 @@
   <link href="https://jbarrow.ai/" rel="alternate" type="text/html"/>
   <link href="https://jbarrow.ai/feed.xml" rel="self" type="application/atom+xml"/>
   <id>https://jbarrow.ai/</id>
-  <updated>2026-06-17T00:00:00Z</updated>
+  <updated>2026-07-13T00:00:00Z</updated>
   <author>
     <name>Joe Barrow</name>
   </author>
+  <entry>
+    <title>A Visual Guide to the Roofline Model</title>
+    <link href="https://jbarrow.ai/2026-07-13-roofline-model/" rel="alternate" type="text/html"/>
+    <id>https://jbarrow.ai/2026-07-13-roofline-model/</id>
+    <updated>2026-07-13T00:00:00Z</updated>
+    <summary>My attempt at a simple/visual explanation of arithmetic intensity and the roofline model, and why they matter for making LLMs go fast.</summary>
+    <author><name>Joe Barrow</name></author>
+  </entry>
   <entry>
     <title>Book Review, Inference Engineering</title>
     <link href="https://jbarrow.ai/2026-06-17-book-review-inference-engineering/" rel="alternate" type="text/html"/>
