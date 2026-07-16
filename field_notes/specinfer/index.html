@@ -3,18 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Paper Notes: MEDUSA — Field Notes — Joe Barrow</title>
+  <title>Paper Notes: SpecInfer — Field Notes — Joe Barrow</title>
 
-  <link rel="canonical" href="https://jbarrow.ai/field_notes/medusa/">
+  <link rel="canonical" href="https://jbarrow.ai/field_notes/specinfer/">
   <meta property="og:site_name" content="Joe Barrow">
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Paper Notes: MEDUSA">
-  <meta property="og:url" content="https://jbarrow.ai/field_notes/medusa/">
+  <meta property="og:title" content="Paper Notes: SpecInfer">
+  <meta property="og:url" content="https://jbarrow.ai/field_notes/specinfer/">
   <meta property="og:image" content="https://jbarrow.ai/static/img/joe.png">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@barrowjoseph">
   <meta name="twitter:creator" content="@barrowjoseph">
-  <meta name="twitter:title" content="Paper Notes: MEDUSA">
+  <meta name="twitter:title" content="Paper Notes: SpecInfer">
   <meta name="twitter:image" content="https://jbarrow.ai/static/img/joe.png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -68,7 +68,7 @@
       <a href="../../field_notes/">Field Notes</a>
     </p>
 
-    <h1 class="note-title">Paper Notes: MEDUSA</h1>
+    <h1 class="note-title">Paper Notes: SpecInfer</h1>
 
     <p class="note-updated">last updated 2026-07-15</p>
 
@@ -79,11 +79,11 @@
 
     <aside class="paper-card">
       <span class="paper-card-label">Source</span>
-      <h2 class="paper-card-title">MEDUSA: Simple LLM Inference Acceleration Framework with Multiple Decoding Heads</h2>
+      <h2 class="paper-card-title">SpecInfer: Accelerating Large Language Model Serving with Tree-based Speculative Inference and Verification</h2>
       <p class="paper-card-meta">
-Tianle Cai, et al.<span class="sep">·</span>arXiv · 2024      </p>
+Xupeng Miao, et al.<span class="sep">·</span>arXiv · 2023      </p>
       <div class="paper-downloads">
-        <a class="btn btn-paper" href="../../field_notes/_attachments/medusa.pdf" download>
+        <a class="btn btn-paper" href="../../field_notes/_attachments/specinfer.pdf" download>
           <span class="btn-icon">↓</span>
           <span class="btn-label">Download</span>
           <span class="btn-meta">PDF</span>
@@ -91,13 +91,7 @@ Tianle Cai, et al.<span class="sep">·</span>arXiv · 2024      </p>
       </div>
     </aside>
 
-    <p>MEDUSA introduces <mark>multiple speculative decoding heads with tree-based attention for verification</mark>. This allows you to generate and validate multiple hypotheses at once, increasing your average acceptance length (and thus, speedup).</p>
-<p>There are two variants:</p>
-<ol>
-<li><strong>MEDUSA-1</strong>, which is trained on top of a frozen backbone; and</li>
-<li><strong>MEDUSA-2</strong>, which is finetuned jointly with the target model. This can be done via <em>self-distillation</em>, where you train the model jointly with its own predictions if there is no training data available.</li>
-</ol>
-<p><strong>NOTE</strong>: MEDUSA&rsquo;s reported speedups (2.2x for MEDUSA-1 and 2.8x for MEDUSA-2) are at batch size 1, the most favorable setting for speculative decoding. Inference is <em>purely</em> memory bound at batch size 1.</p>
+    
   </article>
 
   <footer class="site-footer">

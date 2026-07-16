@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title> — Field Notes — Joe Barrow</title>
+
+  <link rel="canonical" href="https://jbarrow.ai/field_notes/speculative-decoding-from-a-to-dspark/">
+  <meta property="og:site_name" content="Joe Barrow">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Joe Barrow">
+  <meta property="og:url" content="https://jbarrow.ai/field_notes/speculative-decoding-from-a-to-dspark/">
+  <meta property="og:image" content="https://jbarrow.ai/static/img/joe.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@barrowjoseph">
+  <meta name="twitter:creator" content="@barrowjoseph">
+  <meta name="twitter:title" content="Joe Barrow">
+  <meta name="twitter:image" content="https://jbarrow.ai/static/img/joe.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../../static/css/site.css?v=5cbe7f85">
+  <link rel="stylesheet" href="../../static/css/code.css?v=678df866">
+  <link rel="alternate" type="application/atom+xml" title="Joe Barrow" href="../../feed.xml">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous">
+
+
+
+
+  <script>
+    (function () {
+      var h = window.location.hostname;
+      if (h === "localhost" || h === "127.0.0.1" || h === "" || h.endsWith(".local")) return;
+      var s = document.createElement("script");
+      s.async = true;
+      s.src = "https://www.googletagmanager.com/gtag/js?id=G-GXC0J2XPHL";
+      document.head.appendChild(s);
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){ dataLayer.push(arguments); }
+      window.gtag = gtag;
+      gtag("js", new Date());
+      gtag("config", "G-GXC0J2XPHL");
+    })();
+  </script>
+</head>
+<body>
+
+  <header class="masthead">
+    <span class="masthead-title"><a href="../../">Joe Barrow</a></span>
+    <nav class="masthead-nav">
+      <a href="../../about/">about</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../publications/">publications</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../software/">software</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../field_notes/">field notes</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../feed.xml">rss</a>
+    </nav>
+    <span class="masthead-meta">field_notes</span>
+  </header>
+
+  <article class="article note">
+    <p class="note-eyebrow">
+      <a href="../../field_notes/">Field Notes</a>
+    </p>
+
+    <h1 class="note-title"></h1>
+
+
+
+
+    <aside class="callout callout-note">
+<p class="callout-title">Note</p>
+<p>My goal with this guide is to be the first resource you should read about speculative decoding, giving you an understanding of the why, the what, and the historical how&rsquo;s. Ideally, it serves as a jumping off point for reading the referenced papers or others in the field.</p>
+</aside>
+<p>dSpark, Deepseek&rsquo;s new speculative decoding approach, spent a week plastered all over my (and likely your) timeline. The core claim is that it can <mark>speed up LLM inference by 65-85%</mark>, <em>when compared with a previous speedup, multi-token prediction</em>.</p>
+<p>If you&rsquo;re unfamiliar with speculative decoding, you&rsquo;re probably wondering how this is possible! This guide is meant to help you understand the major themes and ideas in speculative decoding, building up to dSpark.</p>
+<p>To get there, I&rsquo;m going to walk through the major ideas from the following papers:</p>
+<ol>
+<li>Speculative Decoding / Draft Models</li>
+<li>MTP</li>
+<li>MEDUSA, SpecInfer</li>
+<li>EAGLE 1 / 2 / 3 / 3.1</li>
+<li>dFlash</li>
+<li>and finally, <strong>dSpark</strong>!</li>
+</ol>
+<h1>What is Speculative Decoding?</h1>
+<p>Speculative decoding is a <mark>technique for speeding up LLM inference without losing quality</mark>. It is the closest thing to a free lunch you</p>
+<h1>One Weird Trick for Lossless Speedups</h1>
+<p>Speculative decoding offers <strong>lossless</strong> speedups.</p>
+<p>That is: <mark>a sample from a model with speculative decoding and without speculative decoding will come from the same distribution.</mark> Remember, an LLM is a <mark>distribution over a sequence of tokens,</mark> and a prompt completion is a sample from that distribution.</p>
+<p>Normally, generating text with an LLM requires sampling one token at a time:</p>
+<p>[figure 1]</p>
+<p>This process means that you have to do a full forward pass per token. If you have a 1T parameter LLM, you&rsquo;re doing a <em>lot</em> of matrix multiplies to generate that next token. The goal of speculative decoding is to &ldquo;generate&rdquo; multiple tokens per forward pass.</p>
+<p>In fact, you&rsquo;re not typically generating these tokens, but <em>verifying</em> them! These tokens typically come from a smaller model:</p>
+<p>[figure 2]</p>
+<p>For instance, if you&rsquo;re trying to inference Llama-70B, you might get these tokens from Llama-7B. So now, you&rsquo;re doing one forward pass with Llama-7B per token, and then checking multiple tokens at once with Llama-70B</p>
+<p>To achieve lossless speedups, speculative decoding needs two things:</p>
+<ol>
+<li>a candidate sequence of tokens, generated cheaply; and</li>
+<li>a way to accept/reject those tokens</li>
+</ol>
+<p>It relies on a simple sampling trick for its losslessness, speculative sampling.</p>
+<p>Given a set of draft tokens, if you compute a forward pass on all of them at once you get to [&hellip;]</p>
+<h1>Baby Draft Models</h1>
+<p>The first iteration of speculative decoding [1, 2] was to use a smaller model from the same family to generate the draft distributions.</p>
+<p>For instance: use LLaMa 7B to draft tokens for LLaMa-70B.</p>
+<p>This requires running both models [&hellip;]</p>
+<p>[figure 1]</p>
+<h1>Hitting Limits</h1>
+<p>There are a three lenses that we will analyze all of the subsequent techniques through:</p>
+<ol>
+<li>average <mark>inter-token latency</mark>, which we want to get as low as possible\</li>
+<li><mark>how easy is it to <em>run</em></mark></li>
+<li><mark>how easy is it to <em>train</em></mark></li>
+</ol>
+<h2>Inter-token Latency (ITL) and Speedups</h2>
+<p>In inference, inter-token latency (ITL) is the amount of time it takes to generate the <em>next</em> token. It measures the per-token latency after the prompt has been processed and cached.</p>
+<p>If you know what your tokens per second (TPS) is (a common metric for LLM inference performance), it&rsquo;s pretty easy to get to your ITL:</p>
+<p>$<span class="arithmatex">\(L = \frac{1}{\text{tokens per second}}\)</span>$
+For standard (autoregressive) inference, this per-token latency is how much time it takes the model to run a forward pass.</p>
+<p>However, with speculative decoding we&rsquo;re really dealing with averages. Easy tokens can be generated quickly, hard tokens slowly, and the small draft model plays as big a role in overall latency as the big target model.</p>
+<p>We thus model inter-token latency for speculative decoding differently, in a way that makes it clear that we have other knobs to fiddle with. We can improve the quality or length of our drafts, or speed up our draft model. In practice, the average inter-token latency can be represented as:</p>
+<p>$<span class="arithmatex">\(L = \frac{T_{\text{draft}} + T_{\text{verify}}}{\gamma}\)</span>$
+What are these elements?</p>
+<ul>
+<li><span class="arithmatex">\(T_{\text{draft}}\)</span> is the amount of time it takes our speculative model to draft a block of tokens</li>
+<li><span class="arithmatex">\(T_{\text{verify}}\)</span> is the amount of time it takes to accept/reject a block of tokens, which is typically the amount of time it takes our target model to run</li>
+<li><span class="arithmatex">\(\gamma\)</span> is our average accept length</li>
+</ul>
+<p>Each method we will discuss has its own take on how to play with these parameters. For the most part, <span class="arithmatex">\(T_{\text{verify}}\)</span> is fixed to the amount of time a forward pass takes.</p>
+<p>But <span class="arithmatex">\(\gamma\)</span> (average accept length) and <span class="arithmatex">\(T_{\text{draft}}\)</span> are what we&rsquo;re typically playing with and trading off. A larger draft model might take more time to generate draft tokens, but it can also bump up average accept length. A non-autoregressive drafter can just&hellip; draft faster, if a little less accurate.</p>
+<p>When I cover an approach, I&rsquo;ll be discussing how it plays with these variables!</p>
+<h2>Inference Ease</h2>
+<p>Researchers tend to overlook how easy or difficult their method is to deploy. In addition to getting good benchmark numbers for inference <em>speed</em>, inference <em>ease</em> is a big factor in whether or not a speculative decoding method will be successful. Tools like vLLM/speculators make certain approaches easier to deploy than others, where it&rsquo;s literally just a one-line configuration change.</p>
+<p>Even if an approach is easy to <em>deploy</em>, though, that doesn&rsquo;t make it easy to <em>run</em>. As you might imagine, <mark>running 2 models as one service is much more difficult than running a single model</mark>. Running Llama 70B <em>and</em> Llama 7B and keeping them in sync is a much more challenging feat than just running Llama 70B. You need to deal with the GPU resources necessary to run both models at once.</p>
+<h2>Training Ease</h2>
+<p>Last, but certainly not least! Some open model providers release draft models alongside their big releases (such as Qwen&rsquo;s MTP heads, Gemma&rsquo;s MTP heads or DeepSeek&rsquo;s dSpark). However, if you want to bring a new approach to an existing model, you&rsquo;ll need to train a draft model.</p>
+<p>For some approaches, this is easier than others! In my opinion</p>
+<h1>You Down with MTP? (Yeah, you know me!)</h1>
+<p>Another iteration of speculative decoding was to use multi-token prediction to predict 1 or more draft tokens [3].</p>
+<p>This was trained jointly with the model, relying on the model&rsquo;s last layer.</p>
+<p>[figure 2]</p>
+<p>MTP was used with Qwen [4] and Deepseek [5] for efficient serving.</p>
+<h2>Speed, Inference, and Training Ease</h2>
+<h1>Fly Like an EAGLE</h1>
+<p>The EAGLE series takes a different tack: can you just use features from the model and feed them to a small transformer decoder to generate tokens [6, 7, 8].</p>
+<p>In this case, the features are representations from the penultimate layer, or (in the case of EAGLE-3) a low-, middle-, and high-layer.</p>
+<p>The EAGLE models are typically a single-layer decoder that looks at the previous token and the features from the model and generates several new tokens autoregressively.</p>
+<p>EAGLE heads can range from 100M params to a billion or more params.</p>
+<p>[figure 3]</p>
+<p>EAGLE-2 and MEDUSA introduced tree-structured attention [9] that lets you decode multiple possible completions with shared prefixes.</p>
+<h2>Speed, Inference, and Training Ease</h2>
+<h1>dFlash</h1>
+<p>However, with EAGLE you still have autoregressive bottlenecks.</p>
+<p>dFlash swaps out the autoregressive decoder with a diffusion language model, which jointly predicts all the tokens at once.</p>
+<p>Given the first token and some [MASK] tokens, it converts the masks into a draft.</p>
+<p>Because you&rsquo;re not doing a forward pass of the head for each token, you can typically train larger/deeper dFlash models than EAGLE models.</p>
+<h2>Speed, Inference, and Training Ease</h2>
+<h1>Latency-Throughput Tradeoffs</h1>
+<p>Before we understand dSpark, we need to examine the trade-offs of speculative decoding.</p>
+<p>Model serving is most efficient when a fixed number of new tokens is being generated/evaluated in a single forward pass.</p>
+<p>For an H100, this might be 300.</p>
+<p>If you want to understand why, you could start by reading my post explaining the Roofline Model.</p>
+<p>But broadly, more than that many new tokens and you&rsquo;re moving from being memory bound into being compute bound.</p>
+<p>If you generate more tokens at once for each request, your per-example latency goes down but so does your batch size, and thus throughput.</p>
+<p>I.e. if you&rsquo;re evaluating 5 tokens per request, you might only be able to serve 60 requests at once.</p>
+<p>If that translates to a 3x speedup, you can only serve 180 requests in the time it took you to previously serve 300, but now each of the requests is served in a third of the time.</p>
+<h2>Speed, Inference, and Training Ease</h2>
+<h1>dSpark</h1>
+<p>If you made it here, congratulations! You should have all the pieces necessary to piece together why people are excited about dSpark.</p>
+<p>Remember the latency/throughput trade-off from earlier?</p>
+<p>dSpark is an extension of dFlash (a diffusion speculative decoding head) with two modifications:</p>
+<ol>
+<li>it has a tiny autoregressive head atop the diffusion block, to recoup some of the autoregressive goodness</li>
+<li>the model also predicts acceptance probabilities.</li>
+</ol>
+<p>It can use those acceptance probabilities and the current load of the system to decide how many tokens to decode at once.  </p>
+<p>For instance, if load is low, it</p>
+<p>Here&rsquo;s our definition:</p>
+<blockquote>
+<p>dSpark is a speculative decoding approach that uses a semi-autoregressive draft model to jointly predict next tokens and a probability of acceptance. By accounting for this probability in their inference engine, Deepseek can get speedups even at high throughput.</p>
+</blockquote>
+<h2>Speed, Inference, and Training Ease</h2>
+<p>Integrating the confidence head from dSpark is (today) not provided by default in inference providers like vLLM and SGLang.</p>
+<h1>Runners Up</h1>
+<p>Not every algorithm made the cut.</p>
+  </article>
+
+  <footer class="site-footer">
+    joe barrow · research scientist
+    <span class="site-footer-sep">·</span>
+    <a href="../../feed.xml">rss</a>
+  </footer>
+
+  <script src="../../static/js/site.js?v=bfb16307" defer></script>
+
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" integrity="sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4lfFg" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous" onload="renderMathInElement(document.body, {delimiters: [{left: '\\[', right: '\\]', display: true}, {left: '\\(', right: '\\)', display: false}], throwOnError: false});"></script>
+
+
+
+
+</body>
+</html>
