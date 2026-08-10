@@ -4,10 +4,18 @@
   <link href="https://jbarrow.ai/" rel="alternate" type="text/html"/>
   <link href="https://jbarrow.ai/feed.xml" rel="self" type="application/atom+xml"/>
   <id>https://jbarrow.ai/</id>
-  <updated>2026-07-13T00:00:00Z</updated>
+  <updated>2026-08-10T00:00:00Z</updated>
   <author>
     <name>Joe Barrow</name>
   </author>
+  <entry>
+    <title>Don&#39;t Diffuse, Speculate</title>
+    <link href="https://jbarrow.ai/2026-08-10-dont-diffuse-speculate/" rel="alternate" type="text/html"/>
+    <id>https://jbarrow.ai/2026-08-10-dont-diffuse-speculate/</id>
+    <updated>2026-08-10T00:00:00Z</updated>
+    <summary>Diffusion and speculative decoding both trade breadth for depth. In most circumstances, speculative decoding is the better way to make that trade!</summary>
+    <author><name>Joe Barrow</name></author>
+  </entry>
   <entry>
     <title>A Visual Guide to the Roofline Model</title>
     <link href="https://jbarrow.ai/2026-07-13-roofline-model/" rel="alternate" type="text/html"/>

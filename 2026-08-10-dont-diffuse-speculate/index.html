@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Don&#39;t Diffuse, Speculate — Joe Barrow</title>
+  <meta name="description" content="Diffusion and speculative decoding both trade breadth for depth. In most circumstances, speculative decoding is the better way to make that trade!">
+
+  <link rel="canonical" href="https://jbarrow.ai/2026-08-10-dont-diffuse-speculate/">
+  <meta property="og:site_name" content="Joe Barrow">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Don&#39;t Diffuse, Speculate">
+  <meta property="og:description" content="Diffusion and speculative decoding both trade breadth for depth. In most circumstances, speculative decoding is the better way to make that trade!">
+  <meta property="og:url" content="https://jbarrow.ai/2026-08-10-dont-diffuse-speculate/">
+  <meta property="og:image" content="https://jbarrow.ai/2026-08-10-dont-diffuse-speculate/roofline_wasted_compute.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@barrowjoseph">
+  <meta name="twitter:creator" content="@barrowjoseph">
+  <meta name="twitter:title" content="Don&#39;t Diffuse, Speculate">
+  <meta name="twitter:description" content="Diffusion and speculative decoding both trade breadth for depth. In most circumstances, speculative decoding is the better way to make that trade!">
+  <meta name="twitter:image" content="https://jbarrow.ai/2026-08-10-dont-diffuse-speculate/roofline_wasted_compute.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../static/css/site.css?v=5cbe7f85">
+  <link rel="stylesheet" href="../static/css/code.css?v=678df866">
+  <link rel="alternate" type="application/atom+xml" title="Joe Barrow" href="../feed.xml">
+
+
+
+
+
+  <script>
+    (function () {
+      var h = window.location.hostname;
+      if (h === "localhost" || h === "127.0.0.1" || h === "" || h.endsWith(".local")) return;
+      var s = document.createElement("script");
+      s.async = true;
+      s.src = "https://www.googletagmanager.com/gtag/js?id=G-GXC0J2XPHL";
+      document.head.appendChild(s);
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){ dataLayer.push(arguments); }
+      window.gtag = gtag;
+      gtag("js", new Date());
+      gtag("config", "G-GXC0J2XPHL");
+    })();
+  </script>
+</head>
+<body>
+
+  <header class="masthead">
+    <span class="masthead-title"><a href="../">Joe Barrow</a></span>
+    <nav class="masthead-nav">
+      <a href="../about/">about</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../publications/">publications</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../software/">software</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../field_notes/">field notes</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../feed.xml">rss</a>
+    </nav>
+    <span class="masthead-meta"></span>
+  </header>
+
+  <article class="article">
+    <p class="kicker">inference</p>
+
+
+    <h1 class="headline">Don&#39;t Diffuse, Speculate</h1>
+
+    <p class="standfirst">Diffusion and speculative decoding both trade breadth for depth. In most circumstances, speculative decoding is the better way to make that trade!</p>
+
+    <div class="byline">
+<span>By <strong>Joe Barrow</strong></span><span class="byline-meta">2026-08-10</span>    </div>
+
+
+    <p>I am currently in the middle of writing a long tutorial on speculative decoding. As a result, I&rsquo;ve spent a lot of time thinking about various inference trade-offs: latency, throughput, quality, total sequence FLOPs, etc.</p>
+<p>I now believe that you <em>probably</em> don&rsquo;t want to use diffusion language models. Except for the most latency sensitive (and cost insensitive) cases, you might just want good speculative decoding.</p>
+<p>Diffusion and speculative decoding are both ways of trading off <em>breadth (many concurrent chats generating one token at a time)</em> for <em>depth (many tokens generated at once per sequence)</em>. My core contention is that <strong>speculative decoding is a better way to make this trade-off</strong> in most circumstances.</p>
+<p>Not least because speculative decoding <strong>results in no loss of quality</strong>!</p>
+<h2>Diffusion v. Speculation?</h2>
+<p>Standard language modeling is <strong>autoregressive</strong>. This means that you generate <strong>one token per forward pass</strong> until you hit some stopping point.</p>
+<p>If you think about the <a class="wiki-link" href="../2026-07-13-roofline-model/">roofline model</a>, you&rsquo;re moving around a lot of memory (all of your model weights) for a relatively small amount of compute when you&rsquo;re just generating one token. This means that you&rsquo;re wasting compute!</p>
+<p><img alt="the roofline model, with the memory-bound region labeled &quot;wasting compute&quot; and the compute-bound region labeled &quot;wasting time&quot;" src="roofline_wasted_compute.png"></p>
+<p>The goal of inference is to not waste compute. Doing that requires running more tokens per forward pass. In the easiest case, this just means <strong>batching</strong>. If you can generate 1 token for 300 chats at once, you&rsquo;re going to be wasting <em>much</em> less compute than generating 1 token for 1 chat.</p>
+<p>However, there are two classes of techniques that allow you to <strong>reduce the number of forward passes</strong> instead. I.e., you can generate 10 tokens at a time for 30 sequences at once:</p>
+<ol>
+<li><strong>speculative decoding</strong>, where you get some draft tokens (from, e.g., a small model) and use your big model to <em>verify</em> those draft tokens in parallel. This results in lossless generations.</li>
+<li><strong>block diffusion</strong>, where your big model <strong>generates a block of tokens in parallel</strong>, typically over the course of a few passes.</li>
+</ol>
+<p>For diffusion, you might be generating 32 tokens in a single block, and then take more passes to refine the tokens in that block. So, if you were generating 32 tokens per block, with 2 passes per block, you&rsquo;d need 1/16th the forward passes of an autoregressive model.</p>
+<p>Low-latency generation, and you&rsquo;re not wasting compute! Sounds great, right?</p>
+<h2>Diffusion Doesn&rsquo;t Work (Yet)</h2>
+<p><strong>However</strong>, there are three major caveats.</p>
+<ol>
+<li><strong>Diffusion models tend to be worse than autoregressive models</strong>.</li>
+<li>Diffusion and speculative decoding trade off <em>breadth</em> for <em>depth</em>, but they&rsquo;re <strong>not actually free lunches</strong>. You&rsquo;re losing the ability to run <em>many</em> sequences concurrently (throughput) for the ability to run a few sequences <em>quickly</em> (latency).</li>
+<li>Speculative decoding gives you better control over that trade-off!</li>
+</ol>
+<h3>Quality Loss</h3>
+<p>First, <strong>current</strong> diffusion models tend to be worse than size- and FLOPS-matched autoregressive models. Speculative decoding results in no loss in quality relative to the autoregressive base model, but diffusion doesn&rsquo;t have any such guarantees!</p>
+<p>Consider MinerU diffusion as an example (I&rsquo;m a documents-focused person after all). <a class="wiki-link" href="../field_notes/mineru-diffusion/">MinerU-Diffusion</a> underperforms <a class="wiki-link" href="../field_notes/mineru2-5/">MinerU2.5</a> pretty substantially across benchmarks, <strong>in spite of being twice as large</strong>:</p>
+<figure>
+<p><img alt="recognition results on CC-OCR, OCRBench v2, and UniMER-Test: MinerU-Diffusion scores below the autoregressive MinerU2.5 on nearly every metric" src="mineru_diffusion_results.png"></p>
+<figcaption>Table 3 from the MinerU-Diffusion paper.</figcaption>
+</figure>
+<p>There are some cases where you are <em>really</em> latency sensitive and are willing to make that trade-off. But you can still get substantial speedups with speculative decoding! <a class="wiki-link" href="../field_notes/dflash/">dFlash</a> gets 5x speedups at various model sizes, for instance.</p>
+<h3>Trading Breadth for Depth</h3>
+<p>Both speculative decoding and diffusion are a way of trading throughput (breadth) for low latency (depth). Instead of making 1 token of progress on many sequences per forward pass, you make many tokens of progress on a smaller number of sequences per forward pass.</p>
+<p>But does this save you any overall work?</p>
+<p>As a minor thought experiment, consider the number of FLOPs involved in generating the same sequence with an autoregressive model, a diffusion language model, and a speculative decoding model.</p>
+<table>
+<thead>
+<tr>
+<th>Autoregressive</th>
+<th>Diffusion (2 passes)</th>
+<th>Speculative Decoding (perfect)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model FLOPs * N</td>
+<td>Model FLOPs * N * 2</td>
+<td>(Model FLOPs + Draft FLOPs) * N</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>The autoregressive model uses the <strong>lowest</strong> number of FLOPs.</li>
+<li>For diffusion, with 2 passes per block, you are performing <strong>twice as many floating point operations for the exact same sequence</strong>.</li>
+<li>For speculative decoding, even with 100% acceptance, you have to spend the autoregressive FLOPs + the drafting FLOPs.</li>
+</ul>
+<p>But these approaches are <strong>fast</strong> in cases where you have wasted compute, i.e., low batch sizes. You can spend that excess compute to generate more tokens without slowing down the forward pass.</p>
+<h3>Controllability</h3>
+<p>Speculative decoding lets you control how you do that trade-off with more fine-grained techniques! For instance, vLLM allows you to turn off speculation altogether when you hit high batch sizes. <a class="wiki-link" href="../field_notes/dspark/">dSpark</a> (from DeepSeek) uses a confidence prediction and the current load on the system to speculate the <em>best possible tokens</em> on every forward pass. You can also just dynamically adjust the number of tokens you&rsquo;re speculating.</p>
+<p>All of these knobs are tunable <em>without loss in quality</em>, and <em>in current software</em> like vLLM.</p>
+<p>Conversely, serving diffusion LLMs with the same controllability just&hellip; isn&rsquo;t there yet.</p>
+<h2>Using Diffusion for Speculation</h2>
+<p>Fear not! If you&rsquo;re a diffusion language model fan there is still a place where it&rsquo;s currently <em>very</em> useful: using diffusion to speculate.</p>
+<p>There are two approaches to use diffusion for speculation:</p>
+<ol>
+<li>The main example currently is <strong><a class="wiki-link" href="../field_notes/dflash/">dFlash</a> or <a class="wiki-link" href="../field_notes/dspark/">dSpark</a></strong>, where a small diffusion model is used to predict a block of speculative tokens using features from the target model. This model is much smaller than the target model, and can be trained on ~any autoregressive transformer.</li>
+<li>A more niche second approach, which I&rsquo;ll refer to as <strong>&ldquo;dual-view&rdquo; models</strong> (<a href="https://arxiv.org/abs/2605.12825">example</a>, Orthrus), where the model has both diffusion attention and autoregressive attention, and the diffusion part is used to speculate tokens, with the autoregressive part used to verify those tokens.</li>
+</ol>
+<h2>This (Probably) Won&rsquo;t Age Well</h2>
+<p><strong>I am confident that this will be wrong in a year or two</strong>! The smartest people I know (Koustava, Apoorv, and others!) are placing bets on diffusion getting better and paying off.</p>
+<p>This is solely from <strong>current</strong> experience, where diffusion language models underperform autoregressive models by a wide margin. I think the underlying idea makes a lot of sense, and there are lots of latency-sensitive applications. But from a practical/product-focused perspective, I&rsquo;m not sold just yet.</p>
+<p>But one day I will look back and laugh at this post!</p>
+
+  </article>
+
+  <footer class="site-footer">
+    joe barrow · research scientist
+    <span class="site-footer-sep">·</span>
+    <a href="../feed.xml">rss</a>
+  </footer>
+
+  <script src="../static/js/site.js?v=bfb16307" defer></script>
+
+
+
+
+
+</body>
+</html>

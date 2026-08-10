@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Qwen3 Embeddings on vLLM — Field Notes — Joe Barrow</title>
+
+  <link rel="canonical" href="https://jbarrow.ai/field_notes/qwen3-embeddings-on-vllm/">
+  <meta property="og:site_name" content="Joe Barrow">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Qwen3 Embeddings on vLLM">
+  <meta property="og:url" content="https://jbarrow.ai/field_notes/qwen3-embeddings-on-vllm/">
+  <meta property="og:image" content="https://jbarrow.ai/static/img/joe.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@barrowjoseph">
+  <meta name="twitter:creator" content="@barrowjoseph">
+  <meta name="twitter:title" content="Qwen3 Embeddings on vLLM">
+  <meta name="twitter:image" content="https://jbarrow.ai/static/img/joe.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../../static/css/site.css?v=5cbe7f85">
+  <link rel="stylesheet" href="../../static/css/code.css?v=678df866">
+  <link rel="alternate" type="application/atom+xml" title="Joe Barrow" href="../../feed.xml">
+
+
+
+
+
+  <script>
+    (function () {
+      var h = window.location.hostname;
+      if (h === "localhost" || h === "127.0.0.1" || h === "" || h.endsWith(".local")) return;
+      var s = document.createElement("script");
+      s.async = true;
+      s.src = "https://www.googletagmanager.com/gtag/js?id=G-GXC0J2XPHL";
+      document.head.appendChild(s);
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){ dataLayer.push(arguments); }
+      window.gtag = gtag;
+      gtag("js", new Date());
+      gtag("config", "G-GXC0J2XPHL");
+    })();
+  </script>
+</head>
+<body>
+
+  <header class="masthead">
+    <span class="masthead-title"><a href="../../">Joe Barrow</a></span>
+    <nav class="masthead-nav">
+      <a href="../../about/">about</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../publications/">publications</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../software/">software</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../field_notes/">field notes</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../feed.xml">rss</a>
+    </nav>
+    <span class="masthead-meta">field_notes</span>
+  </header>
+
+  <article class="article note">
+    <p class="note-eyebrow">
+      <a href="../../field_notes/">Field Notes</a>
+    </p>
+
+    <h1 class="note-title">Qwen3 Embeddings on vLLM</h1>
+
+    <p class="note-updated">last updated 2026-07-22</p>
+
+    <ul class="note-tags">
+      <li><a class="tag-pill" href="../../field_notes/?tag=retrieval">retrieval</a></li>
+    </ul>
+
+
+    <p>There are two main ways to run vLLM (online and offline), in this case I&rsquo;m focused on running Qwen3 embeddings online.</p>
+<p>Ensure that <code>vllm</code> is installed (I&rsquo;m using <code>uv</code> here, out of purely personal preference).</p>
+<div class="codehilite"><pre><span></span><code>uv<span class="w"> </span>install<span class="w"> </span>vllm<span class="w"> </span>cohere<span class="w"> </span>numpy
+</code></pre></div>
+
+<p>Then, kick off an inference server:</p>
+<div class="codehilite"><pre><span></span><code>vllm<span class="w"> </span>serve<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>Qwen/Qwen3-Embedding-8B<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--runner<span class="w"> </span>pooling
+</code></pre></div>
+
+<p>Then it&rsquo;s easy to get embeddings using the <code>openai</code>-compatible embeddings API. Note that for the query, the Qwen3 embedding model allows you (and, in fact, encourages you) to provide task-specific instructions!</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cohere</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">cohere</span><span class="o">.</span><span class="n">ClientV2</span><span class="p">(</span>
+    <span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;EMPTY&quot;</span><span class="p">,</span>
+    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_detailed_instructions</span><span class="p">(</span>
+    <span class="n">task_description</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">query</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Instruct: </span><span class="si">{</span><span class="n">task_description</span><span class="si">}</span><span class="se">\n</span><span class="s2">Query: </span><span class="si">{</span><span class="n">query</span><span class="si">}</span><span class="s2">&quot;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">embed</span><span class="p">(</span>
+    <span class="n">texts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">task</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">texts</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">texts</span> <span class="o">=</span> <span class="p">[</span><span class="n">texts</span><span class="p">]</span>
+
+    <span class="n">input_type</span> <span class="o">=</span> <span class="s2">&quot;document&quot;</span>
+
+    <span class="k">if</span> <span class="n">task</span><span class="p">:</span>
+        <span class="n">texts</span> <span class="o">=</span> <span class="p">[</span><span class="n">get_detailed_instructions</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">texts</span><span class="p">]</span>
+        <span class="n">input_type</span> <span class="o">=</span> <span class="s2">&quot;query&quot;</span>
+
+    <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">embed</span><span class="p">(</span>
+        <span class="n">texts</span><span class="o">=</span><span class="n">texts</span><span class="p">,</span>
+        <span class="n">model</span><span class="o">=</span><span class="s2">&quot;Qwen/Qwen3-Embedding-8B&quot;</span><span class="p">,</span>
+        <span class="n">input_type</span><span class="o">=</span><span class="n">input_type</span><span class="p">,</span>
+        <span class="n">embedding_types</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;float&quot;</span><span class="p">],</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">embeddings</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
+
+
+<span class="n">documents</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;The Great Wall is in China.&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;My favorite activity is watching paint dry on walls.&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="n">task</span> <span class="o">=</span> <span class="s2">&quot;Given a web search query, retrieve relevant passages that answer the query&quot;</span>
+<span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;longest wall in the world&quot;</span>
+
+<span class="n">d_emb</span> <span class="o">=</span> <span class="n">embed</span><span class="p">(</span><span class="n">documents</span><span class="p">)</span>
+<span class="n">q_emb</span> <span class="o">=</span> <span class="n">embed</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">task</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">d_emb</span> <span class="o">@</span> <span class="n">q_emb</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+</code></pre></div>
+
+<p>This should return:</p>
+<div class="codehilite"><pre><span></span><code>[[0.50265586]
+ [0.20611061]]
+</code></pre></div>
+
+<p>So, indeed, the Great Wall is more relevant than watching paint dry!</p>
+  </article>
+
+  <footer class="site-footer">
+    joe barrow · research scientist
+    <span class="site-footer-sep">·</span>
+    <a href="../../feed.xml">rss</a>
+  </footer>
+
+  <script src="../../static/js/site.js?v=bfb16307" defer></script>
+
+
+
+
+
+</body>
+</html>

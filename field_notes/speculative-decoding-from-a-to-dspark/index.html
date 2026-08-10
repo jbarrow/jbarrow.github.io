@@ -10,12 +10,12 @@
   <meta property="og:type" content="article">
   <meta property="og:title" content="Joe Barrow">
   <meta property="og:url" content="https://jbarrow.ai/field_notes/speculative-decoding-from-a-to-dspark/">
-  <meta property="og:image" content="https://jbarrow.ai/static/img/joe.png">
+  <meta property="og:image" content="https://jbarrow.ai/field_notes/_attachments/specdec_eagle.mov">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@barrowjoseph">
   <meta name="twitter:creator" content="@barrowjoseph">
   <meta name="twitter:title" content="Joe Barrow">
-  <meta name="twitter:image" content="https://jbarrow.ai/static/img/joe.png">
+  <meta name="twitter:image" content="https://jbarrow.ai/field_notes/_attachments/specdec_eagle.mov">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -76,46 +76,93 @@
 
     <aside class="callout callout-note">
 <p class="callout-title">Note</p>
-<p>My goal with this guide is to be the first resource you should read about speculative decoding, giving you an understanding of the why, the what, and the historical how&rsquo;s. Ideally, it serves as a jumping off point for reading the referenced papers or others in the field.</p>
+<p>My goal is that this guide should be the first resource to read to learn about speculative decoding. Ideally, it provides sufficient understanding to both play with speculative decoding and jump into the referenced papers or others in the field.</p>
 </aside>
-<p>dSpark, Deepseek&rsquo;s new speculative decoding approach, spent a week plastered all over my (and likely your) timeline. The core claim is that it can <mark>speed up LLM inference by 65-85%</mark>, <em>when compared with a previous speedup, multi-token prediction</em>.</p>
-<p>If you&rsquo;re unfamiliar with speculative decoding, you&rsquo;re probably wondering how this is possible! This guide is meant to help you understand the major themes and ideas in speculative decoding, building up to dSpark.</p>
-<p>To get there, I&rsquo;m going to walk through the major ideas from the following papers:</p>
+<p>Speculative decoding is as close to a free lunch in LLM inference as you&rsquo;re ever going to get. After all, it can <mark>speed up generation <strong>with no loss in quality</strong>!</mark> Consider this video of speculative decoding making OCR ~2x faster:</p>
+<p><img class="embed" src="../_attachments/specdec_eagle.mov" alt="specdec_eagle.mov"></p>
+<p>If you&rsquo;re unfamiliar with speculative decoding, you&rsquo;re probably wondering how this is possible! This guide is meant to help you understand the major themes and ideas in speculative decoding, when it is and isn&rsquo;t useful. The goal is to bring you up to speed on the latest and greatest techniques, like dSpark.</p>
+<p>To get there, I&rsquo;m going to walk through the following major ideas:</p>
 <ol>
-<li>Speculative Decoding / Draft Models</li>
+<li>What is Speculative Decoding?</li>
+<li>Speculative Sampling</li>
+<li>Draft Models</li>
 <li>MTP</li>
 <li>MEDUSA, SpecInfer</li>
 <li>EAGLE 1 / 2 / 3 / 3.1</li>
 <li>dFlash</li>
-<li>and finally, <strong>dSpark</strong>!</li>
+<li>dSpark</li>
 </ol>
+<p>In addition, I have an appendix that goes deeper on concepts or introduce prerequisites:</p>
+<p>A.1: Intuitions for Why Speculative Sampling is Lossless</p>
 <h1>What is Speculative Decoding?</h1>
-<p>Speculative decoding is a <mark>technique for speeding up LLM inference without losing quality</mark>. It is the closest thing to a free lunch you</p>
-<h1>One Weird Trick for Lossless Speedups</h1>
-<p>Speculative decoding offers <strong>lossless</strong> speedups.</p>
-<p>That is: <mark>a sample from a model with speculative decoding and without speculative decoding will come from the same distribution.</mark> Remember, an LLM is a <mark>distribution over a sequence of tokens,</mark> and a prompt completion is a sample from that distribution.</p>
-<p>Normally, generating text with an LLM requires sampling one token at a time:</p>
+<p>Speculative decoding is a <mark>technique for speeding up LLM inference without losing quality</mark>. Normally, generating text with an LLM requires sampling one token at a time:</p>
 <p>[figure 1]</p>
-<p>This process means that you have to do a full forward pass per token. If you have a 1T parameter LLM, you&rsquo;re doing a <em>lot</em> of matrix multiplies to generate that next token. The goal of speculative decoding is to &ldquo;generate&rdquo; multiple tokens per forward pass.</p>
-<p>In fact, you&rsquo;re not typically generating these tokens, but <em>verifying</em> them! These tokens typically come from a smaller model:</p>
+<p>This means you&rsquo;re doing one forward pass per token. Speculative decoding allows you to &ldquo;generate&rdquo; multiple tokens per forward pass. The idea is that you <mark>use a <em>cheap</em> model to <strong>draft</strong> the next several tokens,</mark> and then <mark>accept or reject those draft tokens with the good model</mark>.</p>
+<p>The big model is not generating these tokens, but <em>verifying</em> them! Using the big model as a verifier allows you to <mark>generate a full completion with fewer forward passes, because you can verify multiple tokens in one forward pass</mark>.</p>
+<p>If we revisit the generation above:</p>
 <p>[figure 2]</p>
-<p>For instance, if you&rsquo;re trying to inference Llama-70B, you might get these tokens from Llama-7B. So now, you&rsquo;re doing one forward pass with Llama-7B per token, and then checking multiple tokens at once with Llama-70B</p>
-<p>To achieve lossless speedups, speculative decoding needs two things:</p>
+<h2>Speculative Sampling: One Weird Trick for Losslessness</h2>
+<p>But before I said that speculative decoding offers <strong>lossless</strong> speedups. How are the speedups lossless if you&rsquo;re using a much worse model to draft tokens?</p>
+<p>That&rsquo;s where <strong>speculative sampling</strong> comes in.</p>
+<p>Speculative sampling is the core of speculative decoding. It is how you accept or reject the drafted tokens, left-to-right, one at a time. Speculative sampling is what provides the guarantees that <mark>a sample from a model with speculative decoding and without speculative decoding will come from the same distribution.</mark></p>
+<p>To understand how speculative sampling works, let&rsquo;s look at what an autoregressive language model generates at each timestep, a distribution over tokens:</p>
+<p><img class="embed" src="../_attachments/p.png" alt="p.png"></p>
+<p>This is a <strong>multinomial distribution</strong>. Each token in the vocabulary is assigned some probability on the range <span class="arithmatex">\((0, 1)\)</span>, and if you sum up all of the probabilities it equals <span class="arithmatex">\(1\)</span>.</p>
+<p>Sampling works by drawing a token at random from this distribution. If you sampled a million times and counted up how many times you sampled each token, this distribution emerges.</p>
+<p>For speculative sampling, <strong>we have two distributions</strong>:</p>
 <ol>
-<li>a candidate sequence of tokens, generated cheaply; and</li>
-<li>a way to accept/reject those tokens</li>
+<li>a <em>draft</em> distribution, <span class="arithmatex">\(q\)</span>, from our small model, and </li>
+<li>a <em>target</em> distribution, <span class="arithmatex">\(p\)</span> that we get from running the draft tokens through our big model.</li>
 </ol>
-<p>It relies on a simple sampling trick for its losslessness, speculative sampling.</p>
-<p>Given a set of draft tokens, if you compute a forward pass on all of them at once you get to [&hellip;]</p>
-<h1>Baby Draft Models</h1>
-<p>The first iteration of speculative decoding [1, 2] was to use a smaller model from the same family to generate the draft distributions.</p>
-<p>For instance: use LLaMa 7B to draft tokens for LLaMa-70B.</p>
-<p>This requires running both models [&hellip;]</p>
-<p>[figure 1]</p>
-<h1>Hitting Limits</h1>
+<p>Given the draft distribution and a sampled token, we want to decide whether to accept or reject each token in such a way that the probability of accepting it reflects the probability that it would have been sampled in the first place.</p>
+<p>Here&rsquo;s a look at what the two distributions might look like:</p>
+<p><img class="embed" src="../_attachments/p_q.png" alt="p_q.png"></p>
+<p>Speculative sampling requires that we have our draft distribution, <span class="arithmatex">\(q\)</span>, a token sampled from <span class="arithmatex">\(q\)</span>, <span class="arithmatex">\(t\)</span>, and a target distribution, <span class="arithmatex">\(p\)</span>, computed by the forward pass of our target (big) model.</p>
+<p>From the above example, if <span class="arithmatex">\(t = c\)</span>, then <span class="arithmatex">\(q(t) = 0.3\)</span> and <span class="arithmatex">\(p(t) = 0.25\)</span>. The algorithm progresses in two steps:</p>
+<p><mark>First, decide to whether to accept or reject token <span class="arithmatex">\(t\)</span> with probability.</mark> (I show in the appendix that this is equivalent to <span class="arithmatex">\(\min(p(t), q(t))\)</span>)
+  $<span class="arithmatex">\(a(t) = \min(1, \frac{p(t)}{q(t)})\)</span>$
+<img class="embed" src="../_attachments/p_q_min.png" alt="p_q_min.png"></p>
+<p>If, after the above procedure we <strong>reject</strong> the token, <mark>then we randomly resample from a <em>new</em> distribution, the <strong>residual distribution</strong></mark>:</p>
+<div class="arithmatex">\[r(t) \propto max(0, p(t) - q(t))\]</div>
+<p><img class="embed" src="../_attachments/p_q_r.png" alt="p_q_r.png"></p>
+<p>Another way to think about the first equation is:</p>
+<ol>
+<li>if <span class="arithmatex">\(p(t) \geq q(t)\)</span>, then the probability is 1 and we accept the token, no questions asked;</li>
+<li>otherwise, we accept it with probability <span class="arithmatex">\(\frac{p(t)}{q(t)}\)</span>, which we know will be less than 1 because <span class="arithmatex">\(p(t) &lt; q(t)\)</span>.</li>
+</ol>
+<p>Here is what that looks like:</p>
+<p><img class="embed" src="../_attachments/Screenshot 2026-07-25 at 11.31.18 AM.png" alt="Screenshot 2026-07-25 at 11.31.18 AM.png"></p>
+<p>We repeat this for every draft token, left-to-right, until we reject a token or run out of draft tokens.</p>
+<p><mark>As soon as we reject a token, <strong>we reject all subsequent tokens</strong>, and take the token we sampled from the residual distribution <span class="arithmatex">\(r\)</span> as our last new token.</mark> If we didn&rsquo;t reject <em>any</em> tokens, then <mark>we get a bonus token at the very end, sampled from <span class="arithmatex">\(p\)</span>!</mark></p>
+<p><strong>Importantly,</strong> this means that every time we take a step, we&rsquo;re guaranteed to sample at least one new token, <em>even if</em> we reject <em>all</em> of the draft tokens.</p>
+<p>Let&rsquo;s take a look at an end-to-end speculative decoding step:</p>
+<p><img class="embed" src="../_attachments/Screenshot 2026-07-25 at 11.34.56 AM.png" alt="Screenshot 2026-07-25 at 11.34.56 AM.png"></p>
+<p>I am going to avoid providing a proof here that speculative sampling results in the exact distribution as standard sampling. At the end of the day, the techniques we discuss <mark>only rely on the understanding <em>that</em> speculative decoding is lossless, not <em>how</em> it is lossless</mark>. However, for those interested there is a long appendix at the end of this post with exercises that build up intuitions for understanding how this works.</p>
+<blockquote>
+<p>⚠️ <strong>Misconception 1: Lossless = Same Sequence</strong></p>
+<p>I keep saying that speculative decoding is lossless, but what does that mean?
+<mark>It does not mean that you&rsquo;re guaranteed the exact same sequence as you would have gotten without speculative decoding, <strong>only that the sequences are drawn from the same distribution</strong>.</mark></p>
+<p>Basically: if you draw a bunch of samples from the LLM with the same prompt using speculative and not using speculative decoding, they will converge on the exact same distribution. <mark>In practice, this means that you shouldn&rsquo;t see any loss of quality when you use speculative decoding.</mark></p>
+</blockquote>
+<p>So, if you&rsquo;re sufficiently satisfied with that, then onward!</p>
+<h2>Latency vs. Throughput?</h2>
+<blockquote>
+<p>⚠️ <strong>Misconception 2: Speculative Decoding is More Efficient</strong></p>
+<p>Another misconception I want to clear up is that speculative sampling allows you to do <em>less</em> work for a sequence because you&rsquo;re using a lightweight draft model. <strong>The opposite is actually true!</strong> To generate the same sequence, speculative decoding actually uses <em>more</em> FLOPs.</p>
+<p>So what&rsquo;s the deal? Why is it fast? That&rsquo;s what the rest of this section covers!</p>
+</blockquote>
+<p><strong>Note:</strong> Not required, but to better understand this section you might want to read my <a href="https://jbarrow.ai/2026-07-13-roofline-model/">Visual Guide to the Roofline Model</a>, which introduces you to how to think about GPU performance in terms of memory and compute trade-offs.</p>
+<p>Model serving is most efficient when a fixed number of new tokens is being generated/evaluated in a single forward pass.</p>
+<p>For an H100, the rule of thumb is that, independent of model size, you want ~300 tokens in a forward pass.</p>
+<p>If you want to understand why, you could start by reading my post explaining the Roofline Model.</p>
+<p>But broadly, more than that many new tokens and you&rsquo;re moving from being memory bound into being compute bound.</p>
+<p>If you generate more tokens at once for each request, your per-example latency goes down but so does your batch size, and thus throughput.</p>
+<p>I.e. if you&rsquo;re evaluating 5 tokens per request, you might only be able to serve 60 requests at once.</p>
+<p>If that translates to a 3x speedup, you can only serve 180 requests in the time it took you to previously serve 300, but now each of the requests is served in a third of the time.</p>
+<h1>How to Assess Models</h1>
 <p>There are a three lenses that we will analyze all of the subsequent techniques through:</p>
 <ol>
-<li>average <mark>inter-token latency</mark>, which we want to get as low as possible\</li>
+<li>average <mark>inter-token latency</mark>, which we want to get as low as possible</li>
 <li><mark>how easy is it to <em>run</em></mark></li>
 <li><mark>how easy is it to <em>train</em></mark></li>
 </ol>
@@ -125,16 +172,17 @@
 <p>$<span class="arithmatex">\(L = \frac{1}{\text{tokens per second}}\)</span>$
 For standard (autoregressive) inference, this per-token latency is how much time it takes the model to run a forward pass.</p>
 <p>However, with speculative decoding we&rsquo;re really dealing with averages. Easy tokens can be generated quickly, hard tokens slowly, and the small draft model plays as big a role in overall latency as the big target model.</p>
+<p><img class="embed" src="../_attachments/Screenshot 2026-07-17 at 7.18.56 PM.png" alt="Screenshot 2026-07-17 at 7.18.56 PM.png"></p>
 <p>We thus model inter-token latency for speculative decoding differently, in a way that makes it clear that we have other knobs to fiddle with. We can improve the quality or length of our drafts, or speed up our draft model. In practice, the average inter-token latency can be represented as:</p>
-<p>$<span class="arithmatex">\(L = \frac{T_{\text{draft}} + T_{\text{verify}}}{\gamma}\)</span>$
+<p>$<span class="arithmatex">\(L = \frac{T_{\text{draft}} + T_{\text{verify}}}{\tau}\)</span>$
 What are these elements?</p>
 <ul>
 <li><span class="arithmatex">\(T_{\text{draft}}\)</span> is the amount of time it takes our speculative model to draft a block of tokens</li>
 <li><span class="arithmatex">\(T_{\text{verify}}\)</span> is the amount of time it takes to accept/reject a block of tokens, which is typically the amount of time it takes our target model to run</li>
-<li><span class="arithmatex">\(\gamma\)</span> is our average accept length</li>
+<li><span class="arithmatex">\(\tau\)</span> is our average accept length</li>
 </ul>
 <p>Each method we will discuss has its own take on how to play with these parameters. For the most part, <span class="arithmatex">\(T_{\text{verify}}\)</span> is fixed to the amount of time a forward pass takes.</p>
-<p>But <span class="arithmatex">\(\gamma\)</span> (average accept length) and <span class="arithmatex">\(T_{\text{draft}}\)</span> are what we&rsquo;re typically playing with and trading off. A larger draft model might take more time to generate draft tokens, but it can also bump up average accept length. A non-autoregressive drafter can just&hellip; draft faster, if a little less accurate.</p>
+<p>But <span class="arithmatex">\(\tau\)</span> (average accept length) and <span class="arithmatex">\(T_{\text{draft}}\)</span> are what we&rsquo;re typically playing with and trading off. A larger draft model might take more time to generate draft tokens, but it can also bump up average accept length. A non-autoregressive drafter can just&hellip; draft faster, if a little less accurate.</p>
 <p>When I cover an approach, I&rsquo;ll be discussing how it plays with these variables!</p>
 <h2>Inference Ease</h2>
 <p>Researchers tend to overlook how easy or difficult their method is to deploy. In addition to getting good benchmark numbers for inference <em>speed</em>, inference <em>ease</em> is a big factor in whether or not a speculative decoding method will be successful. Tools like vLLM/speculators make certain approaches easier to deploy than others, where it&rsquo;s literally just a one-line configuration change.</p>
@@ -142,38 +190,47 @@ What are these elements?</p>
 <h2>Training Ease</h2>
 <p>Last, but certainly not least! Some open model providers release draft models alongside their big releases (such as Qwen&rsquo;s MTP heads, Gemma&rsquo;s MTP heads or DeepSeek&rsquo;s dSpark). However, if you want to bring a new approach to an existing model, you&rsquo;ll need to train a draft model.</p>
 <p>For some approaches, this is easier than others! In my opinion</p>
+<h1>Types of Models</h1>
+<p>There are three general types of speculative decoding models:</p>
+<ol>
+<li>draft models from the same family;</li>
+<li>speculative decoding heads that are jointly trained with the model; and</li>
+<li>speculative decoding models that are trained post hoc on top of a model.</li>
+</ol>
+<p>We&rsquo;re going to examine each of these in the following sections.</p>
+<h1>Baby Draft Models</h1>
+<p>The first iteration of speculative decoding [1, 2] was to use a smaller model from the same family to generate the draft distributions.</p>
+<p>For instance: <mark>use LLaMa 7B to draft tokens for LLaMa-70B.</mark></p>
+<p>This relies on the convenient fact that labs would release multiple model sizes at once, with the same tokenizer, like Llama 7B, 32B, and 70B. Or Gemma4 E2B, E4B, 12B and 31B.</p>
+<p>Because the tokenizers are the same, the sample space for the distributions are the same, meaning we can use whatever the small model outputs as the draft distribution for our big model.</p>
+<p>However, this requires running both models at once. Instead of generating a new token with Llama-70B, you generate, say, 5 new tokens with Llama-7B. Then you run them through the forward pass of your 70B model and do the speculative sampling defined above to determine how many tokes you accept/reject:</p>
+<p>[figure]</p>
 <h1>You Down with MTP? (Yeah, you know me!)</h1>
 <p>Another iteration of speculative decoding was to use multi-token prediction to predict 1 or more draft tokens [3].</p>
 <p>This was trained jointly with the model, relying on the model&rsquo;s last layer.</p>
-<p>[figure 2]</p>
+<p>[figure]</p>
 <p>MTP was used with Qwen [4] and Deepseek [5] for efficient serving.</p>
-<h2>Speed, Inference, and Training Ease</h2>
+<h2>Speed, Inference, and Training Eas</h2>
+<p>For MTP, our <span class="arithmatex">\(T_{\text{draft}}\)</span> is quite </p>
 <h1>Fly Like an EAGLE</h1>
+<p><img class="embed" src="../_attachments/Pasted image 20260722131616.png" alt="Pasted image 20260722131616.png"></p>
 <p>The EAGLE series takes a different tack: can you just use features from the model and feed them to a small transformer decoder to generate tokens [6, 7, 8].</p>
 <p>In this case, the features are representations from the penultimate layer, or (in the case of EAGLE-3) a low-, middle-, and high-layer.</p>
 <p>The EAGLE models are typically a single-layer decoder that looks at the previous token and the features from the model and generates several new tokens autoregressively.</p>
 <p>EAGLE heads can range from 100M params to a billion or more params.</p>
-<p>[figure 3]</p>
+<p>[figure ]</p>
 <p>EAGLE-2 and MEDUSA introduced tree-structured attention [9] that lets you decode multiple possible completions with shared prefixes.</p>
 <h2>Speed, Inference, and Training Ease</h2>
 <h1>dFlash</h1>
+<p><img class="embed" src="../_attachments/dflash.png" alt="dflash.png"></p>
 <p>However, with EAGLE you still have autoregressive bottlenecks.</p>
 <p>dFlash swaps out the autoregressive decoder with a diffusion language model, which jointly predicts all the tokens at once.</p>
 <p>Given the first token and some [MASK] tokens, it converts the masks into a draft.</p>
 <p>Because you&rsquo;re not doing a forward pass of the head for each token, you can typically train larger/deeper dFlash models than EAGLE models.</p>
 <h2>Speed, Inference, and Training Ease</h2>
-<h1>Latency-Throughput Tradeoffs</h1>
-<p>Before we understand dSpark, we need to examine the trade-offs of speculative decoding.</p>
-<p>Model serving is most efficient when a fixed number of new tokens is being generated/evaluated in a single forward pass.</p>
-<p>For an H100, this might be 300.</p>
-<p>If you want to understand why, you could start by reading my post explaining the Roofline Model.</p>
-<p>But broadly, more than that many new tokens and you&rsquo;re moving from being memory bound into being compute bound.</p>
-<p>If you generate more tokens at once for each request, your per-example latency goes down but so does your batch size, and thus throughput.</p>
-<p>I.e. if you&rsquo;re evaluating 5 tokens per request, you might only be able to serve 60 requests at once.</p>
-<p>If that translates to a 3x speedup, you can only serve 180 requests in the time it took you to previously serve 300, but now each of the requests is served in a third of the time.</p>
-<h2>Speed, Inference, and Training Ease</h2>
 <h1>dSpark</h1>
-<p>If you made it here, congratulations! You should have all the pieces necessary to piece together why people are excited about dSpark.</p>
+<p><img class="embed" src="../_attachments/dspark.png" alt="dspark.png">
+If you made it here, congratulations! You should have all the pieces necessary to piece together why people are excited about dSpark.</p>
 <p>Remember the latency/throughput trade-off from earlier?</p>
 <p>dSpark is an extension of dFlash (a diffusion speculative decoding head) with two modifications:</p>
 <ol>
@@ -188,8 +245,28 @@ What are these elements?</p>
 </blockquote>
 <h2>Speed, Inference, and Training Ease</h2>
 <p>Integrating the confidence head from dSpark is (today) not provided by default in inference providers like vLLM and SGLang.</p>
-<h1>Runners Up</h1>
-<p>Not every algorithm made the cut.</p>
+<h1>Interesting Things to Read</h1>
+<h1>References</h1>
+<h2>Appendix A.1</h2>
+<h3>Why is it Lossless?</h3>
+<p>These guarantees are thanks to speculative sampling. I am not going to provide a proof, mainly because <mark>if your goal is simply to understand speculative decoding, then you can safely accept on faith that this will provide a lossless sample.</mark></p>
+<p>However, I can help give you some intuitions as to why this is true:</p>
+<p>One way to think about it is: your draft distribution <span class="arithmatex">\(q(t)\)</span> tells you the frequency with which you would see <span class="arithmatex">\(t\)</span> in an infinite number of samples. Your acceptance distribution <span class="arithmatex">\(a(t)\)</span> corrects for this so you see <span class="arithmatex">\(t\)</span> proportionally to <span class="arithmatex">\(p(t)\)</span> <em>instead</em>. It pulls a little probability mass her and there and reassigns.</p>
+<p>Another way to think about it is algebraically. Given our proposal distribution, <span class="arithmatex">\(q(t)\)</span>, we want our acceptance probability <span class="arithmatex">\(a(t)\)</span> to work out such that we keep the proportional to <span class="arithmatex">\(p(t)\)</span>. If we multiply our draft probability with our accept probability:</p>
+<div class="arithmatex">\[a(t)q(t) = \min(1, \frac{p(t)}{q(t)})q(t) = \min(q(t), p(t))\]</div>
+<p>So our acceptance maintains the <strong>overlap</strong> of the two distributions. <mark>That&rsquo;s why the resampling happens with the <strong>residual distribution</strong>, where we want to sample proportionally to the parts of the distribution where <span class="arithmatex">\(p\)</span> is above <span class="arithmatex">\(q\)</span>.</mark></p>
+<blockquote>
+<p><strong>Side Note</strong>
+Working through the math is actually when I realized that you can distribute over <span class="arithmatex">\(\min\)</span> and <span class="arithmatex">\(\max\)</span>! And if it&rsquo;s a negative number you&rsquo;re distributing, you just swap the functions. Very cool, imo.</p>
+</blockquote>
+<div class="footnote">
+<hr>
+<ol>
+<li id="fn:1">
+<p>https://research.google/blog/looking-back-at-speculative-decoding/&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
   </article>
 
   <footer class="site-footer">
