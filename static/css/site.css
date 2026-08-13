@@ -403,7 +403,8 @@ a:hover { text-decoration: underline; }
   vertical-align: top;
 }
 
-.article tbody tr:last-child td { border-bottom: none; }
+/* Keep the rule on the final row so the table closes — with a single-row
+   table, dropping it leaves the row hanging under the header. */
 
 /* Flush the last column against the measure so the rules span it evenly. */
 .article th:last-child,
@@ -412,13 +413,12 @@ a:hover { text-decoration: underline; }
 .article td strong { font-weight: 600; }
 
 @media (max-width: 720px) {
-  /* `display: block` is what makes a <table> scrollable — markdown emits a
-     bare <table> with no wrapper element to hang overflow on. */
-  .article table {
-    display: block;
-    overflow-x: auto;
-    font-size: 14px;
-  }
+  /* Let cells wrap to the measure rather than scrolling the table sideways:
+     every table on the site is prose or short formulas, so wrapping reads
+     better than a clipped row with a hidden scroll affordance. */
+  .article table { font-size: 14px; }
+  .article thead th { padding-right: 12px; }
+  .article tbody td { padding-right: 12px; word-break: break-word; }
 }
 
 /* Citations + references ------------------------------------------------- */

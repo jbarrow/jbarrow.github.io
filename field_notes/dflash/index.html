@@ -10,18 +10,18 @@
   <meta property="og:type" content="article">
   <meta property="og:title" content="Paper Notes: dFlash">
   <meta property="og:url" content="https://jbarrow.ai/field_notes/dflash/">
-  <meta property="og:image" content="https://jbarrow.ai/static/img/joe.png">
+  <meta property="og:image" content="https://jbarrow.ai/field_notes/_attachments/specspecs-dflash.png">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@barrowjoseph">
   <meta name="twitter:creator" content="@barrowjoseph">
   <meta name="twitter:title" content="Paper Notes: dFlash">
-  <meta name="twitter:image" content="https://jbarrow.ai/static/img/joe.png">
+  <meta name="twitter:image" content="https://jbarrow.ai/field_notes/_attachments/specspecs-dflash.png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="../../static/css/site.css?v=991707ec">
+  <link rel="stylesheet" href="../../static/css/site.css?v=cca6c157">
   <link rel="stylesheet" href="../../static/css/code.css?v=678df866">
   <link rel="alternate" type="application/atom+xml" title="Joe Barrow" href="../../feed.xml">
 
@@ -70,7 +70,7 @@
 
     <h1 class="note-title">Paper Notes: dFlash</h1>
 
-    <p class="note-updated">last updated 2026-07-13</p>
+    <p class="note-updated">last updated 2026-08-13</p>
 
     <ul class="note-tags">
       <li><a class="tag-pill" href="../../field_notes/?tag=speculative-decoding">speculative-decoding</a></li>
@@ -92,9 +92,16 @@ Jian Chen, Yesheng Liang, Zhijian Liu<span class="sep">·</span>arXiv · 2026   
     </aside>
 
     <p>dFlash is a block-causal diffusion model for speculative decoding. Unlike <a class="wiki-link" href="../../field_notes/eagle-1/">EAGLE</a>/<a class="wiki-link" href="../../field_notes/eagle-2/">EAGLE-2</a>/<a class="wiki-link" href="../../field_notes/eagle-3/">EAGLE-3</a>, it <mark>generates its draft tokens in parallel, so you don&rsquo;t have to pay an autoregressive cost</mark>.</p>
-<p>This allows dFlash models to be even larger than EAGLE models, and thus possibly more accurate. However, they do suffer from diffusion limitations.</p>
-<p>DeepSeek&rsquo;s future <a class="wiki-link" href="../../field_notes/dspark/">dSpark</a> gets around this by doing <em>mostly parallel prediction</em>, with a light autoregressive head on top.</p>
-<p>It&rsquo;s a popular replacement for EAGLE.</p>
+<p>It&rsquo;s a popular replacement for EAGLE, because it can result in higher speedups and better average acceptance length.</p>
+<h2>Autoregressive v. Diffusion</h2>
+<p>This allows dFlash models to be even larger than EAGLE models, and thus possibly more accurate. EAGLE is typically a 1-layer autoregressive transformer, whereas the dFlash standard is a 5-layer diffusion transformer. For ~the same speculation time, you can speculate more accurate tokens, which is crucial to the speedups.</p>
+<p>However, they do suffer from diffusion limitations. I discuss the limitations of diffusion more in <a href="https://jbarrow.ai/2026-08-10-dont-diffuse-speculate/">Don&rsquo;t Diffuse, Speculate!</a>. But you can see for yourself by actually running dFlash.</p>
+<p>I wrote a library, <a href="https://github.com/jbarrow/specspecs">specspecs</a>, that allows you to visualize what speculative decoding heads output. If we look at a particularly poor-quality draft:</p>
+<p><img class="embed" src="../_attachments/specspecs-dflash.png" alt="specspecs-dflash.png"></p>
+<p>We see unrealistic sequences of tokens: <mark>what reasonable model would predict <code>**</code> followed by <code>**)</code> followed by <code>**)</code></mark>. If you know what token you&rsquo;ve committed to at the previous timestep, which autoregressive models do, you wouldn&rsquo;t make this kind of mistake.</p>
+<p>In the <code>specspecs</code> repo, I have a manually implemented dFlash generation loop that runs on a macbook, so I&rsquo;d encourage you to play with it yourself!</p>
+<h2>dFlash Architecture</h2>
+<p><img class="embed" src="../_attachments/dflash.png" alt="dflash.png"></p>
   </article>
 
   <footer class="site-footer">

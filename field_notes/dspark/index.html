@@ -10,18 +10,18 @@
   <meta property="og:type" content="article">
   <meta property="og:title" content="Paper Notes: dSpark">
   <meta property="og:url" content="https://jbarrow.ai/field_notes/dspark/">
-  <meta property="og:image" content="https://jbarrow.ai/static/img/joe.png">
+  <meta property="og:image" content="https://jbarrow.ai/field_notes/_attachments/dspark-architecture.png">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@barrowjoseph">
   <meta name="twitter:creator" content="@barrowjoseph">
   <meta name="twitter:title" content="Paper Notes: dSpark">
-  <meta name="twitter:image" content="https://jbarrow.ai/static/img/joe.png">
+  <meta name="twitter:image" content="https://jbarrow.ai/field_notes/_attachments/dspark-architecture.png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="../../static/css/site.css?v=991707ec">
+  <link rel="stylesheet" href="../../static/css/site.css?v=cca6c157">
   <link rel="stylesheet" href="../../static/css/code.css?v=678df866">
   <link rel="alternate" type="application/atom+xml" title="Joe Barrow" href="../../feed.xml">
 
@@ -70,7 +70,7 @@
 
     <h1 class="note-title">Paper Notes: dSpark</h1>
 
-    <p class="note-updated">last updated 2026-07-13</p>
+    <p class="note-updated">last updated 2026-08-13</p>
 
     <ul class="note-tags">
       <li><a class="tag-pill" href="../../field_notes/?tag=speculative-decoding">speculative-decoding</a></li>
@@ -92,7 +92,49 @@ Xin Cheng, et al.<span class="sep">·</span>arXiv · 2026      </p>
       </div>
     </aside>
 
-    <p>dSpark made waves when it was released.</p>
+    <p>When it came out, <code>dSpark</code> was all over my timeline. It got a lot of love just for being a DeepSeek paper, but it does bring together some interesting ideas into a single cohesive package.</p>
+<p>dSpark is a &ldquo;lightly-autoregressive&rdquo; speculative decoding approach from DeepSeek. like <a class="wiki-link" href="../../field_notes/eagle-3/">EAGLE-3</a> and <a class="wiki-link" href="../../field_notes/dflash/">dFlash</a>, it is a small transformer model trained to use the hidden representations from specific layers of the model to predict the next several tokens.</p>
+<p>In spite of most of the architecture being dFlash, there are 2 things that make dSpark unique:</p>
+<ol>
+<li>the <mark>small autoregressive head</mark> they place on top of the diffusion model to improve predictions; this can be either an RNN <em>or</em> a bigram head with a transition matrix; and</li>
+<li>the <mark>confidence predictions</mark> that they use to do &ldquo;hardware-aware&rdquo; dynamic length speculation.</li>
+</ol>
+<p>The architecture (from the paper) is below:</p>
+<p><img class="embed" src="../_attachments/dspark-architecture.png" alt="dspark-architecture.png"></p>
+<p>The speculative decoding model (right) uses a <strong>parallel block</strong> (aka <a class="wiki-link" href="../../field_notes/dflash/">dFlash</a>, or a diffusion language model) to jointly predict all future tokens at once. Then, a <strong>lightweight sequential block</strong> (which is what makes their approach &ldquo;semi-autoregressive&rdquo;) is used to refine those predictions left-to-right.</p>
+<p>In addition to predicting the next tokens (<code>E</code>, <code>F</code>, <code>G</code>, <code>H</code>), the model <strong>also predicts the probability that each token will be accepted</strong>, conditioned on the previous token being accepted.</p>
+<h2>Semi-Autoregressive</h2>
+<p>Personally, I like the semi-autoregressive head, which fixes a lot of the issues I noticed with dFlash. I wrote a library, <a href="https://github.com/jbarrow/specspecs">specspecs</a>, that allows you to visualize what speculative decoding heads output. If we look at a draft from <strong>dFlash</strong>, which predicts all tokens in parallel:</p>
+<p><img class="embed" src="../_attachments/specspecs-dflash.png" alt="specspecs-dflash.png"></p>
+<p>We see unrealistic sequences of tokens: <mark>what reasonable model would predict <code>**</code> followed by <code>**)</code> followed by <code>**)</code></mark>. If you know what token you&rsquo;ve committed to at the previous timestep, which autoregressive models do, you wouldn&rsquo;t make this kind of mistake.</p>
+<p>So by introducing a small autoregressive head on top of dFlash, you don&rsquo;t slow down generation <em>too</em> much, but you can create more accurate drafts.</p>
+<h2>Dynamic Speculation Depth</h2>
+<p>The other bit of magic of dSpark is that they can use that confidence to dynamically alter the lengths of their draft proposals. <mark>Note that this is not purely novel in and of itself</mark>, there are other papers that propose similar approaches like <a href="https://arxiv.org/abs/2406.14066v2">Goodput</a> and <a href="https://arxiv.org/abs/2604.09603">ECHO</a> (from Qwen).</p>
+<p>But it&rsquo;s a good idea! Consider the following figure from the <a href="https://arxiv.org/abs/2406.14066v2">goodput paper</a>:</p>
+<p><img class="embed" src="../_attachments/goodput-dynamic-lengths.png" alt="goodput-dynamic-lengths.png"></p>
+<p><mark>Traditional approaches to speculative decoding use a <strong>global propose length</strong></mark>, i.e., every sequence sends the same number of tokens to the large model for verification.</p>
+<p>However, if a token is <strong>unlikely to be accepted</strong>, and especially if you <strong>your service is under a lot of load</strong>, then speculation is wasted compute you can&rsquo;t afford. <mark>The goal is to figure out an optimal <strong>request-level propose length</strong> that makes best use of available compute.</mark></p>
+<p>To learn more about how speculation trades off breadth for depth, I wrote <a href="https://jbarrow.ai/2026-08-10-dont-diffuse-speculate/">Don&rsquo;t Diffuse, Speculate!</a>. But basically you can either send a lot of chats through at the same time (high concurrency) or make lots of progress on a small number of chats at the same time (deep speculative propose lengths), but not both.</p>
+<p>dSpark navigates this trade-off using two pieces of information:</p>
+<ol>
+<li><strong>how much load is the service currently under</strong></li>
+<li><strong>how likely is each token to be accepted</strong></li>
+</ol>
+<p>If the service is under light load, you can send through lots of unlikely tokens and still get a win if any of them get accepted. If the service is under heavy load, you just focus on sending the likeliest sequences.</p>
+<h3>Measuring Load</h3>
+<p>At a high-level, the way they measure &ldquo;current system load&rdquo; is:</p>
+<ul>
+<li>they profile the hardware at different token batch sizes, <code>B</code></li>
+<li>for each batch size, they compute the number of steps per second (<code>SPS</code>) they obtain on the hardware</li>
+<li>they store that curve as a function of <code>SPS(B)</code>, and use that when deciding whether to add a token to be verified</li>
+</ul>
+<h2>Results</h2>
+<p>The best thing about this paper (to me) is that <mark>they can actually measure the performance under real-world load</mark>, because they serve production traffic. At matched throughputs, they improve latency, and at matched latency, they improve throughput:</p>
+<p><img class="embed" src="../_attachments/dspark-throughput-graph.png" alt="dspark-throughput-graph.png"></p>
+<p>Relative to their previous approach using multi-token prediction (<a class="wiki-link" href="../../field_notes/mtp/">MTP</a>), which they discussed in the <a class="wiki-link" href="../../field_notes/deepseek-v3/">DeepSeek-v3</a> technical report.</p>
+<h2>Can You Serve It?</h2>
+<p>To get all the benefits, you need both (a) trained dSpark heads for your model, and (b) an inference engine that can do the hardware-aware speculation depths.</p>
+<p>I saw that vLLM, and the speculators library, now supports dSpark (which was not true when I originally started writing this. 😀)</p>
   </article>
 
   <footer class="site-footer">

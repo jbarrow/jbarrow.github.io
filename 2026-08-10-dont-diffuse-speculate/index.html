@@ -24,7 +24,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="../static/css/site.css?v=991707ec">
+  <link rel="stylesheet" href="../static/css/site.css?v=cca6c157">
   <link rel="stylesheet" href="../static/css/code.css?v=678df866">
   <link rel="alternate" type="application/atom+xml" title="Joe Barrow" href="../feed.xml">
 
@@ -116,15 +116,21 @@
 <table>
 <thead>
 <tr>
-<th>Autoregressive</th>
-<th>Diffusion (2 passes)</th>
-<th>Speculative Decoding (perfect)</th>
+<th>Approach</th>
+<th>Total FLOPs</th>
 </tr>
 </thead>
 <tbody>
 <tr>
+<td>Autoregressive</td>
 <td>Model FLOPs × N</td>
+</tr>
+<tr>
+<td>Diffusion (2 passes)</td>
 <td>Model FLOPs × N × 2</td>
+</tr>
+<tr>
+<td>Speculative Decoding (perfect)</td>
 <td>(Model FLOPs + Draft FLOPs) × N</td>
 </tr>
 </tbody>
