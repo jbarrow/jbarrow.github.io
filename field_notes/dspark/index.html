@@ -129,7 +129,7 @@ Xin Cheng, et al.<span class="sep">·</span>arXiv · 2026      </p>
 <li>for each batch size, they compute the number of steps per second (<code>SPS</code>) they obtain on the hardware</li>
 <li>they store that curve as a function of <code>SPS(B)</code>, and use that when deciding whether to add a token to be verified</li>
 </ul>
-<h2>Results</h2>
+<h2>Real-World Serving Results</h2>
 <p>The best thing about this paper (to me) is that <mark>they can actually measure the performance under real-world load</mark>, because they serve production traffic. At matched throughputs, they improve latency, and at matched latency, they improve throughput:</p>
 <p><img class="embed" src="../_attachments/dspark-throughput-graph.png" alt="dspark-throughput-graph.png"></p>
 <p>Relative to their previous approach using multi-token prediction (<a class="wiki-link" href="../../field_notes/mtp/">MTP</a>), which they discussed in the <a class="wiki-link" href="../../field_notes/deepseek-v3/">DeepSeek-v3</a> technical report.</p>
