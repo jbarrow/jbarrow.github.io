@@ -93,7 +93,8 @@ Xin Cheng, et al.<span class="sep">·</span>arXiv · 2026      </p>
     </aside>
 
     <p>When it came out, <code>dSpark</code> was all over my timeline. It got a lot of love just for being a DeepSeek paper, but it does bring together some interesting ideas into a single cohesive package.</p>
-<p>dSpark is a &ldquo;lightly-autoregressive&rdquo; speculative decoding approach from DeepSeek. like <a class="wiki-link" href="../../field_notes/eagle-3/">EAGLE-3</a> and <a class="wiki-link" href="../../field_notes/dflash/">dFlash</a>, it is a small transformer model trained to use the hidden representations from specific layers of the model to predict the next several tokens.</p>
+<h2>Overview</h2>
+<p>dSpark is a &ldquo;semi-autoregressive&rdquo; speculative decoding approach from DeepSeek. like <a class="wiki-link" href="../../field_notes/eagle-3/">EAGLE-3</a> and <a class="wiki-link" href="../../field_notes/dflash/">dFlash</a>, it is a small transformer model trained to use the hidden representations from specific layers of the model to predict the next several tokens.</p>
 <p>In spite of most of the architecture being dFlash, there are 2 things that make dSpark unique:</p>
 <ol>
 <li>the <mark>small autoregressive head</mark> they place on top of the diffusion model to improve predictions; this can be either an RNN <em>or</em> a bigram head with a transition matrix; and</li>
