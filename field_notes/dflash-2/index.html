@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paper Notes: dFlash 2 — Field Notes — Joe Barrow</title>
+
+  <link rel="canonical" href="https://jbarrow.ai/field_notes/dflash-2/">
+  <meta property="og:site_name" content="Joe Barrow">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Paper Notes: dFlash 2">
+  <meta property="og:url" content="https://jbarrow.ai/field_notes/dflash-2/">
+  <meta property="og:image" content="https://jbarrow.ai/field_notes/_attachments/specspecs-dflash.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@barrowjoseph">
+  <meta name="twitter:creator" content="@barrowjoseph">
+  <meta name="twitter:title" content="Paper Notes: dFlash 2">
+  <meta name="twitter:image" content="https://jbarrow.ai/field_notes/_attachments/specspecs-dflash.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../../static/css/site.css?v=cca6c157">
+  <link rel="stylesheet" href="../../static/css/code.css?v=678df866">
+  <link rel="alternate" type="application/atom+xml" title="Joe Barrow" href="../../feed.xml">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous">
+
+
+
+
+  <script>
+    (function () {
+      var h = window.location.hostname;
+      if (h === "localhost" || h === "127.0.0.1" || h === "" || h.endsWith(".local")) return;
+      var s = document.createElement("script");
+      s.async = true;
+      s.src = "https://www.googletagmanager.com/gtag/js?id=G-GXC0J2XPHL";
+      document.head.appendChild(s);
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){ dataLayer.push(arguments); }
+      window.gtag = gtag;
+      gtag("js", new Date());
+      gtag("config", "G-GXC0J2XPHL");
+    })();
+  </script>
+</head>
+<body>
+
+  <header class="masthead">
+    <span class="masthead-title"><a href="../../">Joe Barrow</a></span>
+    <nav class="masthead-nav">
+      <a href="../../about/">about</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../publications/">publications</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../software/">software</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../field_notes/">field notes</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../feed.xml">rss</a>
+    </nav>
+    <span class="masthead-meta">field_notes</span>
+  </header>
+
+  <article class="article note">
+    <p class="note-eyebrow">
+      <a href="../../field_notes/">Field Notes</a>
+    </p>
+
+    <h1 class="note-title">Paper Notes: dFlash 2</h1>
+
+    <p class="note-updated">last updated 2026-08-19</p>
+
+    <ul class="note-tags">
+      <li><a class="tag-pill" href="../../field_notes/?tag=speculative-decoding">speculative-decoding</a></li>
+      <li><a class="tag-pill" href="../../field_notes/?tag=inference">inference</a></li>
+    </ul>
+
+
+    <p>Jian Chen, first author on the original <a class="wiki-link" href="../../field_notes/dflash/">dFlash</a> paper, released <a href="https://inco.ai/blog/dflash2/">dFlash 2</a> today. It features 2 core improvements over dFlash, which drive up average acceptance length without a huge increase in parameters or draft latency:</p>
+<ol>
+<li>a Markov token selector that considers the previous token when choosing the next one; and</li>
+<li>a convolution that smears internal representations across timesteps.</li>
+</ol>
+<p>The big takeaway is that it drives up average acceptance length by <strong>1 whole token</strong> over dFlash, and by about half a token over <a class="wiki-link" href="../../field_notes/dspark/">dSpark</a>.</p>
+<h2>Total Semi-Autoregressive Victory?</h2>
+<p>dFlash 2 does a sequential selection (their &ldquo;lightweight path selector&rdquo;) to improve coherence for their single-pass diffusions. dSpark did something similar with their &ldquo;semi-autoregressive&rdquo; sampling approach, which gets you an additional half a token average acceptance length.</p>
+<p>If you look at dFlash outputs, it&rsquo;s pretty clear that single pass diffusion has trouble producing coherent blocks. <a class="wiki-link" href="../../field_notes/dspark/">dSpark</a> fixed that with a small autoregressive head on top of dFlash. In my <a class="wiki-link" href="../../field_notes/dspark/">dSpark</a> notes I had written:</p>
+<blockquote>
+<p>Personally, I like the semi-autoregressive head, which fixes a lot of the issues I noticed with dFlash. &hellip; So by introducing a small autoregressive head on top of dFlash, you don&rsquo;t slow down generation <em>too</em> much, but you can create more accurate drafts.</p>
+</blockquote>
+<p>An example of one of these issues (from <a href="https://gihub.com/jbarrow/specspecs">specspecs</a>):</p>
+<p><img class="embed" src="../_attachments/specspecs-dflash.png" alt="specspecs-dflash.png"></p>
+<p>dSpark raised the issue that computing a full <span class="arithmatex">\(|V|\times|V|\)</span> matrix is prohibitively expensive, so they compute a low-rank approximation. dFlash 2 instead shows that <mark>you don&rsquo;t need to compute the whole <span class="arithmatex">\(|V| \times |V|\)</span> matrix!</mark></p>
+<p>They found that correct token almost always exists in the top 16 tokens:</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>0</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+<th>6</th>
+<th>Acceptance length</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Recall@1</td>
+<td>85.4%</td>
+<td>80.3%</td>
+<td>79.4%</td>
+<td>78.3%</td>
+<td>77.5%</td>
+<td>75.9%</td>
+<td>72.9%</td>
+<td>4.27</td>
+</tr>
+<tr>
+<td>Recall@16</td>
+<td>99.5%</td>
+<td>97.3%</td>
+<td>94.8%</td>
+<td>92.6%</td>
+<td>90.8%</td>
+<td>89.4%</td>
+<td>87.8%</td>
+<td>6.79</td>
+</tr>
+</tbody>
+</table>
+<p>So they focus on computing a <span class="arithmatex">\(16 \times 16\)</span> pairwise table for each sequential token pair instead. This allows you to <mark>sample more coherent blocks</mark>. The figure from their blog:</p>
+<p><img class="embed" src="../_attachments/dflash_2_path_selector.png" alt="dflash_2_path_selector.png"></p>
+<p>Now, the interesting things about this is that the <span class="arithmatex">\(16 \times 16\)</span> transition matrix is tractable to compute in parallel. So although there is some sequence-aware sampling going on, the sequential sampling is much lighter weight than the dSpark semi-autoregressive head.</p>
+<p><mark>The core focus is to keep everything as parallel as possible.</mark> You lose a bit of accuracy compared to dSpark (only a +0.3 token bump, instead of a full +0.5 token bump), but more parallel and still better than raw single-pass diffusion.</p>
+<h2>Smearing Representations</h2>
+<p>The second improvement is a small convolution layer that smears internal representations across 2 timesteps. The goal of this is to improve performance at deeper speculation lengths. The standard dFlash puts less weight on later representations, which severely hurts its performance past 4-5 tokens.</p>
+<p>One fix for this is to make dFlash deeper. <mark>Deeper speculators are basically always more accurate.</mark> Remember, one benefit of dFlash over EAGLE is that its parallel decoding means it can be a deeper model, and thus higher accuracy. <strong>But this makes it unacceptably slow.</strong> They instead solve this by forcing local information into the representations at all timesteps.</p>
+<p>High-level figure, from the blog:</p>
+<p><img class="embed" src="../_attachments/dflash_2_conv.png" alt="dflash_2_conv.png"></p>
+<p>The &ldquo;two-tap conv&rdquo; just does a simple convolutional merge of the previous token&rsquo;s representation and the current token&rsquo;s representation. This &ldquo;smears&rdquo; the representations two timesteps, which kind of forces the model to consider local information.</p>
+<p>This seems to buy you the other +0.6-0.7 tokens of average acceptance length.</p>
+<h1>Takeaways</h1>
+<p>A few parting thoughts:</p>
+<ol>
+<li>Single pass diffusion needs help to generate coherent outputs. In DFlash 2, they push as much of that work to being done as parallel in possible. So kind of &ldquo;semi-autoregressive&rdquo;, but even less so than dSpark.</li>
+<li>The work is very cool and important, but the blog post is clearly AI-written. I don&rsquo;t know how to feel about this. I personally prefer when people communicate in their own words. In this case, the work and its artifacts are eminently verifiable &ndash; anybody can run the DFLash 2 heads on their own hardware and look at acceptance lengths.</li>
+<li>I really need to turn <a href="https://gihub.com/jbarrow/specspecs">specspecs</a> into a vLLM plugin, so I can experiment with these kinds of improvements no day zero. But also, you should probably use it, it&rsquo;s cool.</li>
+</ol>
+  </article>
+
+  <footer class="site-footer">
+    joe barrow · research scientist
+    <span class="site-footer-sep">·</span>
+    <a href="../../feed.xml">rss</a>
+  </footer>
+
+  <script src="../../static/js/site.js?v=bfb16307" defer></script>
+
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" integrity="sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4lfFg" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous" onload="renderMathInElement(document.body, {delimiters: [{left: '\\[', right: '\\]', display: true}, {left: '\\(', right: '\\)', display: false}], throwOnError: false});"></script>
+
+
+
+
+</body>
+</html>

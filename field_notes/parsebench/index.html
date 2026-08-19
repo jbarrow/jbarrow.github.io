@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paper Notes: ParseBench — Field Notes — Joe Barrow</title>
+
+  <link rel="canonical" href="https://jbarrow.ai/field_notes/parsebench/">
+  <meta property="og:site_name" content="Joe Barrow">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Paper Notes: ParseBench">
+  <meta property="og:url" content="https://jbarrow.ai/field_notes/parsebench/">
+  <meta property="og:image" content="https://jbarrow.ai/static/img/joe.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@barrowjoseph">
+  <meta name="twitter:creator" content="@barrowjoseph">
+  <meta name="twitter:title" content="Paper Notes: ParseBench">
+  <meta name="twitter:image" content="https://jbarrow.ai/static/img/joe.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../../static/css/site.css?v=cca6c157">
+  <link rel="stylesheet" href="../../static/css/code.css?v=678df866">
+  <link rel="alternate" type="application/atom+xml" title="Joe Barrow" href="../../feed.xml">
+
+
+
+
+
+  <script>
+    (function () {
+      var h = window.location.hostname;
+      if (h === "localhost" || h === "127.0.0.1" || h === "" || h.endsWith(".local")) return;
+      var s = document.createElement("script");
+      s.async = true;
+      s.src = "https://www.googletagmanager.com/gtag/js?id=G-GXC0J2XPHL";
+      document.head.appendChild(s);
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){ dataLayer.push(arguments); }
+      window.gtag = gtag;
+      gtag("js", new Date());
+      gtag("config", "G-GXC0J2XPHL");
+    })();
+  </script>
+</head>
+<body>
+
+  <header class="masthead">
+    <span class="masthead-title"><a href="../../">Joe Barrow</a></span>
+    <nav class="masthead-nav">
+      <a href="../../about/">about</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../publications/">publications</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../software/">software</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../field_notes/">field notes</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../feed.xml">rss</a>
+    </nav>
+    <span class="masthead-meta">field_notes</span>
+  </header>
+
+  <article class="article note">
+    <p class="note-eyebrow">
+      <a href="../../field_notes/">Field Notes</a>
+    </p>
+
+    <h1 class="note-title">Paper Notes: ParseBench</h1>
+
+    <p class="note-updated">last updated 2026-08-14</p>
+
+
+    <aside class="paper-card">
+      <span class="paper-card-label">Source</span>
+      <p class="paper-card-meta">
+TODO<span class="sep">·</span>TODO      </p>
+      <div class="paper-downloads">
+        <a class="btn btn-paper" href="../../field_notes/_attachments/parsebench.pdf" download>
+          <span class="btn-icon">↓</span>
+          <span class="btn-label">Download</span>
+          <span class="btn-meta">PDF</span>
+        </a>
+      </div>
+    </aside>
+
+    <p>ParseBench is a dataset of 2000 pages from 1100 documents, primarily drawn from &ldquo;enterprise domains&rdquo; like finance, legal, and government.</p>
+<h2>The 5 Tasks of ParseBench</h2>
+<ol>
+<li>Table Structure</li>
+<li>Chart Derendering</li>
+<li>Layout Detection (Visual Grounding)</li>
+<li>Content Faithfulness</li>
+<li>Semantic Formatting (strikethrough, bold, underline, etc.)</li>
+</ol>
+<h2>Unit Tests and Construct Validity</h2>
+<p>ParseBench isn&rsquo;t the first document processing benchmark to rely on unit tests. OlmOCR-bench, from AllenAI, also relies on unit tests. In their case for ordering, presence or absence of content, and formula rendering.</p>
+  </article>
+
+  <footer class="site-footer">
+    joe barrow · research scientist
+    <span class="site-footer-sep">·</span>
+    <a href="../../feed.xml">rss</a>
+  </footer>
+
+  <script src="../../static/js/site.js?v=bfb16307" defer></script>
+
+
+
+
+
+</body>
+</html>
