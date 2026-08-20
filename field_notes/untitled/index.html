@@ -3,18 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Training a Custom EAGLE-3 Head — Field Notes — Joe Barrow</title>
+  <title> — Field Notes — Joe Barrow</title>
 
-  <link rel="canonical" href="https://jbarrow.ai/field_notes/training-a-custom-eagle-3-head/">
+  <link rel="canonical" href="https://jbarrow.ai/field_notes/untitled/">
   <meta property="og:site_name" content="Joe Barrow">
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Training a Custom EAGLE-3 Head">
-  <meta property="og:url" content="https://jbarrow.ai/field_notes/training-a-custom-eagle-3-head/">
+  <meta property="og:title" content="Joe Barrow">
+  <meta property="og:url" content="https://jbarrow.ai/field_notes/untitled/">
   <meta property="og:image" content="https://jbarrow.ai/static/img/joe.png">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@barrowjoseph">
   <meta name="twitter:creator" content="@barrowjoseph">
-  <meta name="twitter:title" content="Training a Custom EAGLE-3 Head">
+  <meta name="twitter:title" content="Joe Barrow">
   <meta name="twitter:image" content="https://jbarrow.ai/static/img/joe.png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -68,29 +68,50 @@
       <a href="../../field_notes/">Field Notes</a>
     </p>
 
-    <h1 class="note-title">Training a Custom EAGLE-3 Head</h1>
-
-    <p class="note-updated">last updated 2026-06-08</p>
-
-    <ul class="note-tags">
-      <li><a class="tag-pill" href="../../field_notes/?tag=vllm">vllm</a></li>
-    </ul>
+    <h1 class="note-title"></h1>
 
 
-    <p>Notes in which I follow along the BaseTen <a href="https://www.baseten.co/blog/how-to-train-custom-eagle-3-heads-for-speculative-decoding">How to Train a Custom EAGLE-3 Head for Speculative Decoding</a>.</p>
-<p>They point to three training frameworks:
-1. <a href="https://github.com/NVIDIA/Model-Optimizer">https://github.com/NVIDIA/Model-Optimizer</a>
-    1. https://github.com/NVIDIA/Model-Optimizer/tree/main/examples/speculative_decoding
-    2. ^ above tutorial discusses draft model, EAGLE, and DFlash
-2. <a href="https://github.com/sgl-project/SpecForge">https://github.com/sgl-project/SpecForge</a>
-    1. https://sgl-project.github.io/SpecForge/basic_usage/training.html
-3. <a href="https://github.com/torchspec-project/TorchSpec">https://github.com/torchspec-project/TorchSpec</a></p>
-<p>Looking over the three of them, it <em>looks</em> like SpecForge has the simplest &ldquo;happy path&rdquo; to training an EAGLE-3 head.</p>
-<p>Recommended parameters:
-1. Test-Time-Training Length: 7-9
-2. Number of draft tokens: 3-4, with the claim that &ldquo;going higher rarely helps because prediction accuracy drops off and verification cost grows&rdquo;
-3. Learning rate: 1e-4 to 2e-5 changing wrt model size
-4. Sampling parameters: sample @ T=0; <a href="https://arxiv.org/abs/2410.10141">you lose 25% speed sampling at T=1 instead of T=0 apparently.</a></p>
+
+
+    <table>
+<thead>
+<tr>
+<th>METRIC</th>
+<th>0</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+<th>6</th>
+<th>ACCEPTANCE LENGTH</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Recall@1</td>
+<td>85.4%</td>
+<td>80.3%</td>
+<td>79.4%</td>
+<td>78.3%</td>
+<td>77.5%</td>
+<td>75.9%</td>
+<td>72.9%</td>
+<td>4.27</td>
+</tr>
+<tr>
+<td>Recall@16</td>
+<td>99.5%</td>
+<td>97.3%</td>
+<td>94.8%</td>
+<td>92.6%</td>
+<td>90.8%</td>
+<td>89.4%</td>
+<td>87.8%</td>
+<td>6.79</td>
+</tr>
+</tbody>
+</table>
   </article>
 
   <footer class="site-footer">

@@ -978,6 +978,118 @@ details.series-block--collapsible > summary:hover .series-block-title {
   color: var(--accent);
 }
 
+/* Latest updates ---------------------------------------------------------
+ *
+ * A merged, reverse-chronological feed of posts and Field Notes at the top of
+ * the home page. Deliberately dense — one line per entry — so the whole thing
+ * costs little vertical space, and collapsible for readers who want it gone.
+ */
+
+details.updates-block {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 40px 32px 0;
+}
+
+.updates-block-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 8px;
+  gap: 16px;
+  flex-wrap: wrap;
+  cursor: pointer;
+  list-style: none;
+}
+
+.updates-block-header::-webkit-details-marker { display: none; }
+.updates-block-header::marker { display: none; }
+
+.updates-block-title {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: -0.01em;
+  margin: 0;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.updates-block-header:hover .updates-block-title { color: var(--accent); }
+
+.updates-block-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-faint);
+  letter-spacing: -0.02em;
+}
+
+/* Same +/- affordance the collapsible series blocks use. */
+.updates-block-meta::after {
+  content: '\2212';
+  display: inline-block;
+  margin-left: 10px;
+  width: 0.75em;
+  text-align: center;
+  font-family: var(--font-mono);
+  color: var(--ink-faint);
+}
+details.updates-block:not([open]) .updates-block-meta::after { content: '+'; }
+
+.updates-list {
+  list-style: none;
+  margin: 0;
+  padding: 10px 0 0;
+}
+
+.updates-list-item {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  align-items: baseline;
+  gap: 0 10px;
+  padding: 4px 0;
+}
+
+.updates-list-date {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-faint);
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.updates-list-kind {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+}
+
+.updates-list-kind--post { color: var(--accent); }
+.updates-list-kind--note { color: var(--green); }
+
+.updates-list-title {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  line-height: 1.4;
+}
+
+.updates-list-title:hover { color: var(--accent); text-decoration: none; }
+
+@media (max-width: 640px) {
+  details.updates-block { padding: 32px 32px 0; }
+  .updates-list-item {
+    grid-template-columns: auto 1fr;
+    gap: 0 8px;
+  }
+  .updates-list-title { grid-column: 1 / -1; }
+}
+
 /* Pull quote ------------------------------------------------------------- */
 
 .pullquote {
@@ -1277,12 +1389,25 @@ details.series-block--collapsible > summary:hover .series-block-title {
   letter-spacing: -0.02em;
 }
 
+.note-list-meta .flair {
+  margin: 0 6px 0 0;
+  top: 0;
+  font-size: 9px;
+  padding: 1px 5px;
+  letter-spacing: 0.1em;
+}
+
 .note-list-summary {
   grid-column: 1 / -1;
   font-size: 14px;
   color: var(--ink-soft);
   margin: 4px 0 0;
   max-width: 60ch;
+}
+
+@media (max-width: 640px) {
+  .note-list-item { grid-template-columns: 1fr; }
+  .note-list-meta { grid-column: 1; }
 }
 
 /* Tags ------------------------------------------------------------------- */
