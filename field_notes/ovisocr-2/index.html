@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paper Notes: OvisOCR2 — Field Notes — Joe Barrow</title>
+
+  <link rel="canonical" href="https://jbarrow.ai/field_notes/ovisocr-2/">
+  <meta property="og:site_name" content="Joe Barrow">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Paper Notes: OvisOCR2">
+  <meta property="og:url" content="https://jbarrow.ai/field_notes/ovisocr-2/">
+  <meta property="og:image" content="https://jbarrow.ai/static/img/joe.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@barrowjoseph">
+  <meta name="twitter:creator" content="@barrowjoseph">
+  <meta name="twitter:title" content="Paper Notes: OvisOCR2">
+  <meta name="twitter:image" content="https://jbarrow.ai/static/img/joe.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../../static/css/site.css?v=62c71f14">
+  <link rel="stylesheet" href="../../static/css/code.css?v=678df866">
+  <link rel="alternate" type="application/atom+xml" title="Joe Barrow" href="../../feed.xml">
+
+
+
+
+
+  <script>
+    (function () {
+      var h = window.location.hostname;
+      if (h === "localhost" || h === "127.0.0.1" || h === "" || h.endsWith(".local")) return;
+      var s = document.createElement("script");
+      s.async = true;
+      s.src = "https://www.googletagmanager.com/gtag/js?id=G-GXC0J2XPHL";
+      document.head.appendChild(s);
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){ dataLayer.push(arguments); }
+      window.gtag = gtag;
+      gtag("js", new Date());
+      gtag("config", "G-GXC0J2XPHL");
+    })();
+  </script>
+</head>
+<body>
+
+  <header class="masthead">
+    <span class="masthead-title"><a href="../../">Joe Barrow</a></span>
+    <nav class="masthead-nav">
+      <a href="../../about/">about</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../publications/">publications</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../software/">software</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../field_notes/">field notes</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="../../feed.xml">rss</a>
+    </nav>
+    <span class="masthead-meta">field_notes</span>
+  </header>
+
+  <article class="article note">
+    <p class="note-eyebrow">
+      <a href="../../field_notes/">Field Notes</a>
+    </p>
+
+    <h1 class="note-title">Paper Notes: OvisOCR2</h1>
+
+    <p class="note-updated">last updated 2026-08-25</p>
+
+    <ul class="note-tags">
+      <li><a class="tag-pill" href="../../field_notes/?tag=vlm-ocr">vlm-ocr</a></li>
+    </ul>
+
+    <aside class="paper-card">
+      <span class="paper-card-label">Source</span>
+      <h2 class="paper-card-title">OvisOCR2 Technical Report</h2>
+      <p class="paper-card-meta">
+ATH-MaaS, Alibaba Group<span class="sep">·</span>arXiv · 2026      </p>
+      <div class="paper-downloads">
+        <a class="btn btn-paper" href="../../field_notes/_attachments/ovisocr2.pdf" download>
+          <span class="btn-icon">↓</span>
+          <span class="btn-label">Download</span>
+          <span class="btn-meta">PDF</span>
+        </a>
+      </div>
+    </aside>
+
+    <p>OvisOCR2 is a Qwen-3.5 0.8B finetune that currently (as of 08/25/2026) <mark>holds the number one position on the OmniDocBench leaderboard.</mark> As noted in the paper, <mark>it&rsquo;s the first single-shot VLM to hold this position.</mark> Typically, the best performing models have been pipelined VLMs like <a class="wiki-link" href="../../field_notes/mineru2-5/">MinerU2.5</a> and <a class="wiki-link" href="../../field_notes/paddleocr-vl/">PaddleOCR-VL</a> (check my series on <a href="https://jbarrow.ai/2026-05-09-ocr-cambrian/">OCR&rsquo;s Cambrian Explosion</a> to learn more about the difference between pipelined and single-shot models). As a bonus, the <a href="https://huggingface.co/ATH-MaaS/OvisOCR2">model weights</a> are Apache 2.0 licensed!</p>
+<p>Perhaps more importantly, I&rsquo;ve seen real people use it and get great results!</p>
+<p>So the question is: <mark><strong>how is a 0.8B model so strong</strong></mark>?</p>
+<p>As with most things in machine learning, it&rsquo;s not <em>really</em> the model. Alibaba <mark>built a robust data engine</mark>, that relies on a lot of manual filtering.</p>
+<h1>A Robust Data Engine</h1>
+<h1>Distillation Pipeline</h1>
+<p>The second training trick of OvisOCR2 is the distillation pipeline. They:</p>
+<ol>
+<li>Supervised finetune (SFT) both Qwen-3.5 0.8B and Qwen3.5 4B on the same dataset</li>
+<li>RL tune Qwen3.5 4B, because <mark>they found that RL&rsquo;ing the 0.8B was too high variance and did not converge</mark></li>
+<li>perform On-Policy Distillation (OPD) from the 4B to the 0.8B</li>
+</ol>
+<aside class="callout callout-note">
+<p class="callout-title">Note</p>
+<p>On-policy distillation may sound fancy, but it&rsquo;s basically: run inference with your small model, and then rescore the logits with the big model, then train on the KL-Divergence between those and the small model&rsquo;s logits</p>
+</aside>
+<p>By doing this,</p>
+  </article>
+
+  <footer class="site-footer">
+    joe barrow · research scientist
+    <span class="site-footer-sep">·</span>
+    <a href="../../feed.xml">rss</a>
+  </footer>
+
+  <script src="../../static/js/site.js?v=bfb16307" defer></script>
+
+
+
+
+
+</body>
+</html>
