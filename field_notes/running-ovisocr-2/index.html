@@ -88,7 +88,7 @@
 </code></pre></div>
 
 <p>You can tune some of the params. A page image should take ~3k tokens, so the model length leaves about 5k tokens for the rest of the page (plenty, in most cases!)</p>
-<p>Then, you can run inference using the following python script (lovingly adapted from <a class="wiki-link" href="../../field_notes/lightonocr-1-and-2/">LightOnOCR 2</a>&rsquo;s <a href="https://huggingface.co/lightonai/LightOnOCR-2-1B">HuggingFace documentation</a>):</p>
+<p>Then, you can run inference using the following <code>client.py</code> script (lovingly adapted from <a class="wiki-link" href="../../field_notes/lightonocr-1-and-2/">LightOnOCR 2</a>&rsquo;s <a href="https://huggingface.co/lightonai/LightOnOCR-2-1B">HuggingFace documentation</a>):</p>
 <div class="codehilite"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">io</span><span class="o">,</span><span class="w"> </span><span class="nn">base64</span><span class="o">,</span><span class="w"> </span><span class="nn">requests</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pypdfium2</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pdfium</span>
 
@@ -110,8 +110,19 @@
 <span class="n">pil_image</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;PNG&quot;</span><span class="p">)</span>
 <span class="n">image_base64</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">buffer</span><span class="o">.</span><span class="n">getvalue</span><span class="p">())</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
 
-
-<span class="n">text_prompt</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Extract all readable content from the image in natural human reading order and output the result as a single Markdown document. For charts or images, represent them using an HTML image tag: &lt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;img src=&quot;images/bbox_</span><span class="si">{left}</span><span class="s1">_</span><span class="si">{top}</span><span class="s1">_</span><span class="si">{right}</span><span class="s1">_</span><span class="si">{bottom}</span><span class="s1">.jpg&quot; /&gt;, where left, top, right, bottom are bounding box coordinates scaled to [0, 1000). Format formulas as LaTeX. Format tables as HTML: &lt;table&gt;...&lt;/table&gt;. Transcribe all other text as standard Markdown. Preserve the original text without translation or paraphrasing.&#39;</span>
+<span class="c1"># the prompt and ordering are defined in the OvisOCR2 docs,</span>
+<span class="c1"># I&#39;m recreating them here in the client.</span>
+<span class="n">text_prompt</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Extract all readable content from the image in natural &#39;</span>
+    <span class="s1">&#39;human reading order and output the result as a single &#39;</span>
+    <span class="s1">&#39;Markdown document. For charts or images, represent them &#39;</span>
+    <span class="s1">&#39;using an HTML image tag: &lt;img src=&quot;images/bbox_</span><span class="si">{left}</span><span class="s1">_</span><span class="si">{top}</span><span class="s1">_</span><span class="si">{right}</span><span class="s1">_</span><span class="si">{bottom}</span><span class="s1">.jpg&quot; /&gt;, &#39;</span>
+    <span class="s1">&#39;where left, top, right, bottom are bounding box coordinates &#39;</span>
+    <span class="s1">&#39;scaled to [0, 1000). Format formulas as LaTeX. Format tables &#39;</span>
+    <span class="s1">&#39;as HTML: &lt;table&gt;...&lt;/table&gt;. Transcribe all other text as &#39;</span>
+    <span class="s1">&#39;standard Markdown. Preserve the original text without &#39;</span>
+    <span class="s1">&#39;translation or paraphrasing.&#39;</span>
+<span class="p">)</span>
 
 <span class="n">prompt</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span>
