@@ -105,15 +105,6 @@ a:hover { text-decoration: underline; }
   padding: 88px 32px 96px;
 }
 
-.kicker {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 400;
-  color: var(--accent);
-  margin: 0 0 24px;
-  letter-spacing: -0.01em;
-}
-
 .headline {
   font-family: var(--font-sans);
   font-weight: 600;
@@ -373,7 +364,7 @@ a:hover { text-decoration: underline; }
 
 /* Tables ----------------------------------------------------------------- */
 /* Editorial hairline style: no vertical rules, no zebra fill. The header is
-   a mono all-caps label row (same vocabulary as .kicker / .callout-title),
+   a mono all-caps label row (same vocabulary as .callout-title),
    separated from the body by a full-weight rule. */
 
 .article table {
@@ -1135,14 +1126,6 @@ details.updates-block:not([open]) .updates-block-meta::after { content: '+'; }
 }
 
 .post-list-item:first-child { padding-top: 0; }
-
-.post-list-kicker {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--accent);
-  margin: 0 0 6px;
-  letter-spacing: -0.01em;
-}
 
 .post-list-title {
   font-family: var(--font-sans);
