@@ -95,7 +95,9 @@ For our purposes we’re going to use the following definition:</p>
 This <em>sparse</em> learning signal is effective, but inefficient.
 With supervised fine-tuning (SFT), you get dense, token-level supervision, but you don’t benefit from the <em>evaluative</em> nature of reinforcement learning.</p>
 <p>OPD is both <em>evaluative</em> (meaning that you’re <em>scoring</em> what the student model generates, not <em>instructing</em> it what to generate) and <em>dense</em>.</p>
-<h3>Loss</h3>
+<h3>Limitations</h3>
+<p>Like RL or other on-policy techniques, OPD is generally limited by the student model&rsquo;s <em>ability to perform the task</em>.
+If the model can&rsquo;t do the task <em>at all</em>, you probably need to train it via SFT.</p>
 <h2>What do we need to implement?</h2>
 <p>I annotated 4 parts of the definition above, because they’re instructive for how we build a training pipeline:</p>
 <ol>
@@ -129,9 +131,8 @@ It will queue and continuously batch the requests it receives, meaning we can mo
 <h3>Student and Teacher Setup</h3>
 <p>There is one command each for getting the student and teacher running.</p>
 <p><strong>Student</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="nv">VLLM_SERVER_DEV_MODE</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>vllm<span class="w"> </span>serve<span class="w"> </span><span class="si">${</span><span class="nv">STUDENT_MODEL</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
+<div class="codehilite"><pre><span></span><code><span class="nv">VLLM_SERVER_DEV_MODE</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>vllm<span class="w"> </span>serve<span class="w"> </span>Qwe/Qwen3.5-0.8B<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--weight-transfer-config<span class="w"> </span><span class="s1">&#39;{&quot;backend&quot;: &quot;nccl&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--port<span class="w"> </span><span class="si">${</span><span class="nv">STUDENT_PORT</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--no-enable-prefix-caching<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--gpu-memory-utilization<span class="w"> </span><span class="m">0</span>.8<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--port<span class="w"> </span><span class="m">8000</span>
@@ -262,7 +263,7 @@ The magic that makes this all work is what we do <em>next</em>, weight syncing.<
 <p>Once we have an updated student, we need to ensure that its weights are synced to our inference engine, so future rollotus remain on policy.
 This prevents training on a stale policy.</p>
 <p>You&rsquo;ll note in the above section, there are 📌&rsquo;s in the <code>initialize_engine()</code> call and the <code>engine.send_weights()</code>.
-<code>initialize_engine()</code> gives is the below function to get a weight transfer engine from vLLM, which will allow us to send updated weights to the running server.</p>
+<code>initialize_engine()</code> gives us the below function to get a weight transfer engine from vLLM, which will allow us to send updated weights to the running server.</p>
 <div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">vllm.distributed.weight_transfer</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
         <span class="n">ModuleSource</span><span class="p">,</span>
         <span class="n">HTTPVLLMWeightSyncClient</span><span class="p">,</span>
@@ -301,13 +302,17 @@ The OPD loss deserves its own section.</p>
 <div class="arithmatex">\[
 KL(\pi_\theta||\pi_T) = \mathbb{E}_{x\sim\pi_\theta} \left[\log{\pi_\theta(x)} - \log{\pi_T(x)}\right]
 \]</div>
-<p>The code for this is:</p>
+<p>Because we have <em>sampled</em> a sequence from the student model, we can&rsquo;t just backpropagate this loss, though.
+Instead, we need to use a REINFORCE-style approach.
+In our case, that means using the reverse-KL as a per-token advantage.
+If you want to learn more about REINFORCE, definitely give Sasha Rush&rsquo;s &ldquo;<a href="https://srush.github.io/sampling-to-reinforce/">From Sampling to Reinforce</a>&rdquo; a read!</p>
+<p>The code for our loss is:</p>
 <div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compute_loss</span><span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
     <span class="n">ids</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="s2">&quot;token_ids&quot;</span><span class="p">]</span>
     <span class="n">logits</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">input_ids</span><span class="o">=</span><span class="n">ids</span><span class="p">,</span> <span class="n">attention_mask</span><span class="o">=</span><span class="n">batch</span><span class="p">[</span><span class="s2">&quot;attention_mask&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">logits</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
     <span class="n">logp</span> <span class="o">=</span> <span class="o">-</span><span class="n">F</span><span class="o">.</span><span class="n">cross_entropy</span><span class="p">(</span><span class="n">logits</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">ids</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:],</span> <span class="n">reduction</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">)</span>
 
-    <span class="c1"># per-token negative reverse KL, used as the advantage</span>
+    <span class="c1"># per-token negative reverse KL</span>
     <span class="n">advantage</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="s2">&quot;teacher_logp&quot;</span><span class="p">][:,</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="n">batch</span><span class="p">[</span><span class="s2">&quot;student_logp&quot;</span><span class="p">][:,</span> <span class="mi">1</span><span class="p">:]</span>
     <span class="n">mask</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="s2">&quot;completion_mask&quot;</span><span class="p">][:,</span> <span class="mi">1</span><span class="p">:]</span>
     <span class="n">loss</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">logp</span> <span class="o">*</span> <span class="n">advantage</span> <span class="o">*</span> <span class="n">mask</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="n">mask</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
@@ -345,7 +350,7 @@ Yes!</p>
 Remember, we&rsquo;re <strong>exclusively using</strong> the student rollouts and a teacher model.</p>
 <p>Also a neat result because Qwen is already a strong model for its size!</p>
 <h2>Heterogeneous Hardware</h2>
-<p>I keep alluding the &ldquo;heterogeneous hardware;&rdquo; what exactly does that mean here?
+<p>I keep alluding to &ldquo;heterogeneous hardware;&rdquo; what exactly does that mean here?
 Well, you can run the teacher and student on completely different machines and training will still work!</p>
 <p>For instance, you can run vLLM on a Modal instance, and just modify the training script to point to it instead of <code>localhost</code>.
 You can also run the generator or scorer on AMD GPUs, DGX Sparks, or (if you have infinite patience) CPUs.</p>
@@ -355,8 +360,8 @@ You can also run the generator or scorer on AMD GPUs, DGX Sparks, or (if you hav
 <p><img alt="gpu_bubbles.png" src="gpu_bubbles.png"></p>
 <p>In terms of a &ldquo;from-scratch&rdquo; implementation, this isn&rsquo;t too bad!
 In this setup, we&rsquo;re ensuring that <mark>every sample is on-policy, with the latest policy.</mark>
-To really maximize compute, we can consier sampling <em>off-policy</em>, which in our case really just means &ldquo;generate samples from a slightly older model state.&rdquo;</p>
-<p>Unfortunately, pptimizing GPU utilization is out of the scope of this blog post.</p>
+To really maximize compute, we can consider sampling <em>off-policy</em>, which in our case really just means &ldquo;generate samples from a slightly older model state.&rdquo;</p>
+<p>Unfortunately, optimizing GPU utilization is out of the scope of this blog post.</p>
 <h2>Where to Go From Here</h2>
 <p>If you enjoyed this there are several natural extensions that I think are interesting.
 First, scaling the teacher and student models.
