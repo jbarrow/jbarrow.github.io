@@ -62,15 +62,20 @@ a:hover { text-decoration: underline; }
 .masthead-title a { color: inherit; }
 
 .masthead-social {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: -0.02em;
   display: flex;
-  gap: 8px;
-  align-items: baseline;
+  gap: 14px;
+  align-items: center;
 }
 
-.masthead-social a { color: var(--ink-faint); }
+.masthead-social a {
+  display: flex;
+  color: var(--ink);
+}
+
+.masthead-social svg { fill: currentColor; }
+/* The X glyph reads larger than the GitHub mark at the same size. */
+.masthead-social .icon-x { width: 14px; height: 14px; }
+.masthead-social .icon-github { width: 16px; height: 16px; }
 
 .masthead-social a:hover {
   color: var(--accent);
