@@ -8,6 +8,13 @@
  * 2. Code-block copy buttons: a small "copy" affordance on every fenced
  *    code block. Hidden by default, fades in on hover (always visible on
  *    touch devices via CSS).
+ *
+ * 3. Subscribe form: submits to Kit in the background and shows the result
+ *    inline. Without JS the form posts normally and Kit handles the redirect.
+ *
+ * 4. Subscribe popup: on long posts and field notes, slides in a signup
+ *    prompt once the reader is partway down. Dismissing it hides it for
+ *    30 days; subscribing hides it for good.
  */
 (function () {
   'use strict';
@@ -130,12 +137,104 @@
     render();
   }
 
+  // -- Subscribe form ------------------------------------------------------
+
+  function attachSubscribe() {
+    document.querySelectorAll('form.subscribe').forEach(form => {
+      const status = form.querySelector('.subscribe-status');
+      const button = form.querySelector('button');
+
+      form.addEventListener('submit', async e => {
+        e.preventDefault();
+        button.disabled = true;
+        status.className = 'subscribe-status';
+        status.textContent = 'sending…';
+        try {
+          const res = await fetch(form.action, {
+            method: 'POST',
+            body: new FormData(form),
+            headers: { Accept: 'application/json' },
+          });
+          const data = await res.json();
+          if (data.status === 'failed') {
+            const msgs = (data.errors && data.errors.messages) || [];
+            throw new Error(msgs[0] || 'Something went wrong.');
+          }
+          form.reset();
+          status.classList.add('is-ok');
+          status.textContent = 'Thanks! Check your inbox to confirm.';
+          store('subscribe-done', '1');
+          const popup = form.closest('.subscribe-popup');
+          if (popup) setTimeout(() => closePopup(popup), 2500);
+        } catch (err) {
+          status.classList.add('is-error');
+          status.textContent = err.message || 'Something went wrong.';
+        } finally {
+          button.disabled = false;
+        }
+      });
+    });
+  }
+
+  // -- Subscribe popup -----------------------------------------------------
+
+  const DISMISS_DAYS = 30;
+  const MIN_PAGE_SCREENS = 3;   // page must be at least this many viewports tall
+  const TRIGGER_FRACTION = 0.4; // ...and the reader this far through it
+
+  // localStorage can throw (private mode, blocked storage); treat as empty.
+  function store(key, value) {
+    try { localStorage.setItem(key, value); } catch (e) {}
+  }
+  function recall(key) {
+    try { return localStorage.getItem(key); } catch (e) { return null; }
+  }
+
+  function closePopup(popup) {
+    popup.classList.remove('is-open');
+    setTimeout(() => { popup.hidden = true; }, 250);
+  }
+
+  function attachSubscribePopup() {
+    const popup = document.querySelector('.subscribe-popup');
+    if (!popup || recall('subscribe-done')) return;
+    const dismissed = Number(recall('subscribe-dismissed') || 0);
+    if (Date.now() - dismissed < DISMISS_DAYS * 864e5) return;
+
+    // Don't compete with the inline form at the end of a post.
+    const inline = document.querySelector('form.subscribe:not(.subscribe--popup)');
+    let inlineVisible = false;
+    if (inline && 'IntersectionObserver' in window) {
+      new IntersectionObserver(entries => {
+        inlineVisible = entries[0].isIntersecting;
+      }).observe(inline);
+    }
+
+    function onScroll() {
+      const doc = document.documentElement;
+      const scrollable = doc.scrollHeight - window.innerHeight;
+      if (doc.scrollHeight < window.innerHeight * MIN_PAGE_SCREENS) return;
+      if (window.scrollY / scrollable < TRIGGER_FRACTION || inlineVisible) return;
+      window.removeEventListener('scroll', onScroll);
+      popup.hidden = false;
+      requestAnimationFrame(() => popup.classList.add('is-open'));
+    }
+
+    popup.querySelector('.subscribe-popup-close').addEventListener('click', () => {
+      store('subscribe-dismissed', String(Date.now()));
+      closePopup(popup);
+    });
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+
   // -- Init ----------------------------------------------------------------
 
   function init() {
     syncAsides();
     attachCopyButtons();
     attachTagFilter();
+    attachSubscribe();
+    attachSubscribePopup();
   }
 
   if (document.readyState === 'loading') {

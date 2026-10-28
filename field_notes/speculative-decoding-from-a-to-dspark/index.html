@@ -21,7 +21,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="../../static/css/site.css?v=75645fa9">
+  <link rel="stylesheet" href="../../static/css/site.css?v=99b6804a">
   <link rel="stylesheet" href="../../static/css/code.css?v=678df866">
   <link rel="alternate" type="application/atom+xml" title="Joe Barrow" href="../../feed.xml">
 
@@ -59,9 +59,15 @@
       <span class="masthead-nav-sep">·</span>
       <a href="../../field_notes/">field notes</a>
       <span class="masthead-nav-sep">·</span>
+      <a href="../../subscribe/">subscribe</a>
+      <span class="masthead-nav-sep">·</span>
       <a href="../../feed.xml">rss</a>
     </nav>
-    <span class="masthead-meta">field_notes</span>
+    <nav class="masthead-social">
+      <a href="https://twitter.com/barrowjoseph" rel="me">twitter</a>
+      <span class="masthead-nav-sep">·</span>
+      <a href="https://github.com/jbarrow" rel="me">github</a>
+    </nav>
   </header>
 
   <article class="article note">
@@ -272,10 +278,26 @@ Working through the math is actually when I realized that you can distribute ove
   <footer class="site-footer">
     joe barrow · research scientist
     <span class="site-footer-sep">·</span>
+    <a href="../../subscribe/">subscribe</a>
+    <span class="site-footer-sep">·</span>
     <a href="../../feed.xml">rss</a>
   </footer>
 
-  <script src="../../static/js/site.js?v=bfb16307" defer></script>
+<aside class="subscribe-popup" hidden aria-label="Subscribe">
+  <button type="button" class="subscribe-popup-close" aria-label="Dismiss">×</button>
+  <form class="subscribe subscribe--popup" action="https://app.kit.com/forms/10107113/subscriptions" method="post">
+  <p class="subscribe-label">Enjoying this?</p>
+  <p class="subscribe-blurb">Get new posts and field notes by email.</p>
+  <div class="subscribe-row">
+    <input type="email" name="email_address" aria-label="Email address" placeholder="you@example.com" autocomplete="email" required>
+    <button type="submit">subscribe</button>
+  </div>
+  <p class="subscribe-status" role="status" aria-live="polite"></p>
+</form>
+
+</aside>
+
+  <script src="../../static/js/site.js?v=763276f8" defer></script>
 
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" integrity="sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4lfFg" crossorigin="anonymous"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous" onload="renderMathInElement(document.body, {delimiters: [{left: '\\[', right: '\\]', display: true}, {left: '\\(', right: '\\)', display: false}], throwOnError: false});"></script>

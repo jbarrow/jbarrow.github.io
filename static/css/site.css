@@ -61,11 +61,20 @@ a:hover { text-decoration: underline; }
 
 .masthead-title a { color: inherit; }
 
-.masthead-meta {
+.masthead-social {
   font-family: var(--font-mono);
   font-size: 12px;
-  color: var(--ink-faint);
   letter-spacing: -0.02em;
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+}
+
+.masthead-social a { color: var(--ink-faint); }
+
+.masthead-social a:hover {
+  color: var(--accent);
+  text-decoration: none;
 }
 
 .masthead-nav {
@@ -90,11 +99,23 @@ a:hover { text-decoration: underline; }
   color: var(--ink-faint);
 }
 
-@media (max-width: 640px) {
-  /* Hide the meta slot on phones — keep masthead to two slots. */
-  .masthead { gap: 12px; flex-wrap: wrap; }
-  .masthead-meta { display: none; }
-  .masthead-nav { font-size: 11px; gap: 6px; }
+@media (max-width: 800px) {
+  /* Two rows: name + social links on top, nav links wrapping underneath. */
+  .masthead {
+    flex-wrap: wrap;
+    row-gap: 10px;
+    padding: 14px 32px;
+  }
+  .masthead-nav {
+    order: 3;
+    flex-basis: 100%;
+    flex-wrap: wrap;
+    gap: 2px 16px;
+  }
+  .masthead-nav .masthead-nav-sep { display: none; }
+  /* Larger tap targets without changing the type size. */
+  .masthead-nav a,
+  .masthead-social a { padding: 4px 0; }
 }
 
 /* Article ---------------------------------------------------------------- */
@@ -1468,6 +1489,126 @@ details.updates-block:not([open]) .updates-block-meta::after { content: '+'; }
   color: var(--ink-faint);
   font-style: italic;
   padding: 16px 0;
+}
+
+/* Subscribe ------------------------------------------------------------- */
+
+.subscribe {
+  margin: 48px 0 0;
+  padding: 24px 0 0;
+  border-top: 1px solid var(--rule);
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+.subscribe-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 0 0 8px;
+}
+
+.subscribe-blurb { margin: 0 0 12px; }
+
+.subscribe-row {
+  display: flex;
+  gap: 8px;
+  max-width: 420px;
+}
+
+.subscribe input[type="email"] {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 10px;
+  font: inherit;
+  font-size: 14px;
+  color: var(--ink);
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+}
+
+.subscribe input[type="email"]:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.subscribe button {
+  padding: 8px 14px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--paper);
+  background: var(--ink);
+  border: 1px solid var(--ink);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.subscribe button:hover { background: var(--accent); border-color: var(--accent); }
+.subscribe button:disabled { opacity: 0.5; cursor: default; }
+
+.subscribe-status {
+  margin: 8px 0 0;
+  min-height: 1.4em;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.subscribe-status.is-ok { color: var(--green); }
+.subscribe-status.is-error { color: #b91c1c; }
+
+.subscribe--page { margin-top: 32px; }
+
+/* Slide-in prompt on long posts and field notes. */
+.subscribe-popup {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 50;
+  width: 340px;
+  padding: 18px 20px 6px;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.subscribe-popup[hidden] { display: none; }
+.subscribe-popup.is-open { opacity: 1; transform: none; }
+
+.subscribe--popup {
+  margin: 0;
+  padding: 0;
+  border-top: none;
+}
+
+.subscribe-popup-close {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  padding: 2px 6px;
+  font-size: 18px;
+  line-height: 1;
+  color: var(--ink-faint);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.subscribe-popup-close:hover { color: var(--ink); }
+
+@media (max-width: 640px) {
+  .subscribe-popup {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    width: auto;
+  }
 }
 
 /* Footer ----------------------------------------------------------------- */
