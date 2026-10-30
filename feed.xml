@@ -4,10 +4,18 @@
   <link href="https://jbarrow.ai/" rel="alternate" type="text/html"/>
   <link href="https://jbarrow.ai/feed.xml" rel="self" type="application/atom+xml"/>
   <id>https://jbarrow.ai/</id>
-  <updated>2026-10-08T00:00:00Z</updated>
+  <updated>2026-10-30T00:00:00Z</updated>
   <author>
     <name>Joe Barrow</name>
   </author>
+  <entry>
+    <title>A Deep Dive into Decision Models</title>
+    <link href="https://jbarrow.ai/2026-10-23-deep-dive-into-decision-models/" rel="alternate" type="text/html"/>
+    <id>https://jbarrow.ai/2026-10-23-deep-dive-into-decision-models/</id>
+    <updated>2026-10-30T00:00:00Z</updated>
+    <summary>Understanding what makes decision models tick by investigating Perplexity Decider.</summary>
+    <author><name>Joe Barrow</name></author>
+  </entry>
   <entry>
     <title>Why is Speculative Decoding Fast?</title>
     <link href="https://jbarrow.ai/2026-10-08-why-is-speculative-decoding-fast/" rel="alternate" type="text/html"/>
